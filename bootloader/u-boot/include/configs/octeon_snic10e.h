@@ -31,12 +31,21 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
+/** Enable the more powerful hush command parser */
+#define CONFIG_SYS_HUSH_PARSER
+
+//#define CONFIG_OCTEON_BIG_STACK_SIZE		0x4000	/** 16K stack */
+
+
 #include "octeon_common.h"
 
 /* Change flash base from default since it is small enough to not be remapped */
 
 /* Default DDR clock if tuple doesn't exist in EEPROM */
 #define SNIC10E_DEF_DRAM_FREQ		667
+
+/** Enable SE application native API support */
+//#define CONFIG_OCTEON_SE_NAPI
 
 /* Addresses for various things on boot bus.  These addresses
  * are used to configure the boot bus mappings.
@@ -180,6 +189,13 @@
 #define CONFIG_ENV_SIZE		(8*1024)
 #define CONFIG_ENV_ADDR		(CONFIG_SYS_FLASH_BASE + CONFIG_SYS_FLASH_SIZE - CONFIG_ENV_SIZE)
 
+
+#include "config_octeon_nand.h"
+#define CONFIG_SYS_MAX_NAND_DEVICE	1
+/* Not used for Octeon, but must be set */
+#define CONFIG_SYS_NAND_BASE		0
+#define CONFIG_SYS_NAND_MAX_CHIPS CONFIG_SYS_MAX_NAND_DEVICE
+
 /*-----------------------------------------------------------------------
  * Cache Configuration
  */
@@ -201,5 +217,14 @@
 
 /** Disable DDR2 support */
 #define CONFIG_OCTEON_DISABLE_DDR2
+
+#define CONFIG_OCTEON_PCI	/** Enable support to read PCIe EEPROM */
+
+/* The following line should be defined for all PCIe connected LiquidIO card
+ * It will do initialization needed for oct-remote-app-ctl host utilty to
+ * provide hotplug features when controlling start/add_cores/del_cores/shutdown
+ * hotplugable SE application from x86 HOST
+ */
+#define CONFIG_OCTEON_REMOTE_HOTPLUG
 
 #endif	/* __CONFIG_H__ */

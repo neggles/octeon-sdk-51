@@ -53,22 +53,22 @@
 			compatible = "cavium,octeon-3860-twsi";
 			reg = <0x11800 0x00001000 0x0 0x200>;
 			interrupts = <0 45>;
-			clock-frequency = <100000>;
+			/* NOTE: In order to get the proper delay between
+			 * i2c bus transactions for the SFP we need to either
+			 * slow the bus down to no more than 30KHz or else
+			 * somehow insert a delay between transactions.  Only
+			 * U-Boot is capable of inserting the appropriate delay
+			 * at this time.
+			 */
+			clock-frequency = <30000>;
 
 			tmp@4c {
 				compatible = "ti,tmp421";
 				reg = <0x4c>;
 			};
-			sfp0eeprom: eeprom@50 {
+			sfp0: eeprom@50 {
 				compatible = "atmel,24c01";
 				reg = <0x50>;
-			};
-			/* This is optional, available on some
-			 * Avago devices
-			 */
-			sfp0alerts: eeprom@51 {
-				compatible = "atmel,24c01";
-				reg = <0x51>;
 			};
 			tlv-eeprom@53 {
 				compatible = "atmel,24c256";
@@ -83,15 +83,18 @@
 			compatible = "cavium,octeon-3860-twsi";
 			reg = <0x11800 0x00001200 0x0 0x200>;
 			interrupts = <0 59>;
-			clock-frequency = <100000>;
+			/* NOTE: In order to get the proper delay between
+			 * i2c bus transactions for the SFP we need to either
+			 * slow the bus down to no more than 30KHz or else
+			 * somehow insert a delay between transactions.  Only
+			 * U-Boot is capable of inserting the appropriate delay
+			 * at this time.
+			 */
+			clock-frequency = <30000>;
 
-			sfp1eeprom: eeprom@50 {
+			sfp1: eeprom@50 {
 				compatible = "atmel,24c01";
 				reg = <0x50>;
-			};
-			sfp1alerts: eeprom@51 {
-				compatible = "atmel,24c01";
-				reg = <0x51>;
 			};
 			gpio1: gpio@20 {
 				reg = <0x20>;
@@ -111,7 +114,7 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0x11800 0x00001800 0x0 0x40>;
-
+			status = "disabled";
 			mphyA: ethernet-phy-nexus@A {
 				reg = <0>;
 				/* The Vitesse VSC8488 is a dual-PHY where
@@ -341,8 +344,8 @@
 					 * the PHY in the proper mode for
 					 * copper or optical.
 					 */
-					sfp-eeprom = <&sfp0eeprom>;
-	                        };
+					sfp-eeprom = <&sfp0>;
+				};
 
 				phy1: ethernet-phy@1 {
 					/* Absolute address */
@@ -557,8 +560,8 @@
 					 * the PHY in the proper mode for
 					 * copper or optical.
 					 */
-					sfp-eeprom = <&sfp1eeprom>;
-	                        };
+					sfp-eeprom = <&sfp1>;
+				};
 			};
 			mphyB: ethernet-phy-nexus@B {
 				reg = <0>;
@@ -581,6 +584,14 @@
 					reg = <0>;
 					compatible = "ti,tlk10232", "ethernet-phy-ieee802.3-c45";
 
+					/* The TI 10G PHY does not
+					 * automatically read the SFP EEPROM
+					 * so the host needs to do it to put
+					 * the PHY in the proper mode for
+					 * copper or optical.
+					 */
+					sfp-eeprom = <&sfp0>;
+
 					/* TX fault input signal for PHY from SFP+ */
 					tx-fault	= <&gpio1 4 0>;
 					/* TX disable for PHY to SFP+ */
@@ -589,13 +600,20 @@
 					mod-abs		= <&gpio1 6 0>;
 					/* RX los of singal for PHY from SFP+ */
 					rx-los		= <&gpio1 7 0>;
-	                        };
+				};
 
 				phy10: ethernet-phy@1 {
 					/* Absolute address */
 					reg = <0x1>;
 					compatible = "ti,tlk10232", "ethernet-phy-ieee802.3-c45";
 
+					/* The TI 10G PHY does not
+					 * automatically read the SFP EEPROM
+					 * so the host needs to do it to put
+					 * the PHY in the proper mode for
+					 * copper or optical.
+					 */
+					sfp-eeprom = <&sfp1>;
 					/* TX fault input signal for PHY */
 					tx-fault	= <&gpio1 0 0>;
 					/* TX disable for PHY */
@@ -604,7 +622,7 @@
 					mod-abs		= <&gpio1 2 0>;
 					/* RX los of singal for PHY */
 					rx-los		= <&gpio1 3 0>;
-	                        };
+				};
 			};
 		};
 
@@ -626,7 +644,6 @@
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
 					phy-handle = <&phy0>;
-					sfp-slot = <&sfp00>;
 				};
 			};
 			interface@B {
@@ -641,7 +658,6 @@
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
 					phy-handle = <&phy1>;
-					sfp-slot = <&sfp01>;
 				};
 			};
 			interface@C {
@@ -656,7 +672,6 @@
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
 					phy-handle = <&phy10>;
-					sfp-slot = <&sfp10>;
 				};
 			};
 			interface@D {
@@ -671,7 +686,6 @@
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
 					phy-handle = <&phy11>;
-					sfp-slot = <&sfp11>;
 				};
 			};
 		};
@@ -720,11 +734,11 @@
 				cavium,t-rd-hld = <25>;
 				cavium,t-wr-hld = <35>;
 				cavium,t-pause  = <0>;
-				cavium,t-wait   = <0>;
+				cavium,t-wait   = <300>;
 				cavium,t-page   = <25>;
 				cavium,t-rd-dly = <0>;
 
-				cavium,pages     = <8>;
+				cavium,pages     = <0>;
 				cavium,bus-width = <8>;
 			};
 			cavium,cs-config@2 {
@@ -782,6 +796,21 @@
 			reg = <0x11800 0x00000108 0x0 0x8>;
 			interrupts = <0 63>;
 		};
+		nand-flash-interface@1070001000000 {
+			compatible = "cavium,octeon-5230-nand";
+			reg = <0x10700 0x1000000 0x0 0x100 0x11800 0x168 0x0 0x20>;
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			interrupts = <0x0 0x3f>;
+			flash@1 {
+				compatible = "nand-flash";
+				reg = <0x1>;
+				nand-ecc-mode = "soft";
+				nand-ecc-size = <0x200>;
+				nand-ecc-bytes = <0x7>;
+				nand-bus-width = <0x8>;
+			};
+		};
 	};
 	gpio-leds {
 		compatible = "gpio-leds";
@@ -803,44 +832,6 @@
 			gpios = <&gpio 2 0>;
 			default-state = "keep";
 			cavium,phy-trim = "0,vitesse";
-		};
-		sfp00: sfp-slot@00 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&phy0 4 0>;
-			mod_abs    = <&phy0 0 0>;
-			tx_error   = <&phy0 1 0>;
-			eeprom     = <&sfp0eeprom>;
-			diag       = <&sfp0alerts>;
-			cavium,phy-trim = "0,vitesse";
-		};
-		sfp01: sfp-slot@01 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&phy1 10 0>;
-			mod_abs    = <&phy1 9 0>;
-			tx_error   = <&phy1 8 0>;
-			eeprom     = <&sfp1eeprom>;
-			diag       = <&sfp1alerts>;
-			cavium,phy-trim = "0,vitesse";
-		};
-		sfp10: sfp-slot@10 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&gpio1 5 0>;
-			mod_abs    = <&gpio1 6 0>;
-			tx_error   = <&gpio1 4 0>;
-			rx_los     = <&gpio1 7 0>;
-			eeprom     = <&sfp0eeprom>;
-			diag       = <&sfp0alerts>;
-			cavium,phy-trim = "0,ti";
-		};
-		sfp11: sfp-slot@11 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&gpio1 1 0>;
-			mod_abs    = <&gpio1 2 0>;
-			tx_error   = <&gpio1 0 0>;
-			rx_los     = <&gpio1 3 0>;
-			eeprom     = <&sfp1eeprom>;
-			diag       = <&sfp1alerts>;
-			cavium,phy-trim = "0,ti";
 		};
 	};
 
