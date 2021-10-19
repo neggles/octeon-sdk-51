@@ -139,13 +139,6 @@ int cortina_phy_reset(struct phy_device *phydev)
 	return 0;
 }
 
-int cs4224_mmi_bus(struct mii_dev *bus)
-{
-	return 1;
-}
-
-int cs4224_mmi_bus(struct mii_dev *bus) __attribute__((weak));
-
 /**
  * get_phy_id - reads the specified addr for its ID.
  * @bus: the target MII bus
@@ -160,16 +153,14 @@ static int cortina_get_phy_id(struct mii_dev *bus, int addr, uint32_t *phy_id)
 	int phy_reg;
 	bool finished;
 #ifdef CONFIG_PHY_CORTINA_CS4223
-	if (cs4224_mmi_bus(bus)) {
-		int retries = 5000;
+	int retries = 5000;
 
-		/* Wait for firmware to finish loading */
-		do {
-			finished = cs4224_is_eeprom_finished(bus, addr);
-			if (!finished)
-				mdelay(1);
-		} while (retries-- > 0 && !finished);
-	}
+	/* Wait for firmware to finish loading */
+	do {
+		finished = cs4224_is_eeprom_finished(bus, addr);
+		if (!finished)
+			mdelay(1);
+	} while (retries-- > 0 && !finished);
 #endif
 	/* The Cortina PHY stores the PHY id at addresses 0 and 1 */
 	phy_reg = bus->read(bus, addr, 0, CORTINA_GLOBAL_CHIP_ID_MSB);
@@ -267,7 +258,7 @@ struct phy_device *cortina_phy_device_create(struct mii_dev *bus,
 	dev->drv = cortina_get_phy_driver(dev, interface);
 
 	if (!dev->drv) {
-		debug("PHY driver not found for Cortina PHY on %s, address %u:%d, phy id: 0x%08x\n",
+		printf("PHY driver not found for Cortina PHY on %s, address %u:%d, phy id: 0x%08x\n",
 		       bus->name, addr, sub_addr, dev->phy_id);
 		return NULL;
 	}
@@ -766,7 +757,7 @@ static int cs4223_config(struct phy_device *phydev)
  *
  * @return 0 for success.
  */
-int cs4223_reset(struct phy_device *phydev)
+static int cs4223_reset(struct phy_device *phydev)
 {
 	u16 reg;
 	u16 value;
@@ -842,9 +833,6 @@ int cortina_phy_init(void)
 	int rc = 0;
 #ifdef CONFIG_PHY_CORTINA_CS4321
 	rc |= cortina_cs4321_phy_init();
-#endif
-#ifdef CONFIG_PHY_CORTINA_CS4318
-	rc |= cortina_cs4318_phy_init();
 #endif
 	cortina_phy_register(&cortina_cs4223);
 
@@ -1318,11 +1306,11 @@ static int cs4224_set_mode_slice(struct phy_device *phydev,
 				  val);
 			mdelay(10);
 			break;
-	default:
+		default:
 			printf("%s: Error: Unsupported mode %d\n",
 			       __func__, mode);
 			break;
-	}
+		}
 		break;
 	}
 	case CORTINA_SLICE_1000X:
@@ -1594,7 +1582,7 @@ int cs4224_set_mode(struct phy_device *phydev, enum cortina_slice_mode mode)
 						    pinfo->slice_offsets[i]);
 	} else {
 		rc = cs4224_set_mode_slice(phydev, mode, pinfo->sub_addr, off);
-		}
+	}
 
 	if (rc) {
 		printf("%s(%s, %s): Error setting slice mode\n", __func__,
@@ -1774,7 +1762,7 @@ static bool cs4224_is_eeprom_finished(struct mii_dev *bus, int addr)
 	return false;
 }
 
-static int cs4224_enable_monitor_sense_points(struct phy_device *phydev, bool wait)
+int cs4224_enable_monitor_sense_points(struct phy_device *phydev, bool wait)
 {
 	uint16_t val;
 	int i;
@@ -1802,7 +1790,7 @@ static int cs4224_enable_monitor_sense_points(struct phy_device *phydev, bool wa
 	return 0;
 }
 
-static int cs4224_apply_workarounds(struct phy_device *phydev)
+int cs4224_apply_workarounds(struct phy_device *phydev)
 {
 	uint16_t val;
 
@@ -1869,7 +1857,7 @@ int cs4223_wait_for_eeprom_finished(struct phy_device *phydev,
 		return -1;
 }
 
-static int cs4224_hard_reset(struct phy_device *phydev)
+int cs4224_hard_reset(struct phy_device *phydev)
 {
 	uint16_t val;
 	uint32_t stride;

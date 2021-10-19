@@ -37,7 +37,6 @@ int checkboard(void)
 	buffer[0] = 0x1f;
 	i2c_set_bus_num(CONFIG_SYS_DTT_BUS_NUM);
 	/* Enable access through the MUX */
-
 	i2c_write(0x70, 0, 0, buffer, 1);
 	/* Note that the SA56004 will be programmed again later with DTT */
 	/* Internal SA56004 temp, approximates ambient/board temp.*/
@@ -51,7 +50,7 @@ int checkboard(void)
 	 */
 	val = i2c_reg_read(CONFIG_SYS_I2C_DTT_ADDR, 0x03);
 	i2c_reg_write(CONFIG_SYS_I2C_DTT_ADDR, 0x9, val | 1);
-	
+
 	/* Configure PSRAM for normal (not command) mode. */
 	gpio_direction_output(6, 0);
 	return 0;

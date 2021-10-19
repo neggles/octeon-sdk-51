@@ -16,157 +16,158 @@
  */
 
 /* LMC0_MODEREG_PARAMS1 */
-#define OCTEON_EBB7304_MODEREG_PARAMS1_1RANK_1SLOT		\
+#define OCTEON_EBB7304_MODEREG_PARAMS1_1RANK_1SLOT      \
 	{							\
 		.cn78xx = {					\
 			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
+                  .asr_00       = 0,                    \
+                  .srt_00       = 0,                    \
 			.rtt_wr_00	= ddr4_rttwr_80ohm&3,	\
 			.rtt_wr_00_ext	= (ddr4_rttwr_80ohm>>2)&1,	\
-			.dic_00		= ddr4_dic_34ohm,	\
-			.rtt_nom_00	= 0,                    \
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= 0,			\
-			.dic_01		= ddr4_dic_34ohm,	\
-			.rtt_nom_01	= 0,			\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,			\
-			.rtt_wr_10	= 0,			\
-			.dic_10		= ddr4_dic_34ohm,	\
-			.rtt_nom_10	= 0,			\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= 0,			\
-			.dic_11		= ddr4_dic_34ohm,	\
-			.rtt_nom_11	= 0,			\
-		}						\
-	}
+                  .dic_00	= ddr4_dic_34ohm,	\
+                  .rtt_nom_00	= 0,                    \
+                  .pasr_01      = 0,                    \
+                  .asr_01       = 0,                    \
+                  .srt_01       = 0,                    \
+                  .rtt_wr_01    = 0,                    \
+                  .dic_01	= ddr4_dic_34ohm,	\
+                  .rtt_nom_01   = 0,                    \
+                  .pasr_10      = 0,                    \
+                  .asr_10       = 0,                    \
+                  .srt_10       = 0,                    \
+                  .rtt_wr_10    = 0,                    \
+                  .dic_10	= ddr4_dic_34ohm,	\
+                  .rtt_nom_10   = 0,                    \
+                  .pasr_11      = 0,                    \
+                  .asr_11       = 0,                    \
+                  .srt_11       = 0,                    \
+                  .rtt_wr_11    = 0,                    \
+                  .dic_11	= ddr4_dic_34ohm,	\
+                  .rtt_nom_11   = 0,                    \
+        }                                               \
+    }
 
-#define OCTEON_EBB7304_MODEREG_PARAMS1_1RANK_2SLOT      	\
+#define OCTEON_EBB7304_MODEREG_PARAMS1_1RANK_2SLOT      \
 	{							\
 		.cn78xx = {					\
 			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
+                  .asr_00       = 0,                    \
+                  .srt_00       = 0,                    \
 			.rtt_wr_00	= ddr4_rttwr_80ohm&3,	\
 			.rtt_wr_00_ext	= (ddr4_rttwr_80ohm>>2)&1,	\
-			.dic_00		= ddr4_dic_34ohm,	\
-			.rtt_nom_00	= 0,			\
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= 0,			\
-			.dic_01		= ddr4_dic_34ohm,	\
-			.rtt_nom_01	= 0,			\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,                    \
+                  .dic_00	= ddr4_dic_34ohm,	\
+                  .rtt_nom_00   = 0,                    \
+                  .pasr_01      = 0,                    \
+                  .asr_01       = 0,                    \
+                  .srt_01       = 0,                    \
+                  .rtt_wr_01    = 0,                    \
+                  .dic_01	= ddr4_dic_34ohm,	\
+                  .rtt_nom_01   = 0,                    \
+                  .pasr_10      = 0,                    \
+                  .asr_10       = 0,                    \
+                  .srt_10       = 0,                    \
 			.rtt_wr_10	= ddr4_rttwr_80ohm&3,	\
 			.rtt_wr_10_ext	= (ddr4_rttwr_80ohm>>2)&1,	\
-			.dic_10		= ddr4_dic_34ohm,	\
-			.rtt_nom_10	= 0,			\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= 0,			\
-			.dic_11		= ddr4_dic_34ohm,	\
-			.rtt_nom_11	= 0			\
-		}                                               \
-	}
+                  .dic_10	= ddr4_dic_34ohm,	\
+                  .rtt_nom_10   = 0,                    \
+                  .pasr_11      = 0,                    \
+                  .asr_11       = 0,                    \
+                  .srt_11       = 0,                    \
+                  .rtt_wr_11    = 0,                    \
+                  .dic_11	= ddr4_dic_34ohm,	\
+                  .rtt_nom_11   = 0                     \
+        }                                               \
+    }
 
-#define OCTEON_EBB7304_MODEREG_PARAMS1_2RANK_1SLOT		\
+#define OCTEON_EBB7304_MODEREG_PARAMS1_2RANK_1SLOT      \
 	{							\
 		.cn78xx = {					\
 			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
-			.rtt_wr_00	= ddr4_rttwr_240ohm,	\
-			.dic_00		= ddr4_dic_34ohm,	\
-			.rtt_nom_00	= 0,			\
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= ddr4_rttwr_240ohm,	\
-			.dic_01		= ddr4_dic_34ohm,	\
-			.rtt_nom_01	= 0,			\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,			\
-			.dic_10		= ddr4_dic_34ohm,	\
-			.rtt_nom_10	= 0,			\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= 0,			\
-			.dic_11		= ddr4_dic_34ohm,	\
-			.rtt_nom_11	= 0,			\
-		}						\
-	}
+                  .asr_00       = 0,                    \
+                  .srt_00       = 0,                    \
+                  .rtt_wr_00	= ddr4_rttwr_240ohm,    \
+                  .dic_00	= ddr4_dic_34ohm,       \
+                  .rtt_nom_00	= 0,                    \
+                  .pasr_01      = 0,                    \
+                  .asr_01       = 0,                    \
+                  .srt_01       = 0,                    \
+                  .rtt_wr_01	= ddr4_rttwr_240ohm,    \
+                  .dic_01	= ddr4_dic_34ohm,       \
+                  .rtt_nom_01	= 0,                    \
+                  .pasr_10      = 0,                    \
+                  .asr_10       = 0,                    \
+                  .srt_10       = 0,                    \
+                  .dic_10	= ddr4_dic_34ohm,       \
+                  .rtt_nom_10	= 0,                    \
+                  .pasr_11      = 0,                    \
+                  .asr_11       = 0,                    \
+                  .srt_11       = 0,                    \
+                  .rtt_wr_11    = 0,                    \
+                  .dic_11	= ddr4_dic_34ohm,	\
+                  .rtt_nom_11   = 0,                    \
+        }                                               \
+    }
 
-#define OCTEON_EBB7304_MODEREG_PARAMS1_2RANK_2SLOT		\
+#define OCTEON_EBB7304_MODEREG_PARAMS1_2RANK_2SLOT      \
 	{							\
 		.cn78xx = {					\
 			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
-			.rtt_wr_00	= ddr4_rttwr_240ohm,	\
-			.dic_00		= ddr4_dic_34ohm,	\
-			.rtt_nom_00	= ddr4_rttnom_120ohm,	\
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= ddr4_rttwr_240ohm,	\
-			.dic_01		= ddr4_dic_34ohm,	\
-			.rtt_nom_01	= ddr4_rttnom_120ohm,	\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,			\
-			.rtt_wr_10	= ddr4_rttwr_240ohm,	\
-			.dic_10		= ddr4_dic_34ohm,	\
-			.rtt_nom_10	= ddr4_rttnom_120ohm,	\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= ddr4_rttwr_240ohm,	\
-			.dic_11		= ddr4_dic_34ohm,	\
-			.rtt_nom_11	= ddr4_rttnom_120ohm,	\
-		}						\
-	}
+                  .asr_00       = 0,                    \
+                  .srt_00       = 0,                    \
+                  .rtt_wr_00	= ddr4_rttwr_240ohm,    \
+                  .dic_00	= ddr4_dic_34ohm,       \
+                  .rtt_nom_00	= ddr4_rttnom_120ohm,   \
+                  .pasr_01      = 0,                    \
+                  .asr_01       = 0,                    \
+                  .srt_01       = 0,                    \
+                  .rtt_wr_01	= ddr4_rttwr_240ohm,    \
+                  .dic_01	= ddr4_dic_34ohm,       \
+                  .rtt_nom_01	= ddr4_rttnom_120ohm,   \
+                  .pasr_10      = 0,                    \
+                  .asr_10       = 0,                    \
+                  .srt_10       = 0,                    \
+                  .rtt_wr_10	= ddr4_rttwr_240ohm,    \
+                  .dic_10	= ddr4_dic_34ohm,       \
+                  .rtt_nom_10	= ddr4_rttnom_120ohm,   \
+                  .pasr_11      = 0,                    \
+                  .asr_11       = 0,                    \
+                  .srt_11       = 0,                    \
+                  .rtt_wr_11	= ddr4_rttwr_240ohm,    \
+                  .dic_11	= ddr4_dic_34ohm,       \
+                  .rtt_nom_11	= ddr4_rttnom_120ohm,   \
+        }                                               \
+    }
 
-#define OCTEON_EBB7304_MODEREG_PARAMS1_4RANK_1SLOT		\
+#define OCTEON_EBB7304_MODEREG_PARAMS1_4RANK_1SLOT      \
 	{							\
 		.cn78xx = {					\
 			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
-			.rtt_wr_00	= rttwr_60ohm,		\
-			.dic_00		= dic_34ohm,		\
-			.rtt_nom_00	= rttnom_20ohm,		\
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= rttwr_60ohm,		\
-			.dic_01		= dic_34ohm,		\
-			.rtt_nom_01	= rttnom_none,		\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,			\
-			.rtt_wr_10	= rttwr_60ohm,		\
-			.dic_10		= dic_34ohm,		\
-			.rtt_nom_10	= rttnom_20ohm,		\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= rttwr_60ohm,		\
-			.dic_11		= dic_34ohm,		\
-			.rtt_nom_11	= rttnom_none,		\
-		}						\
-	}
+                  .asr_00       = 0,                    \
+                  .srt_00       = 0,                    \
+                  .rtt_wr_00    = rttwr_60ohm,          \
+                  .dic_00       = dic_34ohm,            \
+                  .rtt_nom_00   = rttnom_20ohm,         \
+                  .pasr_01      = 0,                    \
+                  .asr_01       = 0,                    \
+                  .srt_01       = 0,                    \
+                  .rtt_wr_01    = rttwr_60ohm,          \
+                  .dic_01       = dic_34ohm,            \
+                  .rtt_nom_01   = rttnom_none,          \
+                  .pasr_10      = 0,                    \
+                  .asr_10       = 0,                    \
+                  .srt_10       = 0,                    \
+                  .rtt_wr_10    = rttwr_60ohm,          \
+                  .dic_10       = dic_34ohm,            \
+                  .rtt_nom_10   = rttnom_20ohm,         \
+                  .pasr_11      = 0,                    \
+                  .asr_11       = 0,                    \
+                  .srt_11       = 0,                    \
+                  .rtt_wr_11    = rttwr_60ohm,          \
+                  .dic_11       = dic_34ohm,            \
+                  .rtt_nom_11   = rttnom_none,          \
+        }                                               \
+    }
+
 
 #define OCTEON_EBB7304_MODEREG_PARAMS2_1RANK_1SLOT	\
 {							\
@@ -294,107 +295,107 @@
 #define OCTEON_EBB7304_DDR_CONFIGURATION             \
 /* Interface 0 */							\
 {									\
-	.custom_lmc_config = {						\
-		.min_rtt_nom_idx		= 1,			\
-		.max_rtt_nom_idx		= 7,			\
-		.min_rodt_ctl			= 1,			\
-		.max_rodt_ctl			= 7,			\
-		.ck_ctl				= ddr4_driver_34_ohm,	\
-		.cmd_ctl			= ddr4_driver_34_ohm,	\
-		.ctl_ctl			= ddr4_driver_34_ohm,	\
-		.min_cas_latency		= 0,			\
-		.offset_en 			= 1,			\
-		.offset_udimm			= 2,			\
-		.offset_rdimm			= 2,			\
-		.ddr_rtt_nom_auto		= 0,			\
-		.ddr_rodt_ctl_auto		= 0,			\
-		.rlevel_comp_offset_udimm	= 0,			\
-		.rlevel_comp_offset_rdimm	= 0,			\
-		.rlevel_compute 		= 0,			\
-		.ddr2t_udimm			= 1,			\
-		.ddr2t_rdimm			= 1,			\
-		.maximum_adjacent_rlevel_delay_increment = 2,		\
-		.fprch2				= 2,			\
-		.dll_write_offset		= NULL,			\
-		.dll_read_offset		= NULL,			\
+        .custom_lmc_config = {                                          \
+            .min_rtt_nom_idx	= 1,                                    \
+            .max_rtt_nom_idx	= 7,                                    \
+            .min_rodt_ctl	= 1,                                    \
+            .max_rodt_ctl	= 7,                                    \
+            .ck_ctl		= ddr4_driver_34_ohm,                   \
+            .cmd_ctl		= ddr4_driver_34_ohm,                   \
+            .ctl_ctl		= ddr4_driver_34_ohm,                   \
+            .min_cas_latency	= 0,                                    \
+            .offset_en 		= 1,                                    \
+            .offset_udimm	= 2,                                    \
+            .offset_rdimm	= 2,                                    \
+            .ddr_rtt_nom_auto	= 0,                                    \
+            .ddr_rodt_ctl_auto	= 0,                                    \
+            .rlevel_comp_offset_udimm	= 0,                            \
+            .rlevel_comp_offset_rdimm	= 0,                            \
+            .rlevel_compute 	= 0,                                    \
+            .ddr2t_udimm 	= 1,                                    \
+            .ddr2t_rdimm 	= 1,                                    \
+            .maximum_adjacent_rlevel_delay_increment = 2,               \
+            .fprch2		= 2,                                    \
+            .dll_write_offset   = NULL,                                 \
+            .dll_read_offset    = NULL,                                 \
 		.parity				= 0			\
-	},								\
-	.dimm_config_table = {						\
+    },                                                                  \
+            .dimm_config_table = {                                      \
 		OCTEON_EBB7304_DRAM_SOCKET_CONFIGURATION0,		\
 		DIMM_CONFIG_TERMINATOR					\
-	},								\
-	.unbuffered = {							\
-		.ddr_board_delay		= 0,			\
-		.lmc_delay_clk			= 0,			\
-		.lmc_delay_cmd			= 0,			\
+    },                                                                  \
+                 .unbuffered = {                                        \
+            .ddr_board_delay = 0,                                       \
+            .lmc_delay_clk = 0,                                         \
+            .lmc_delay_cmd = 0,                                         \
 		.lmc_delay_dq			= 0			\
 	},								\
-	.registered = {							\
-		.ddr_board_delay		= 0,			\
-		.lmc_delay_clk			= 0,			\
-		.lmc_delay_cmd			= 0,			\
+                      .registered = {                                   \
+            .ddr_board_delay = 0,                                       \
+            .lmc_delay_clk = 0,                                         \
+            .lmc_delay_cmd = 0,                                         \
 		.lmc_delay_dq			= 0			\
 	},								\
-	.odt_1rank_config = {						\
+                           .odt_1rank_config = {                        \
 		OCTEON_EBB7304_CN78XX_DRAM_ODT_1RANK_CONFIGURATION	\
 	},								\
-	.odt_2rank_config = {						\
+                                .odt_2rank_config = {                   \
 		OCTEON_EBB7304_CN78XX_DRAM_ODT_2RANK_CONFIGURATION	\
-	},								\
+    },                                                                  \
 	.odt_4rank_config = {						\
 		OCTEON_EBB7304_CN78XX_DRAM_ODT_4RANK_CONFIGURATION	\
 	}								\
 },									\
 /* Interface 1 */							\
 {									\
-	.custom_lmc_config = {						\
-		.min_rtt_nom_idx		= 1,			\
-		.max_rtt_nom_idx		= 7,			\
-		.min_rodt_ctl			= 1,			\
-		.max_rodt_ctl			= 7,			\
-		.ck_ctl				= ddr4_driver_34_ohm,	\
-		.cmd_ctl			= ddr4_driver_34_ohm,	\
-		.ctl_ctl			= ddr4_driver_34_ohm,	\
-		.min_cas_latency		= 0,			\
-		.offset_en 			= 1,			\
-		.offset_udimm			= 2,			\
-		.offset_rdimm			= 2,			\
-		.ddr_rtt_nom_auto		= 0,			\
-		.ddr_rodt_ctl_auto		= 0,			\
-		.rlevel_comp_offset_udimm	= 0,			\
-		.rlevel_comp_offset_rdimm	= 0,			\
-		.rlevel_compute			= 0,			\
-		.ddr2t_udimm 			= 1,			\
-		.ddr2t_rdimm 			= 1,			\
-		.maximum_adjacent_rlevel_delay_increment = 2,		\
-		.fprch2				= 2,			\
-		.dll_write_offset		= NULL,			\
-		.dll_read_offset		= NULL,			\
+        .custom_lmc_config = {                                          \
+            .min_rtt_nom_idx	= 1,                                    \
+            .max_rtt_nom_idx	= 7,                                    \
+            .min_rodt_ctl	= 1,                                    \
+            .max_rodt_ctl	= 7,                                    \
+            .ck_ctl		= ddr4_driver_34_ohm,                   \
+            .cmd_ctl		= ddr4_driver_34_ohm,                   \
+            .ctl_ctl		= ddr4_driver_34_ohm,                   \
+            .min_cas_latency	= 0,                                    \
+            .offset_en 		= 1,                                    \
+            .offset_udimm	= 2,                                    \
+            .offset_rdimm	= 2,                                    \
+            .ddr_rtt_nom_auto	= 0,                                    \
+            .ddr_rodt_ctl_auto	= 0,                                    \
+            .rlevel_comp_offset_udimm	= 0,                            \
+            .rlevel_comp_offset_rdimm	= 0,                            \
+            .rlevel_compute 	= 0,                                    \
+            .ddr2t_udimm 	= 1,                                    \
+            .ddr2t_rdimm 	= 1,                                    \
+            .maximum_adjacent_rlevel_delay_increment = 2,               \
+            .fprch2		= 2,                                    \
+            .dll_write_offset   = NULL,                                 \
+            .dll_read_offset    = NULL,                                 \
 		.parity				= 0			\
 	},								\
-	.dimm_config_table = {						\
+            .dimm_config_table = {                                      \
                 OCTEON_EBB7304_DRAM_SOCKET_CONFIGURATION1,		\
 		DIMM_CONFIG_TERMINATOR					\
 	},								\
-	.unbuffered = {							\
-		.ddr_board_delay		= 0,			\
-		.lmc_delay_clk			= 0,			\
-		.lmc_delay_cmd			= 0,			\
+                 .unbuffered = {                                        \
+            .ddr_board_delay = 0,                                       \
+            .lmc_delay_clk = 0,                                         \
+            .lmc_delay_cmd = 0,                                         \
 		.lmc_delay_dq			= 0			\
 	},								\
-	.registered = {							\
-		.ddr_board_delay		= 0,			\
-		.lmc_delay_clk			= 0,			\
-		.lmc_delay_cmd			= 0,			\
+                      .registered = {                                   \
+            .ddr_board_delay = 0,                                       \
+            .lmc_delay_clk = 0,                                         \
+            .lmc_delay_cmd = 0,                                         \
 		.lmc_delay_dq			= 0			\
 	},								\
-	.odt_1rank_config = {						\
+                           .odt_1rank_config = {                        \
 		OCTEON_EBB7304_CN78XX_DRAM_ODT_1RANK_CONFIGURATION	\
 	},        							\
-	.odt_2rank_config = {						\
+                                .odt_2rank_config = {                   \
 		OCTEON_EBB7304_CN78XX_DRAM_ODT_2RANK_CONFIGURATION	\
 	},								\
-	.odt_4rank_config = {						\
+                                     .odt_4rank_config = {              \
 		OCTEON_EBB7304_CN78XX_DRAM_ODT_4RANK_CONFIGURATION	\
 	}								\
 },

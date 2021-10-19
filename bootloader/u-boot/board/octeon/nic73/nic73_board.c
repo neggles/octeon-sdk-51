@@ -107,6 +107,7 @@ void board_net_preinit(void)
 	/* Turn on SFP+ transmitters */
 	gpio_set_value(16, 0);
 	gpio_set_value(21, 0);
+
 }
 
 void board_net_postinit(void)

@@ -69,8 +69,8 @@ extern bool avago_i2c_sbus_fn(struct avago_hdl *ah, uint32_t sbus_addr,
 			      uint8_t reg_addr, uint8_t command,
 			      uint32_t *sbus_data);
 extern bool avago_i2c_sbus(struct avago_hdl *ah, uint32_t sbus_addr,
-			   uint8_t reg_addr, uint8_t command,
-			   uint32_t *sbus_data);
+			       uint8_t reg_addr, uint8_t command,
+			       uint32_t *sbus_data);
 
 /**
  * Performs phase calibration on the host side for the specified chip and ring
@@ -156,11 +156,11 @@ static void uboot_avago_tx_atten_set(struct avago_hdl *ah, uint32_t chip,
 {
 	uint32_t serdes;
 
-	for (serdes = 6; serdes <= 9; serdes++) {
+		for (serdes = 6; serdes <= 9; serdes++) {
 		uboot_avago_tx_atten_set_per_lane(ah, chip, ring, serdes,
 						  tx_atten);
-		mdelay(50);
-	}
+			mdelay(50);
+		}
 }
 
 /**
@@ -196,7 +196,6 @@ int uboot_garnet_set_fec(int i2c_bus, int i2c_base_addr, uint32_t chip,
 		rc = avago_spico_int(ah, avago_make_addr3(chip, ring, 0xfd),
 				     0x24, enable_fec ? 0x40a0: 0x80a0);
 	}
-	free(ah);
 
 	i2c_set_bus_num(old_i2c_bus);
 
@@ -211,7 +210,7 @@ int uboot_garnet_init(int i2c_bus, int i2c_base_addr, uint32_t chip,
 	const bool squelch_tx = true;
 	const bool run_adaptive = false;
 	const enum avsp_supervisor_mode run_mode =
-				AVSP_SUPERVISOR_MODE_TUNE_IF_LOCKED_SIGNAL;
+			AVSP_SUPERVISOR_MODE_TUNE_IF_LOCKED_SIGNAL;
 	const char *device_name;
 	const int electrical_idle_threshold = 0;
 	const uint32_t *sbus_rom;
@@ -252,10 +251,10 @@ int uboot_garnet_init(int i2c_bus, int i2c_base_addr, uint32_t chip,
 	}
 	debug("%s: device name: %s\n", __func__, device_name);
 
-	sbus_rom_size = ARRAY_SIZE(avago_sbus_master_0704_heal_rom);
-	sbus_rom = avago_sbus_master_0704_heal_rom;
-	debug("Loading self-healing SBus ROM, size: %u bytes\n",
-	      sbus_rom_size);
+		sbus_rom_size = ARRAY_SIZE(avago_sbus_master_0704_heal_rom);
+		sbus_rom = avago_sbus_master_0704_heal_rom;
+		debug("Loading self-healing SBus ROM, size: %u bytes\n",
+		      sbus_rom_size);
 
 	rc = avsp_upload_firmware_u32(ah, chip, false,
 				      serdes_rom_size,
@@ -283,16 +282,14 @@ int uboot_garnet_init(int i2c_bus, int i2c_base_addr, uint32_t chip,
 
 	debug("%s: Configuring for %dG operation\n", __func__,
 	      enable_10g ? 10 : 25);
-
 	if (enable_10g) {
 		/* Low byte is the multiplier for 161MHz clock */
 		rc = avago_spico_int(ah, avago_make_addr3(chip, ring, 0xfd),
 				     0x24, 0x0040);
 	} else {
-		rc = avago_spico_int(ah, avago_make_addr3(chip, ring, 0xfd),
-				     0x24, enable_fec ? 0x40a0: 0x80a0);
+	rc = avago_spico_int(ah, avago_make_addr3(chip, ring, 0xfd),
+			     0x24, enable_fec ? 0x40a0: 0x80a0);
 	}
-
 	if (!rc)
 		printf("%s: Error %sabling FEC\n", __func__,
 		       enable_fec ? "en" : "dis");
@@ -306,7 +303,7 @@ int uboot_garnet_init(int i2c_bus, int i2c_base_addr, uint32_t chip,
 		 * amplitude.
 		 */
 		avago_spico_int(ah, avago_make_addr3(chip, ring, 0xfd),
-				0x26, 0x6206);
+				     0x26, 0x6206);
 	}
 
 	mdelay(500);
@@ -318,7 +315,6 @@ int uboot_garnet_init(int i2c_bus, int i2c_base_addr, uint32_t chip,
 	i2c_set_bus_speed(old_i2c_speed);
 	if (ah)
 		free(ah);
-
 	return rc ? -1 : 0;
 }
 
@@ -375,7 +371,6 @@ static int do_aapl_init(cmd_tbl_t *cmdtp, int flag, int argc,
 	int chip = 0;
 	int ring = 0;
 	bool enable_fec = true;
-
 	if (argc == 4) {
 		chip = simple_strtol(argv[1], NULL, 0);
 		argc--;
@@ -463,7 +458,7 @@ static int do_serdes_int(cmd_tbl_t *cmdtp, int flags, int argc,
 	avago_init_ip_info(ah, false);
 	device_name = avago_get_chip_name(ah, avago_make_addr3(chip, ring, 0));
 	debug("Sending interrupt 0x%x with data 0x%x to %s at %x:%x:%x\n",
-	      interrupt, data, device_name, chip, ring, sbus_addr);
+	       interrupt, data, device_name, chip, ring, sbus_addr);
 
 	ret_data = avago_spico_int(ah, avago_make_addr3(chip, ring, sbus_addr),
 				   interrupt, data);
@@ -491,7 +486,7 @@ static int do_serdes_tx_invert(cmd_tbl_t *cmdtp, int flags, int argc,
 	device_name = avago_get_chip_name(ah, avago_make_addr3(chip, ring,
 							       sbus_addr));
 	debug("%sabling tx inversion for SerDes on %s at %x:%x:%x\n",
-	      invert ? "Ena" : "Dis", device_name, chip, ring,  sbus_addr);
+	       invert ? "Ena" : "Dis", device_name, chip, ring,  sbus_addr);
 
 	avago_serdes_set_tx_invert(ah, avago_make_addr3(chip, ring, sbus_addr),
 				   invert);

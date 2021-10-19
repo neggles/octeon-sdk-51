@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
+
 #include <config.h>
 #include <version.h>
 #include <asm/regdef.h>
@@ -829,7 +830,6 @@ wd_use_ciu:
 	andi	a4, 0xffff
 	blt	a4, (OCTEON_PRID_CN78XX << 8), 1f
 	 nop
-
 	/* Zero out alternate package for now */
 	dins	a4, zero, 6, 1
 	bge	a4, ((OCTEON_PRID_CN78XX << 8) | 0x08), 1f
@@ -1040,7 +1040,7 @@ no_flash:
 	mfc0	a4, COP0_PROC_ID_REG
 	ext	a4, a4, 8, 8
 	blt	a4, OCTEON_PRID_CN63XX, octeon1_plus
-	 mtc0	zero, COP0_DESAVE_REG
+	mtc0	zero, COP0_DESAVE_REG
 
 	/* The following are only available on Octeon 2 or later */
 	mtc0	zero, COP0_KSCRATCH1_REG
@@ -1071,7 +1071,7 @@ no_flash:
 	 * a reset.
 	 */
 	bbit0	a2, 11, watchdog_ok	/* Skip if watchdog not hit */
-	 dins	a2, zero, 2, 18	/* Don't clear LBOOT, LBOOT_EXT or LBOOT_OCI */
+	dins	a2, zero, 2, 18	/* Don't clear LBOOT, LBOOT_EXT or LBOOT_OCI */
 	/* Clear bit indicating reset due to watchdog */
 	ori	a2, 1 << 11
 	sd	a2, 0(a1)
@@ -1860,6 +1860,7 @@ no_big_stack:
 	 * the addressing of the flash.
 	 */
 	dbgchar	a4, a5, '7'
+
 	/* Enable movable boot bus region 0, at address 0x10000000 */
 	dli	a4, OCTEON_MIO_BOOT_BASE
 	dli	a5, 0x81000000
@@ -1885,6 +1886,7 @@ no_big_stack:
 
 
 	/* Compute value for boot bus configuration register */
+
 	/* Read region 0 config so we can _modify_ the base address field */
 	dli	a4, OCTEON_MIO_BOOT_REG_CFG0	/* region 0 config */
 	ld	a0, 0(a4)
@@ -1946,7 +1948,7 @@ __mapped_continue_label:
 	 */
 	lw	t0, __all_cores_are_equal
 	beq	a0, t0, core_0_cont1
-	 nop
+	nop
 
 	/* other cores look up addr from dram */
         /* DRAM controller already set up by first core */
@@ -1989,7 +1991,7 @@ __mapped_continue_label:
          nop
 
         j       t9
-         lw      k0, 12(a1)      /* Load global data (deprecated) */
+         lw     k0, 12(a1)      /* Load global data (deprecated) */
 
 invalid_boot_vector:
         dla     a0, MESSAGE_INVALID_BOOT_VECTOR
@@ -1998,7 +2000,7 @@ invalid_boot_vector:
 
         wait
         b       invalid_boot_vector
-         nop
+        nop
 
 	/* Check if we are resetting via NMI.  If so, skip the bootloader
 	 * and directly enter the application startup code.  Also clear NMI
@@ -2682,6 +2684,7 @@ change_boot_mappings:
 	.globl tlbwi_and_eret
 	.ent   tlbwi_and_eret
 tlbwi_and_eret:
+
 	tlbwi
 	nop
 	nop
@@ -3039,7 +3042,7 @@ uart_write_hex:
 	dext	a0, a6, 60, 4		/* Extract [63:60] for display in hex */
 	or	v0, a0			/* OR in the current digit, when non zero print */
 	beqz	v0, 2f
-	 addiu	a0, '0'			/* Add '0' to convert to '0'-'9' */
+	addiu	a0, '0'			/* Add '0' to convert to '0'-'9' */
 	slti	a4, a0, 0x3a		/* Flag if 0-9 instead of a-f */
 	addiu	a5, a0, 0x41-0x30-10	/* Add 'a' */
 	bal	octeon_uart_write_char	/* Output char */
@@ -3293,7 +3296,6 @@ uart_tx_fifo_not_empty:
 	ld	a1, UART_LSR(a0)
 	bbit0	a1, 6, uart_tx_fifo_not_empty
 	 nop
-
 	/* Disable boot bus moveable regions */
 	dli	t0, OCTEON_MIO_BOOT_LOC_CFG0
 	sd	zero, 0(t0)
@@ -3301,10 +3303,8 @@ uart_tx_fifo_not_empty:
 	/* Soft reset */
 	dmfc0	a4, COP0_PROC_ID_REG
 	ext	a4, a4, 8, 8
-
 	.set	push
-	.set	at
-
+	.set 	at
 	/* CN78XX, CN73XX and CN75XX use CIU3 instead of CIU addresses */
 	blt	a4, OCTEON_PRID_CN78XX, wdog_ciu
 	 nop

@@ -168,7 +168,7 @@ int octeon_eth_board_post_setup_phy(struct eth_device *dev);
  * @param	mod_abs_changed	Function to be called
  */
 void octeon_eth_register_mod_abs_changed(struct eth_device *dev,
-		int (*mod_abs_changed)(struct eth_device *dev, bool mod_abs));
+		 int (*mod_abs_changed)(struct eth_device *dev, bool mod_abs));
 
 /**
  * Checks for state changes with the link state or module state

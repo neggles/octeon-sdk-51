@@ -20,7 +20,7 @@
 
 /**
  *
- * $Id: octeon_boot.c 165791 2017-09-01 19:13:10Z cchavva $
+ * $Id: octeon_boot.c 165789 2017-09-01 19:03:27Z cchavva $
  *
  */
 
@@ -1672,8 +1672,8 @@ int octeon_setup_boot_vector(uint32_t func_addr, cvmx_coremask_t *pcm)
 		       &InitTLBStart, &uboot_start);
 
 		debug("addr to jump to: 0x%llx\n",
-		      gd->bd->bi_uboot_ram_addr + ((char *)&InitTLBStart -
-						   (char *)&uboot_start));
+		       gd->bd->bi_uboot_ram_addr + ((char *)&InitTLBStart -
+						    (char *)&uboot_start));
 #endif
 		/* Here we need to figure out the physical address of the
 		 * InitTLBStart function.
@@ -1690,8 +1690,8 @@ int octeon_setup_boot_vector(uint32_t func_addr, cvmx_coremask_t *pcm)
 			boot_vect[core].app_start_func_addr = func_addr;
 #if 0
 			debug("Setting core %d app_start address(0x%p) to: 0x%lx\n",
-			      core, &(boot_vect[core].app_start_func_addr),
-			      boot_vect[core].app_start_func_addr);
+			       core, &(boot_vect[core].app_start_func_addr),
+			       boot_vect[core].app_start_func_addr);
 #endif
 		} else {
 			/* If fewer than all cores are run, set rest to stop,
@@ -1808,8 +1808,8 @@ static int convert_ciu_fuse_to_physical_core(int core, int max_cores)
 {
 	if (!octeon_has_feature(OCTEON_FEATURE_CIU3))
 		return core;
-    	else if (!OCTEON_IS_MODEL(OCTEON_CN78XX))
-        	return core;
+    else if (!OCTEON_IS_MODEL(OCTEON_CN78XX))
+        return core;
 	else if (core < (max_cores / 2))
 		return core * 2;
 	else
@@ -1910,6 +1910,7 @@ cvmx_coremask_t *octeon_get_available_coremask(cvmx_coremask_t *pcm)
 {
 	uint64_t cores;
 	uint64_t ciu_fuse;
+
 	cvmx_coremask_clear_all(pcm);
 
 	if (octeon_has_feature(OCTEON_FEATURE_CIU3)) {
@@ -1955,7 +1956,7 @@ cvmx_coremask_t *octeon_get_available_coremask(cvmx_coremask_t *pcm)
 		return pcm;
 	} else if (OCTEON_IS_MODEL(OCTEON_CN68XX)) {
 		cvmx_coremask_set64(pcm, ciu_fuse);
-	}
+   }
 
 	/* Get number of cores from fuse register, convert to coremask */
 	cores = __builtin_popcountll(ciu_fuse);

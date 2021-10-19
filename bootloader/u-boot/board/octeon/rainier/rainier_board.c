@@ -932,15 +932,15 @@ int on_quietfan(const char *name, const char *value, enum env_op op,
 		case 't':
 		case 'T':
 			i2c_set_bus_num(FAN_BUS);
-			puts("Quieting down fan\n");
-			init_fan_controller();
-			break;
-		default:
-			puts("Restoring fan to default state\n");
-			i2c_set_bus_num(FAN_BUS);
-			i2c_reg_write(FAN_ADDR, ADT7476_CONFIG1, 0x04);
-			break;
-		}
+		puts("Quieting down fan\n");
+		init_fan_controller();
+		break;
+	default:
+		puts("Restoring fan to default state\n");
+		i2c_set_bus_num(FAN_BUS);
+		i2c_reg_write(FAN_ADDR, ADT7476_CONFIG1, 0x04);
+		break;
+	}
 		break;
 	case env_op_delete:
 	default:

@@ -32,6 +32,7 @@
  * OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.
  *
  ***********************license end**************************************/
+
 #include <common.h>
 #include <environment.h>
 #include <stdio_dev.h>

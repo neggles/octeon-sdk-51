@@ -137,25 +137,25 @@
     { .cnf75xx = {.pasr_00      = 0,                    \
                   .asr_00       = 0,                    \
                   .srt_00       = 0,                    \
-                  .rtt_wr_00    = rttwr_60ohm,          \
+                  .rtt_wr_00    = rttwr_60ohm,         \
                   .dic_00       = dic_34ohm,            \
                   .rtt_nom_00   = rttnom_20ohm,         \
                   .pasr_01      = 0,                    \
                   .asr_01       = 0,                    \
                   .srt_01       = 0,                    \
-                  .rtt_wr_01    = rttwr_60ohm,          \
+                  .rtt_wr_01    = rttwr_60ohm,         \
                   .dic_01       = dic_34ohm,            \
                   .rtt_nom_01   = rttnom_none,          \
                   .pasr_10      = 0,                    \
                   .asr_10       = 0,                    \
                   .srt_10       = 0,                    \
-                  .rtt_wr_10    = rttwr_60ohm,          \
+                  .rtt_wr_10    = rttwr_60ohm,         \
                   .dic_10       = dic_34ohm,            \
                   .rtt_nom_10   = rttnom_20ohm,         \
                   .pasr_11      = 0,                    \
                   .asr_11       = 0,                    \
                   .srt_11       = 0,                    \
-                  .rtt_wr_11    = rttwr_60ohm,          \
+                  .rtt_wr_11    = rttwr_60ohm,         \
                   .dic_11       = dic_34ohm,            \
                   .rtt_nom_11   = rttnom_none,          \
         }                                               \

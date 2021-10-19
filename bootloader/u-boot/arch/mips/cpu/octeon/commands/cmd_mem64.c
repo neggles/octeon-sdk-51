@@ -267,7 +267,7 @@ int do_mem_mw64 ( cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		return CMD_RET_USAGE;
 
 	/* Check for size specification.
-	 */
+	*/
 	if (cmd_get_data_size_swap(argv[0], &size, &swap, 8, swap))
 		return CMD_RET_USAGE;
 

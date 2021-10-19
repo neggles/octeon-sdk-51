@@ -39,7 +39,7 @@
 
 /**
  *
- * $Id: octeon_eth.c 167352 2017-10-23 20:47:37Z cchavva $
+ * $Id: octeon_eth.c 165789 2017-09-01 19:03:27Z cchavva $
  *
  */
 
@@ -378,7 +378,6 @@ static int cvm_oct_set_mac_address(struct eth_device *dev)
 	control.s.bcst = 1;	/* Allow broadcast MAC addresses */
 	control.s.mcst = 1;	/* Force reject multicast packets */
 	control.s.cam_mode = 1;	/* Filter packets based on the CAM */
-
 	cvmx_write_csr(gmx_reg + GMX_RX_ADR_CTL, control.u64);
 
 	cvmx_write_csr(gmx_reg + GMX_RX_ADR_CAM_EN, 1);
@@ -536,7 +535,7 @@ void __octeon_phy_port_check(struct eth_device *dev)
 
 	/* If there's been no interrupt then don't bother checking */
 	if (!board_octeon_eth_check_mod_abs_interrupt(dev))
-		return;
+					return;
 
 	if (sfp->check_mod_abs)
 		mod_abs = sfp->check_mod_abs(dev, sfp->mod_abs_data);
@@ -545,7 +544,7 @@ void __octeon_phy_port_check(struct eth_device *dev)
 		debug("%s(%s): mod_abs changed from %d to %d\n", __func__,
 		      dev->name, sfp->last_mod_abs, mod_abs);
 		sfp->mod_abs_changed(dev, mod_abs, sfp->mod_abs_changed_data);
-	}
+				}
 
 	if (oct_eth_info->phy_port_check && !mod_abs && sfp->last_mod_abs) {
 		debug("%s: Checking port, mod_abs: %d\n", __func__, mod_abs);
@@ -638,7 +637,7 @@ int octeon_network_hw_shutdown(int mode)
 		retval = cvmx_helper_shutdown_packet_io_global();
 		cvmx_helper_shutdown_packet_io_local();
 		if (mode) 
-			cvmx_helper_shutdown_fpa_pools(0);
+		cvmx_helper_shutdown_fpa_pools(0);
 		/* Spurious FPE errors will happen doing this cleanup. */
 		if (OCTEON_IS_MODEL(OCTEON_CN68XX)) {
 			cvmx_sso_err_t sso_err;
@@ -653,10 +652,10 @@ int octeon_network_hw_shutdown(int mode)
 		}
 	}
 	if (mode) {
-		debug("%s: Freeing global resources\n", __func__);
-		free_global_resources();
-		/* Free command queue named block, as we have reset the hardware */
-		cvmx_bootmem_phy_named_block_free("cvmx_cmd_queues", 0);
+	debug("%s: Freeing global resources\n", __func__);
+	free_global_resources();
+	/* Free command queue named block, as we have reset the hardware */
+	cvmx_bootmem_phy_named_block_free("cvmx_cmd_queues", 0);
 	} else {
 		int i;
 		int num_ints = cvmx_helper_get_number_of_interfaces();
@@ -1525,7 +1524,6 @@ static int octeon_setup_phy(struct eth_device *dev,
 	char mii_name[MDIO_NAME_LEN];
 	int port_offset;
 	phy_interface_t phy_mode;
-
 #ifdef DEBUG
 	debug("%s(%s, %s, %d)\n", __func__, dev->name,
 	      cvmx_helper_interface_mode_to_string(if_mode), mgmt);
@@ -1533,20 +1531,20 @@ static int octeon_setup_phy(struct eth_device *dev,
 	port_offset = oct_eth_info->port;
 
 	if (octeon_has_feature(OCTEON_FEATURE_BGX_MIX) && mgmt == 1) {
-		char env_var[20];
-		int bgx_port;
-		sprintf(env_var, "bgx_for_mix%d", oct_eth_info->port);
-		if (getenv(env_var)) {
-			bgx_port = getenv_ulong(env_var, 0, 1);
-			/* Only the first 2 ports are MIXX interfaces */
-			if (((bgx_port >> 4) & 0xf) != oct_eth_info->port) {
-				printf("ERROR: Invalid bgx_for_mix%d passed for MIX%d\n",
-					oct_eth_info->port, oct_eth_info->port);
-				return -1;
-			}
-			port_offset = (bgx_port & 0xffff);
+			char env_var[20];
+			int bgx_port;
+			sprintf(env_var, "bgx_for_mix%d", oct_eth_info->port);
+			if (getenv(env_var)) {
+				bgx_port = getenv_ulong(env_var, 0, 1);
+				/* Only the first 2 ports are MIXX interfaces */
+				if (((bgx_port >> 4) & 0xf) != oct_eth_info->port) {
+					printf("ERROR: Invalid bgx_for_mix%d passed for MIX%d\n",
+						oct_eth_info->port, oct_eth_info->port);
+					return -1;
+				}
+				port_offset = (bgx_port & 0xffff);
 		} else {
-			return -1;
+				return -1;
 		}
 		mgmt = 0;
 		phy_mode = cvm_if_mode_to_phy_mode(if_mode);
@@ -1749,27 +1747,6 @@ static int octeon_eth_initialize_port(int interface, int index, int port,
 			else
 				sprintf(dev->name, "octeth%d", card_number++);
 		} else {
-#ifdef CONFIG_OCTEON_IM8724
-			if (!strcmp(getenv("ethname"), "ifmode")) {
-			    switch (if_mode) {
-				case CVMX_HELPER_INTERFACE_MODE_SGMII:
-					sprintf(dev->name, "octsgmii%d%d", interface, index);
-					card_number++;
-					break;
-				case CVMX_HELPER_INTERFACE_MODE_RXAUI:
-					sprintf(dev->name, "octrxaui%d%d", interface, index);
-					card_number++;
-					break;
-				case CVMX_HELPER_INTERFACE_MODE_XFI:
-					sprintf(dev->name, "octxfi%d%d", interface, index);
-					card_number++;
-					break;
-				default:
-					sprintf(dev->name, "octeth%d", card_number++);
-			    }
-			}
-			else
-#endif
 			sprintf(dev->name, "octeth%d", card_number++);
 		}
 	}
@@ -1802,11 +1779,11 @@ static int octeon_eth_initialize_port(int interface, int index, int port,
 		      __func__);
 		rc = octeon_sfp_get_info(fdt_parent_offset(gd->fdt_blob, eth),
 					 &oct_eth_info->sfp);
-	}
+		}
 	if (rc) {
 		printf("%s: Error parsing SFP info for %s\n",
-		       __func__, dev->name);
-		return -1;
+					       __func__, dev->name);
+					return -1;
 	} else if (oct_eth_info->sfp.valid) {
 		debug("%s: Registering default mod_abs function\n", __func__);
 		octeon_sfp_register_mod_abs_func(dev, NULL, NULL);
@@ -1853,17 +1830,13 @@ static int octeon_eth_initialize_ports(int interface,
 
 	num_ports = pknd + (num_ports * incr);
 	for (index = 0, port = pknd; (port < num_ports); port += incr, index++) {
-		cvmx_helper_interface_mode_t mode;
 		if (!cvmx_helper_is_port_valid(interface, index)) {
 			debug("interface %d port %d invalid\n",
 			      interface, index);
 			continue;
 		}
-		if (octeon_has_feature(OCTEON_FEATURE_BGX))
-			mode = cvmx_helper_bgx_get_mode(interface, index);
-		else
-			mode = if_mode;
-		rc = octeon_eth_initialize_port(interface, index, port, mode);
+		debug("interface %d port %d is valid\n", interface, index);
+		rc = octeon_eth_initialize_port(interface, index, port, if_mode);
 		if (rc < 0) {
 			printf("%s: Could not initialize interface %d, index %d\n",
 			       __func__, interface, index);
@@ -2443,3 +2416,4 @@ int octeon_mgmt_eth_initialize(bd_t * bis)
 
 }
 #endif /* defined(CONFIG_OCTEON_MGMT_ENET) && defined(CONFIG_CMD_NET) */
+

@@ -224,19 +224,12 @@
 /** Enable overwrite of previous console environment settings */
 #define CONFIG_SYS_CONSOLE_ENV_OVERWRITE
 
-/** Board specific environment callbacks */
-#ifndef CONFIG_BOARD_ENV_CALLBACK_LIST
-# define CONFIG_BOARD_ENV_CALLBACK_LIST		""
-#endif
-
-/** Environment variables with callbacks */
 #define CONFIG_ENV_CALLBACK_LIST_STATIC			\
 	"console_uart:console_uart,"			\
 	"pci_console_active:pci_console_active,"	\
 	"watchdog_enable:watchdog_enable,"		\
 	"watchdog_timeout:watchdog_timeout,"		\
 	"pci_secure_mode:pci_secure_mode,"		\
-	CONFIG_BOARD_ENV_CALLBACK_LIST
 
 /** Enable the call to overwrite_console() */
 #define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
@@ -335,7 +328,7 @@
 
 /** Remapped base of flash */
 # ifndef CONFIG_SYS_FLASH_BASE
-#  define CONFIG_SYS_FLASH_BASE		(0x1fc00000 - CONFIG_SYS_FLASH_SIZE)
+# define CONFIG_SYS_FLASH_BASE		(0x1fc00000 - CONFIG_SYS_FLASH_SIZE)
 # endif
 # define CONFIG_SYS_FLASH_EMPTY_INFO		1	/** Prints empty secs */
 # define CONFIG_SYS_FLASH_USE_BUFFER_WRITE		/** Speeds up writes */

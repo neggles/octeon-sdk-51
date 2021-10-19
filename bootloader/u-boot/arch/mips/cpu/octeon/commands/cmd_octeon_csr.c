@@ -26,12 +26,12 @@
 
 /**
  * @file
- *
+ * 
  * Command to display CSR of the local Octeon
- *
+ * 
  * $Id: cmd_octeon_csr.c 144382 2016-08-30 00:29:27Z cchavva $
- *
- *
+ * 
+ * 
  */
 #include <config.h>
 #include <common.h>
@@ -82,22 +82,22 @@ int do_octcsr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	uint64_t csr_addr;
 	int csr_type, csr_widthbits, ret;
 	uint32_t model;
-
+	
 	if (argc < 2)
 		return cmd_usage(cmdtp);
 
-
+	
 	model = cvmx_get_proc_id();
 	index = 1;
 	while (index < argc) {
 		csr_name = argv[index];
 		const CVMX_CSR_DB_ADDRESS_TYPE *csr;
-
+		
 		/* Find the CSR address from the name.  If this fails it will
 		 * return 0.
 		 */
 		ret = cvmx_csr_db_get_params(model, (char *) csr_name, &csr_addr, &csr_type, NULL, &csr_widthbits);
-
+		
 
 		/* See if it's a read or write */
 		if ((index + 1 < argc) && is_digit(argv[index + 1][0])) {
@@ -119,7 +119,7 @@ int do_octcsr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 			if ((csr->type == CVMX_CSR_DB_TYPE_PCICONFIGEP)
 			    || (csr->type == CVMX_CSR_DB_TYPE_PCICONFIGRC)) {
-				/* Names are of the format
+				/* Names are of the format 
 				 * "PCIE??#_CFG???". The # is the pcie
 				 * port number
 				 */
@@ -152,7 +152,7 @@ int do_octcsr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 				else if (csr->widthbits == 32) {
 					cvmx_write64_uint32(csr->address, value);
 					if (((csr->address >> 40) & 0x7ffff) == 0x118)
-						/* Perform immediate read to
+						/* Perform immediate read to 
 						 * force write to complete.
 						 */
 						cvmx_read64_uint64(CVMX_MIO_BOOT_BIST_STAT);
@@ -178,7 +178,7 @@ int do_octcsr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 				continue;
 			}
 
-			if ((csr->type == CVMX_CSR_DB_TYPE_PCICONFIGEP) ||
+			if ((csr->type == CVMX_CSR_DB_TYPE_PCICONFIGEP) || 
 			    (csr->type == CVMX_CSR_DB_TYPE_PCICONFIGRC)) {
 				/* Names are of the format "PCIE??#_CFG???".
 				 * The # is the pcie port number

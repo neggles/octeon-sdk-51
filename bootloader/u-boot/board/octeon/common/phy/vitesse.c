@@ -60,6 +60,7 @@ static int num_coma_gpios = 0;	/** Number of COMA GPIOs to activate */
 /** Describes each COMA GPIO pin */
 static struct gpio_pin coma_gpios[MAX_COMA_GPIOS];
 
+
 extern int octeon_i2c_reg_addr_to_bus(uint64_t addr);
 extern uint32_t i2c_get_stop_delay(void);
 extern int i2c_set_stop_delay(uint32_t delay);
@@ -1114,7 +1115,7 @@ int octeon_fdt_vitesse_vsc8490_config(struct eth_device *ethdev)
 	};
 	const void *fdt = gd->fdt_blob;
 	const struct octeon_eth_info *oct_eth_info =
-				(struct octeon_eth_info *)ethdev->priv;
+	(struct octeon_eth_info *)ethdev->priv;
 	struct phy_device *phydev = oct_eth_info->phydev;
 	struct phy_device phydev_copy;
 	int phy_node_offset;
@@ -1591,6 +1592,7 @@ int octeon_vitesse_vsc8488_sfp_config(struct eth_device *ethdev)
 	int sfp_offset;
 	int i2c_bus, i2c_addr;
 	int mode = VITESSE_FUNC_MODE_LIMITING;	/* Default for optical */
+	int i;
 	const char *mode_str = "Unknown";
 	struct phy_device *phydev;
 	int timeout;
@@ -1648,21 +1650,21 @@ int octeon_vitesse_vsc8488_sfp_config(struct eth_device *ethdev)
 		debug("%s(%s): Module is absent\n", __func__, ethdev->name);
 		mode = VITESSE_FUNC_MODE_COPPER;
 		mode_str = "Copper Pigtail (assumed)";
-	} else {
+		} else {
 		rc = octeon_sfp_read_eeprom(ethdev);
 		if (rc) {
 			printf("%s: Error reading SFP eeprom for %s\n",
 			       __func__, ethdev->name);
 			mode = VITESSE_FUNC_MODE_COPPER;
 			mode_str = "Copper Pigtail (assumed)";
-		} else {
+	} else {
 			sfp_info = &oct_eth_info->sfp.sfp_info;
 			mode = sfp_info->limiting ?
 						VITESSE_FUNC_MODE_LIMITING :
 						VITESSE_FUNC_MODE_COPPER;
 			mode_str = sfp_info->limiting ?
 				"Optical/Active Copper" : "Passive Copper";
-		}
+	}
 	}
 
 
@@ -2080,8 +2082,8 @@ static int octeon_vitesse_vsc7224_channel(const void *fdt, int node,
 		if (!bgx_addr) {
 			printf("%s: Can't get parent address of node\n",
 			       __func__);
-			return -1;
-		}
+				return -1;
+			}
 		interface = (fdt32_to_cpu(bgx_addr[1]) >> 24) & 0xf;
 		debug("%s: Looking for interface 0x%x, index: %d\n",
 		      __func__, interface, index);
@@ -2116,13 +2118,13 @@ static int octeon_vitesse_vsc7224_channel(const void *fdt, int node,
 				cable_length = 0;
 			} else {
 				is_copper = !sfp_info->limiting;
-				if (is_copper)
+			if (is_copper)
 					cable_length = sfp_info->max_copper_cable_len;
-				else
-					cable_length = 0;
-				debug ("%s: Is%s copper cable with a length of %d meters\n",
-				       __func__, is_copper ? "" : " not", cable_length);
-			}
+			else
+				cable_length = 0;
+			debug ("%s: Is%s copper cable with a length of %d meters\n",
+			       __func__, is_copper ? "" : " not", cable_length);
+		}
 		}
 		debug("%s: getting taps\n", __func__);
 		tapinfo = (struct vsc7224_tapinfo *)
@@ -2571,7 +2573,7 @@ static int vsc7224_vscope(int bus, int addr, uint8_t i_chan,
 			vsc7224_write_reg(bus, addr, 0x82, ctrl | 0x0002);
 			timeout_cnt = 9;
 			while (((vsc7224_read_reg(bus, addr, vscope_flags) &
-				 vscope_done_mask) == 0x0000) &&
+				vscope_done_mask) == 0x0000) &&
 				(timeout_cnt > 0))
 				timeout_cnt--;
 			/* If timed out print out bogus value */

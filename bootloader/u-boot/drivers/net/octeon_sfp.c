@@ -58,9 +58,6 @@
 #ifdef CONFIG_PCA9555
 # include <pca9555.h>
 #endif
-#ifdef CONFIG_PCA9554
-# include <pca9554.h>
-#endif
 #ifdef CONFIG_PCA9698
 # include <pca9698.h>
 #endif
@@ -578,12 +575,6 @@ int octeon_sfp_set_gpio_pin(struct octeon_sfp_gpio_info *gpio, bool set)
 				1 << gpio->pin, set << gpio->pin);
 		break;
 #endif
-#ifdef CONFIG_PCA9554
-	case GPIO_TYPE_PCA9554:
-		pca9554_set_val(gpio->i2c_bus, gpio->i2c_addr,
-				1 << gpio->pin, set << gpio->pin);
-		break;
-#endif
 #ifdef CONFIG_PCA9555
 	case GPIO_TYPE_PCA9555:
 		pca9555_set_val(gpio->i2c_bus, gpio->i2c_addr,
@@ -645,19 +636,6 @@ int __octeon_sfp_check_mod_abs(struct eth_device *dev, void *data)
 		      mod_abs_info->i2c_bus, mod_abs_info->i2c_addr);
 		old_i2c_bus = i2c_get_bus_num();
 		result = pca953x_get_val(mod_abs_info->i2c_bus,
-					 mod_abs_info->i2c_addr);
-		debug("%s: result: 0x%x\n", __func__, result);
-		if (result >= 0)
-			result = (result >> mod_abs_info->pin) & 1;
-		i2c_set_bus_num(old_i2c_bus);
-		break;
-#endif
-#ifdef CONFIG_PCA9554
-	case GPIO_TYPE_PCA9554:
-		debug("%s: PCA9554 reading 0x%x:0x%x\n", __func__,
-		      mod_abs_info->i2c_bus, mod_abs_info->i2c_addr);
-		old_i2c_bus = i2c_get_bus_num();
-		result = pca9554_get_val(mod_abs_info->i2c_bus,
 					 mod_abs_info->i2c_addr);
 		debug("%s: result: 0x%x\n", __func__, result);
 		if (result >= 0)
@@ -847,16 +825,7 @@ static enum command_ret_t do_octsfpinfo(struct cmd_tbl_s *cmd, int flag,
 		return CMD_RET_FAILURE;
 	}
 	ethinfo = (struct octeon_eth_info *)ethdev->priv;
-	if (!ethinfo) {
-		printf("%s: ethinfo not found for %s\n", __func__, argv[1]);
-		return CMD_RET_FAILURE;
-	}
 	sfp = &ethinfo->sfp;
-	debug("sfp at %p\n", sfp);
-	if (!sfp) {
-		printf("No SFP information is associated with %s\n", argv[1]);
-		return CMD_RET_USAGE;
-	}
 	if (sfp->i2c_bus < 0) {
 		printf("No SFP i2c bus for %s\n", argv[1]);
 		return CMD_RET_FAILURE;
@@ -872,7 +841,6 @@ static enum command_ret_t do_octsfpinfo(struct cmd_tbl_s *cmd, int flag,
 		       __func__, ethdev->name);
 		return CMD_RET_FAILURE;
 	}
-	debug("%s: checking mod_abs, func at %p\n", __func__, sfp->check_mod_abs);
 	if (sfp->check_mod_abs(ethdev, sfp->mod_abs_data) ||
 		sfp->i2c_eeprom_addr <= 0) {
 		printf("No SFP/SFP+ module attached to %s\n", argv[1]);
@@ -887,7 +855,6 @@ static enum command_ret_t do_octsfpinfo(struct cmd_tbl_s *cmd, int flag,
 		printf("Error reading SFP+ EEPROM for %s\n", argv[1]);
 		return CMD_RET_FAILURE;
 	}
-	debug("%s: parsing eeprom\n", __func__);
 	rc = phy_sfp_parse_eeprom(&sfp_info, buffer);
 	if (rc) {
 		printf("Error parsing SFP+ EEPROM for %s\n", argv[1]);

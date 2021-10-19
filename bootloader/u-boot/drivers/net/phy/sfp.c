@@ -140,9 +140,9 @@ static int phy_sfp_parse_sfp(struct phy_sfp_info *sfp_info,
 		}
 
 		/* fall through */
-	default:
-		sfp_info->limiting = true;
-		break;
+		default:
+			sfp_info->limiting = true;
+			break;
 	}
 	if (sfp_info->copper_cable)
 		sfp_info->max_copper_cable_len = buffer[0x12];

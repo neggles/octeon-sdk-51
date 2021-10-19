@@ -213,7 +213,7 @@ static int fdt_fix_mix(const void *fdt)
 				printf("WARNING: Failed to get lmac fdt node "
 				       "for %d%d%d\n", env_node, env_bgx,
 				       env_lmac);
-				continue;
+			continue;
 			}
 		}
 
@@ -741,7 +741,7 @@ void board_configure_qlms(void)
 				else
 					speed[qlm] = 6000;
 			} else
-				speed[qlm] = 6000;
+			speed[qlm] = 6000;
 		} else {
 			printf("QLM %d: disabled\n", qlm);
 		}

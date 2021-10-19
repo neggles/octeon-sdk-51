@@ -439,20 +439,20 @@ int octeon_bist_7XXX(int node)
 				       0, ~0ull);
 	if (OCTEON_IS_MODEL(OCTEON_CNF75XX)) {
 		for (i = 0; i < 2; i++) {
-			bist_failures +=
+	bist_failures +=
 				displayErrorReg_1_node(node, "CVMX_DENCX_BIST_STATUS",
 					       CVMX_DENCX_BIST_STATUS(i),
-					       0, ~0ull);
-			bist_failures +=
+				       0, ~0ull);
+	bist_failures +=
 				displayErrorReg_1_node(node, "CVMX_FDEQX_BIST_STATUS0",
 					       CVMX_FDEQX_BIST_STATUS0(i),
-					       0, ~0ull);
+				       0, ~0ull);
 		}
-		bist_failures +=
+	bist_failures +=
 			displayErrorReg_1_node(node, "CVMX_DLFE_BIST_STATUS",
 					       CVMX_DLFE_BIST_STATUS,
 					       0, ~0ull);
-		bist_failures +=
+	bist_failures +=
 			displayErrorReg_1_node(node, "CVMX_DLFE_BIST_STATUS1",
 					       CVMX_DLFE_BIST_STATUS1,
 					       0, ~0ull);
@@ -465,11 +465,11 @@ int octeon_bist_7XXX(int node)
 		bist_failures +=
 			displayErrorReg_1_node(node, "CVMX_DFA_BIST1", CVMX_DFA_BIST1,
 				       0, ~0ull);
-		bist_failures +=
-			displayErrorReg_1_node(node, "CVMX_HNA_BIST0",
+	bist_failures +=
+		displayErrorReg_1_node(node, "CVMX_HNA_BIST0",
 				       CVMX_HNA_BIST0, 0, ~0ull);
-		bist_failures +=
-			displayErrorReg_1_node(node, "CVMX_HNA_BIST1", CVMX_HNA_BIST1,
+	bist_failures +=
+		displayErrorReg_1_node(node, "CVMX_HNA_BIST1", CVMX_HNA_BIST1,
 				       0, ~0ull);
 	}
 	bist_failures +=
@@ -487,7 +487,8 @@ int octeon_bist_7XXX(int node)
 	iob_bist_status = octeon_bist_check_iob();
 
 	bist_failures += displayErrorReg_1_node(node, "CVMX_IOBN_BIST_STATUS",
-						CVMX_IOBN_BIST_STATUS, 0, ~0ull);
+				       CVMX_IOBN_BIST_STATUS, 0, ~0ull);
+
 	bist_val = cvmx_read_csr_node(node, CVMX_IOBN_PP_BIST_STATUS);
 	bist_val &= ciu_fuse;
 	if (bist_val && iob_bist_status)
@@ -496,7 +497,7 @@ int octeon_bist_7XXX(int node)
 							CVMX_IOBN_PP_BIST_STATUS,
 							0, ciu_fuse);
 	bist_failures += displayErrorReg_1_node(node, "CVMX_IOBP_BIST_STATUS",
-						CVMX_IOBP_BIST_STATUS, 0, ~0ull);
+				       CVMX_IOBP_BIST_STATUS, 0, ~0ull);
 	bist_val = cvmx_read_csr_node(node, CVMX_IOBP_PP_BIST_STATUS);
 	if (bist_val && iob_bist_status)
 		bist_failures += displayErrorReg_1_node(node,
@@ -542,7 +543,6 @@ int octeon_bist_7XXX(int node)
 	bist_failures +=
 		displayErrorReg_1_node(node, "CVMX_LBK_BIST_RESULT",
 				       CVMX_LBK_BIST_RESULT, 0, ~0ull);
-
 	bist_failures +=
 		displayErrorReg_1_node(node, "CVMX_MIO_BOOT_BIST_STAT",
 				       CVMX_MIO_BOOT_BIST_STAT, 0, ~0ull);
@@ -553,12 +553,12 @@ int octeon_bist_7XXX(int node)
 	}
 	/* Add Bist status for NQM block */
 	if (OCTEON_IS_MODEL(OCTEON_CN78XX)) {
-		for (i = 0; i < 4; i++) {
-			bist_failures +=
-				displayErrorReg_1_node(node, "CVMX_PEMX_BIST_STATUS(i)",
+	for (i = 0; i < 4; i++) {
+		bist_failures +=
+			displayErrorReg_1_node(node, "CVMX_PEMX_BIST_STATUS(i)",
 					       CVMX_PEMX_BIST_STATUS(i),
 					       0, ~0ull);
-		}
+	}
 	}
 	bist_failures +=
 		displayErrorReg_1_node(node, "CVMX_PKI_BIST_STATUS0",
@@ -626,8 +626,8 @@ int octeon_bist_7XXX(int node)
 	}
 
 	if (!OCTEON_IS_MODEL(OCTEON_CNF75XX)) {
-		bist_failures +=
-			displayErrorReg_1_node(node, "CVMX_RAD_REG_BIST_RESULT",
+	bist_failures +=
+		displayErrorReg_1_node(node, "CVMX_RAD_REG_BIST_RESULT",
 				       CVMX_RAD_REG_BIST_RESULT, 0, ~0ull);
 	}
 
@@ -738,7 +738,7 @@ int octeon_bist_usb(int cnt, int clear_bist)
 
 	bist_failures +=
 		displayErrorReg_1("CVMX_USBDRDX_UCTL_BIST_STATUS(i)",
-				CVMX_USBDRDX_UCTL_BIST_STATUS(cnt), 0, ~0ull);
+				CVMX_USBDRDX_UCTL_BIST_STATUS(cnt), 0, ~0ull);	
 
 	reg_val = cvmx_read_csr(CVMX_USBDRDX_UCTL_CTL(cnt));
 	if (clear_bist) {
@@ -842,7 +842,7 @@ int octeon_bist_70XX(void)
 	if (!OCTEON_IS_MODEL(OCTEON_CN70XX_PASS1_0))
 		bist_failures +=
 	    		displayErrorReg_1("CVMX_PEXP_SLI_BIST_STATUS",
-					  CVMX_PEXP_SLI_BIST_STATUS, 0, ~0ull);
+					CVMX_PEXP_SLI_BIST_STATUS, 0, ~0ull);
 	bist_failures +=
 	    displayErrorReg_1("CVMX_POW_BIST_STAT", CVMX_POW_BIST_STAT, 0,
 			      ~0ull);
@@ -1132,6 +1132,7 @@ int octeon_bist(void)
 
 	if (OCTEON_IS_OCTEON2())
 		return (octeon_bist_6XXX());
+
 	val = (uint32_t) cvmx_read_csr(CVMX_POW_BIST_STAT);
 	if (cm_str) {
 		uint32_t cm_override = simple_strtoul(cm_str, NULL, 0);

@@ -98,11 +98,12 @@
 #define CONFIG_PHYLIB
 
 #if defined(CONFIG_PHY_CORTINA_CS4223)
+# define CONFIG_PHY_SFP
 # ifndef CONFIG_PHY_CORTINA
 #  define CONFIG_PHY_CORTINA
 # endif
 # ifndef CONFIG_PHYLIB_10G
-#  define CONFIG_PHYLIB_10G
+# define CONFIG_PHYLIB_10G
 # endif
 #endif
 

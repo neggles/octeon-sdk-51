@@ -616,7 +616,7 @@ void NetStartAgain(void)
 	eth_halt();
 #if !defined(CONFIG_NET_DO_NOT_TRY_ANOTHER)
 	if (!getenv("netsingle"))
-		eth_try_another(!NetRestarted);
+	eth_try_another(!NetRestarted);
 #endif
 	eth_init(gd->bd);
 	if (NetRestartWrap) {

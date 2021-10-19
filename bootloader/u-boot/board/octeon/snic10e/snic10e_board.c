@@ -118,18 +118,18 @@ void octeon_board_poll(void)
 
 int early_board_init(void)
 {
-	/* configure clk_out pin */
-	cvmx_mio_fus_pll_t fus_pll;
+		/* configure clk_out pin */
+		cvmx_mio_fus_pll_t fus_pll;
 
-	fus_pll.u64 = cvmx_read_csr(CVMX_MIO_FUS_PLL);
-	fus_pll.cn63xx.c_cout_rst = 1;
-	cvmx_write_csr(CVMX_MIO_FUS_PLL, fus_pll.u64);
+		fus_pll.u64 = cvmx_read_csr(CVMX_MIO_FUS_PLL);
+		fus_pll.cn63xx.c_cout_rst = 1;
+		cvmx_write_csr(CVMX_MIO_FUS_PLL, fus_pll.u64);
 
-	/* Sel::  0:rclk, 1:pllout 2:psout 3:gnd */
-	fus_pll.cn63xx.c_cout_sel = 0;
-	cvmx_write_csr(CVMX_MIO_FUS_PLL, fus_pll.u64);
-	fus_pll.cn63xx.c_cout_rst = 0;
-	cvmx_write_csr(CVMX_MIO_FUS_PLL, fus_pll.u64);
+		/* Sel::  0:rclk, 1:pllout 2:psout 3:gnd */
+		fus_pll.cn63xx.c_cout_sel = 0;
+		cvmx_write_csr(CVMX_MIO_FUS_PLL, fus_pll.u64);
+		fus_pll.cn63xx.c_cout_rst = 0;
+		cvmx_write_csr(CVMX_MIO_FUS_PLL, fus_pll.u64);
 
 	/* Populate global data from eeprom */
 	octeon_board_get_clock_info(SNIC10E_DEF_DRAM_FREQ);

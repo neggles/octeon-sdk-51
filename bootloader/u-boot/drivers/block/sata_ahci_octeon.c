@@ -373,6 +373,8 @@ int ahci_init_platform(void)
 	}
 
 	for (port_no = 0; port_no < host->n_ports; port_no++) {
+		void __iomem *mmio;
+
 		DPRINTK("Initializing port %d\n", port_no);
 		port = host->ports[port_no];
 		if (!(hpriv->port_map & (1 << port_no)))
@@ -391,6 +393,7 @@ int ahci_init_platform(void)
 		}
 		DPRINTK("Configuring PxCMD register for Octeon\n");
 		ap = port->link.ap;
+		mmio = ahci_port_base(ap);
 		ahci_port_start(ap);
 		DPRINTK("Stopping engine %d %d\n", port_no, ap->port_no);
 		ahci_stop_engine(link->ap);

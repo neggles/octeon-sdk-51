@@ -131,18 +131,10 @@ static int octeon3_reset_wait_pend(int node, uint64_t cores)
 	return pending.s.pend ? -1 : 0;
 }
 
-static int octeon3_all_cores_out_of_reset_wait(int node, uint64_t cores,
-					       uint64_t core_mask)
+static int octeon3_all_cores_out_of_reset_wait(int node, uint64_t cores, uint64_t core_mask)
 {
 	int cores_not_up = 0;
 	bool pending_timeout = false;
-
-	volatile uint32_t *memptr_reset =
-				CASTPTR(uint32_t,
-					BOOTLOADER_DEBUG_CORE_RESET_COUNT);
-	volatile uint32_t *memptr_revid =
-				CASTPTR(uint32_t,
-					BOOTLOADER_DEBUG_CORE_REVID_COUNT);
 
 	debug("%s(%d, 0x%llx, 0x%llx)\n", __func__, node, cores, core_mask);
 	while (cores) {
@@ -159,14 +151,8 @@ static int octeon3_all_cores_out_of_reset_wait(int node, uint64_t cores,
 			/* core is out of reset, wait for it to start code. */
 			mdelay(1);
 		}
-		debug("  %s reset ptr: %p, revid ptr: %p\n", __func__,
-		      memptr_reset, memptr_revid);
-		debug("  %s reset cnt: %x, revid cnt: %x\n", __func__,
-		      *memptr_reset, *memptr_revid);
 	}
 
-	debug("%s(%d, 0x%llx, 0x%llx) pending_timeout: %d\n",
-	      __func__, node, cores, core_mask, pending_timeout);
 	return pending_timeout ? -1 : 0;
 }
 
@@ -201,11 +187,6 @@ int __octeon_enable_all_cores_cn78xx(void)
 		printf("%s: Error: could not find boot vector\n", __func__);
 		return -1;
 	}
-	debug("%s: mio_boot_loc_cfg0: 0x%llx\n", __func__,
-	      cvmx_read_csr(CVMX_MIO_BOOT_LOC_CFGX(0)));
-	debug("%s: rst_pp_power: 0x%llx\n", __func__,
-	      cvmx_read_csr(CVMX_RST_PP_POWER));
-	debug("%s: ciu_pp_rst: 0x%llx\n", __func__, cvmx_read_csr(CVMX_CIU_PP_RST));
 	memptr_reset = CASTPTR(uint32_t, BOOTLOADER_DEBUG_CORE_RESET_COUNT);
 	memptr_revid = CASTPTR(uint32_t, BOOTLOADER_DEBUG_CORE_REVID_COUNT);
 
@@ -217,6 +198,16 @@ int __octeon_enable_all_cores_cn78xx(void)
 #ifdef DEBUG
 	cvmx_coremask_print(&coremask);
 #endif
+	cvmx_coremask_for_each_core(core, &coremask) {
+		if (core != 0) {
+			boot_init_vec[core].code_addr =
+				MAKE_XKPHYS(cvmx_ptr_to_phys(&revid_check_patch));
+			debug("%s: boot_init_vec[%d].code_addr (%p): 0x%llx\n",
+			      __func__, core, &boot_init_vec[core].code_addr,
+			      boot_init_vec[core].code_addr);
+		}
+	}
+
 	cvmx_coremask_for_each_node(node, gd->arch.node_mask)
 		core_mask[node] = cvmx_coremask_get64_node(&coremask, node);
 
@@ -230,7 +221,7 @@ int __octeon_enable_all_cores_cn78xx(void)
 
 	if (!rst_not_done) {
 		debug("%s: cores already out of reset\n", __func__);
-		return 0;
+		return;
 	}
 	CVMX_SYNCW;
 
@@ -249,24 +240,17 @@ int __octeon_enable_all_cores_cn78xx(void)
 
 
 		do {
-			debug("%s: node: %d attempting reset iteration: %d, cores: 0x%llx\n",
-			      __func__, node, cores_not_up, cores[node]);
-			cvmx_coremask_for_each_core(core, &coremask) {
-				if (core != 0) {
-					boot_init_vec[core].code_addr =
-						MAKE_XKPHYS(cvmx_ptr_to_phys(&revid_check_patch));
-				debug("%s: boot_init_vec[%d].code_addr (%p): 0x%llx\n",
-				      __func__, core,
-				      &boot_init_vec[core].code_addr,
-	  			      boot_init_vec[core].code_addr);
-				}
-			}
+			debug("%s: node: %d attempting reset iteration: %d\n",
+			      __func__, node, cores_not_up);
 			*memptr_reset = 0;
 			*memptr_revid = 0;
 			CVMX_SYNCW;
+
 			cvmx_write_csr_node(node, CVMX_RST_PP_POWER, cores[node]);
 			cvmx_read_csr_node(node, CVMX_RST_PP_POWER);
+#ifndef CONFIG_OCTEON_SIM_SPEED
 			mdelay(1);
+#endif
 			cvmx_write_csr_node(node, CVMX_RST_PP_POWER, 0);
 			cvmx_read_csr_node(node, CVMX_RST_PP_POWER);
 			mdelay(1);
@@ -281,15 +265,8 @@ int __octeon_enable_all_cores_cn78xx(void)
 			revid_count = *memptr_revid;
 
 			if (!pending_timeout) {
-				debug("%s: node %d: reset pending clear.  reset: %d, revid: %d, core count: %d\n",
-				      __func__, node, reset_count, revid_count,
-				      core_count);
-				debug("%s: ciu_pp_rst for node %d: 0x%llx\n",
-				      __func__, node,
-				      cvmx_read_csr_node(node, CVMX_CIU_PP_RST));
-				debug("%s: rst_pp_power for node %d: 0x%llx\n",
-				      __func__, node,
-				      cvmx_read_csr_node(node, CVMX_RST_PP_POWER));
+				debug("%s: node %d: reset pending clear.  reset: %d, revid: %d\n",
+				      __func__, node, reset_count, revid_count);
 				if ((reset_count == core_count) &&
 				    (revid_count == core_count)) {
 					cores_not_up =

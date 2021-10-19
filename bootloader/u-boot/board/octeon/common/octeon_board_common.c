@@ -70,6 +70,8 @@ DECLARE_GLOBAL_DATA_PTR;
 # define USE_EEPROM	1
 #endif
 
+static uint32_t pci_cfgspace_reg0[2] = { 0, 0 };
+
 /**
  * Dynamically adjust the board name, used for prompt generation
  * @param name - name string to be adjusted
@@ -378,7 +380,6 @@ void __octeon_board_create_random_mac_addr(void)
 		for (i = 0; i < sizeof(fuse_buf); i += 8)
 			CVMX_MT_CRC_DWORD_REFLECT(*ptr++);
 	}
-
 	/* Get the final CRC32 */
 	CVMX_MF_CRC_IV_REFLECT(crc);
 	crc ^= 0xffffffff;
@@ -412,36 +413,16 @@ void octeon_board_get_mac_addr(void)
 void __octeon_board_get_mac_addr(void)
 {
 #if USE_EEPROM
-	uint16_t eeprom_buf16[OCTEON_EEPROM_MAX_TUPLE_LENGTH / 2 + 1];
-	uint8_t *eeprom_buf = (void *)eeprom_buf16;
-	uint8_t net_our_ether[6];
-	uint16_t addr = 0, found =0;
-	int len;
-	octeon_eeprom_header_t *tlv_hdr_ptr = (void *)eeprom_buf;
-	octeon_eeprom_mac_addr_t *ma_ptr = (void *)eeprom_buf;
+	uint8_t ee_buf[OCTEON_EEPROM_MAX_TUPLE_LENGTH];
+	int addr;
 
-#ifdef   CONFIG_EEPROM_TLV_BASE_ADDRESS
-	addr = CONFIG_EEPROM_TLV_BASE_ADDRESS;
-	printf("CONFIG_EEPROM_TLV_BASE_ADDRESS: 0x%x\n",
-		CONFIG_EEPROM_TLV_BASE_ADDRESS);
-#endif
-
-	while ((len = octeon_tlv_eeprom_get_next_tuple(CONFIG_SYS_DEF_EEPROM_ADDR,
-		addr, eeprom_buf, OCTEON_EEPROM_MAX_TUPLE_LENGTH)) > 0)
-	{
-		if (tlv_hdr_ptr->type == EEPROM_MAC_ADDR_TYPE) {
-			memcpy(net_our_ether, ma_ptr->mac_addr_base, 6);
-			printf("TLV MAC address: %02X:%02X:%02X:%02X:%02X:%02X  addr: %d\n",
-				net_our_ether[0], net_our_ether[1], net_our_ether[2],
-				net_our_ether[3], net_our_ether[4], net_our_ether[5], addr);
-			memcpy((void *)&(gd->arch.mac_desc), eeprom_buf,
-					sizeof(octeon_eeprom_mac_addr_t));
-			found = 1;
-			break;
-		}
-		addr += len;
-	}
-	if (found == 0)
+	addr = octeon_tlv_get_tuple_addr(CONFIG_SYS_DEF_EEPROM_ADDR,
+					 EEPROM_MAC_ADDR_TYPE, 0, ee_buf,
+					 OCTEON_EEPROM_MAX_TUPLE_LENGTH);
+	if (addr >= 0)
+		memcpy((void *)&(gd->arch.mac_desc), ee_buf,
+		       sizeof(octeon_eeprom_mac_addr_t));
+	else
 #endif
 		octeon_board_create_random_mac_addr();
 }
@@ -602,9 +583,8 @@ void __octeon_board_get_descriptor(enum cvmx_board_types_enum type,
 		}
 	}
 #endif
-	if (gd->arch.board_desc.board_type == CVMX_BOARD_TYPE_NULL ||
-	    gd->arch.board_desc.board_type != type) {
-		printf("Setting board type to passed-in type %s\n",
+	if (gd->arch.board_desc.board_type == CVMX_BOARD_TYPE_NULL) {
+		debug("Setting board type to passed-in type %s\n",
 		      cvmx_board_type_to_string(type));
 		gd->flags |= GD_FLG_BOARD_DESC_MISSING;
 		gd->arch.board_desc.rev_major = rev_major;
@@ -641,9 +621,6 @@ void board_mdio_init(void) __attribute__((weak, alias("__board_mdio_init")));
         defined(CONFIG_OCTEON_NIC23)    || \
         defined(CONFIG_OCTEON_NIC225E)  || \
         defined(CONFIG_OCTEON_COPPERHEAD)
-
-static uint32_t pci_cfgspace_reg0[2] = { 0, 0 };
-
 /**
  * Saves the PCI ID as read from the EEPROM for use by octeon_board_restore_pf()
  *
@@ -765,17 +742,17 @@ void octeon_board_restore_pf(void)
 			/* if DevID has NOT been reset, FLR is not yet complete */
 			if (cfg_rd.s.data != pci_cfgspace_reg0[pf_num]) {
 
-				stopreq.s.pf0_stopreq = (pf_num == 0) ? 1 : 0;
-				stopreq.s.pf1_stopreq = (pf_num == 1) ? 1 : 0;
-				cvmx_write_csr(CVMX_SPEMX_FLR_PF_STOPREQ(0), stopreq.u64);
+			stopreq.s.pf0_stopreq = (pf_num == 0) ? 1 : 0;
+			stopreq.s.pf1_stopreq = (pf_num == 1) ? 1 : 0;
+			cvmx_write_csr(CVMX_SPEMX_FLR_PF_STOPREQ(0), stopreq.u64);
 
-				cfg_wr.u64 = 0;
-				cfg_wr.s.addr = (pf_num << 24) | 0;
-				cfg_wr.s.data = pci_cfgspace_reg0[pf_num];
-				cvmx_write_csr(CVMX_SPEMX_CFG_WR(0), cfg_wr.u64);
-				start_initialized[pf_num] = false;
-			}
+			cfg_wr.u64 = 0;
+			cfg_wr.s.addr = (pf_num << 24) | 0;
+			cfg_wr.s.data = pci_cfgspace_reg0[pf_num];
+			cvmx_write_csr(CVMX_SPEMX_CFG_WR(0), cfg_wr.u64);
+			start_initialized[pf_num] = false;
 		}
+	}
 	}
 }
 #endif

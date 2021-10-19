@@ -36,7 +36,7 @@
  *
  ***********************license end**************************************/
 
-/* $Revision: 167267 $ */
+/* $Revision: 163731 $ */
 
 #if defined(__U_BOOT__)
 /* If necessary define DDR_VERBOSE to enable verbose output at compile
@@ -120,7 +120,7 @@ extern int isspace(int);
 #include "configs/octeon_ebb7304_shared.h"
 #include "configs/octeon_ebb7504_shared.h"
 #include "configs/octeon_ebb7500_shared.h"
-#include "configs/octeon_cnf7300_shared.h"
+#include "configs/octeon_ubnt_e1000_shared.h"
 #include "configs/octeon_nic73_shared.h"
 #include "configs/octeon_nic25e_shared.h"
 #include "configs/octeon_nic225e_shared.h"
@@ -158,7 +158,6 @@ extern int isspace(int);
 #include "configs/octeon_rainier_shared.h"
 #include "configs/octeon_nicx40e_shared.h"
 #include "configs/octeon_copperhead_shared.h"
-#include "configs/octeon_im8724_shared.h"
 #ifdef __U_BOOT__
 # include <asm/arch/octeon_eeprom_types.h>
 #else
@@ -381,14 +380,6 @@ static void ddr_print(const char *format, ...)
     }
 }
 #endif
-
-static void ddr_print2(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-}
 
 static void ddr_config_write_csr(uint64_t csr_addr, uint64_t val)
 {
@@ -1039,7 +1030,7 @@ int get_dimm_part_number(char *buffer, const dimm_config_t *dimm_config,
 
 	c = (read_spd(dimm_config, dimm_index, offset+i) & 0xff);
 	if (c == 0) // any null, we are done
-	    break;
+            break;
 
 	/* Skip leading spaces. */
 	if (skipping) {
@@ -1047,7 +1038,7 @@ int get_dimm_part_number(char *buffer, const dimm_config_t *dimm_config,
 		continue;
 	    else
 		skipping = 0;
-	}
+    }
 
 	/* Put non-null non-leading-space-skipped char into buffer */
 	buffer[strlen] = c;
@@ -1058,8 +1049,8 @@ int get_dimm_part_number(char *buffer, const dimm_config_t *dimm_config,
 	i = strlen - 1; // last char put into buf
 	while (i >= 0 && myisspace((int)buffer[i])) { // still in buf and a space
 	    --i;
-	    --strlen;
-	}
+        --strlen;
+    }
     }
     buffer[strlen] = 0;       /* Insure that the string is terminated */
 
@@ -1128,10 +1119,10 @@ void report_common_dimm(const dimm_config_t *dimm_config, int upper_dimm, int di
 }
 
 static const char *ddr3_dimm_types[] = {
-    /* 0000 */ "Undefined",
-    /* 0001 */ "RDIMM",
-    /* 0010 */ "UDIMM",
-    /* 0011 */ "SO-DIMM",
+        /* 0000 */ "Undefined",
+        /* 0001 */ "RDIMM",
+        /* 0010 */ "UDIMM",
+        /* 0011 */ "SO-DIMM",
     /* 0100 */ "Micro-DIMM",
     /* 0101 */ "Mini-RDIMM",
     /* 0110 */ "Mini-UDIMM",
@@ -1170,17 +1161,17 @@ static const char *ddr4_dimm_types[] = {
     /* 0001 */ "RDIMM",
     /* 0010 */ "UDIMM",
     /* 0011 */ "SO-DIMM",
-    /* 0100 */ "LRDIMM",
-    /* 0101 */ "Mini-RDIMM",
-    /* 0110 */ "Mini-UDIMM",
-    /* 0111 */ "Reserved",
-    /* 1000 */ "72b-SO-RDIMM",
-    /* 1001 */ "72b-SO-UDIMM",
+        /* 0100 */ "LRDIMM",
+        /* 0101 */ "Mini-RDIMM",
+        /* 0110 */ "Mini-UDIMM",
+        /* 0111 */ "Reserved",
+        /* 1000 */ "72b-SO-RDIMM",
+        /* 1001 */ "72b-SO-UDIMM",
     /* 1010 */ "Reserved",
-    /* 1011 */ "Reserved",
-    /* 1100 */ "16b-SO-DIMM",
-    /* 1101 */ "32b-SO-DIMM",
-    /* 1110 */ "Reserved",
+        /* 1011 */ "Reserved",
+        /* 1100 */ "16b-SO-DIMM",
+        /* 1101 */ "32b-SO-DIMM",
+        /* 1110 */ "Reserved",
     /* 1111 */ "Reserved"
 };
 
@@ -1215,9 +1206,7 @@ static void report_dimm(const dimm_config_t *dimm_config, int upper_dimm,
     else
         report_ddr3_dimm(dimm_config, 0, dimm, ddr_interface_num);
 }
-
 #endif /* CONFIG_OCTEON_DISABLE_DDR3 */
-
 #ifndef CONFIG_OCTEON_DISABLE_DDR2
 static inline int lookup_cycle_time_psec (int spd_byte)
 {
@@ -1641,17 +1630,17 @@ validate_ddr3_rlevel_bitmask(rlevel_bitmask_t *rlevel_bitmask_p, int ddr_type)
     uint64_t temp;
 
     if (bitmask == 0) {
-	blank += RLEVEL_BITMASK_BLANK_ERROR;
+        blank += RLEVEL_BITMASK_BLANK_ERROR;
     } else {
 
-	/* Look for fb, the first bit */
+        /* Look for fb, the first bit */
         temp = bitmask;
         while (!(temp & 1)) {
             firstbit++;
             temp >>= 1;
         }
 
-	/* Look for lb, the last bit */
+        /* Look for lb, the last bit */
         lastbit = firstbit;
         while ((temp >>= 1))
             lastbit++;
@@ -1679,8 +1668,8 @@ validate_ddr3_rlevel_bitmask(rlevel_bitmask_t *rlevel_bitmask_p, int ddr_type)
         if (extras > 0)
             toolong = RLEVEL_BITMASK_TOOLONG_ERROR * ((1 << extras) - 1);
 
-	/* Detect if bitmask is too narrow. */
-	if (width < 4)
+        /* Detect if bitmask is too narrow. */
+        if (width < 4)
 	    narrow = (4 - width) * RLEVEL_BITMASK_NARROW_ERROR;
 
 	/* detect leading bubble bits, that is, any 0's between first and mstart */
@@ -1688,7 +1677,7 @@ validate_ddr3_rlevel_bitmask(rlevel_bitmask_t *rlevel_bitmask_p, int ddr_type)
         i = mstart - firstbit - 1;
         while (--i >= 0) {
 	    if ((temp & 1) == 0)
-		bubble += RLEVEL_BITMASK_BUBBLE_BITS_ERROR;
+                bubble += RLEVEL_BITMASK_BUBBLE_BITS_ERROR;
             temp >>= 1;
         }
 
@@ -1698,8 +1687,8 @@ validate_ddr3_rlevel_bitmask(rlevel_bitmask_t *rlevel_bitmask_p, int ddr_type)
             if (temp & 1) { /* Detect 1 bits after the trailing end of the mask, including last. */
                 trailing += RLEVEL_BITMASK_TRAILING_BITS_ERROR;
             } else { /* Detect trailing bubble bits, that is, any 0's between end-of-mask and last */
-		tbubble  += RLEVEL_BITMASK_BUBBLE_BITS_ERROR;
-            }
+                tbubble += RLEVEL_BITMASK_BUBBLE_BITS_ERROR;
+        }
             temp >>= 1;
         }
     }
@@ -1712,9 +1701,9 @@ validate_ddr3_rlevel_bitmask(rlevel_bitmask_t *rlevel_bitmask_p, int ddr_type)
 
     debug_bitmask_print("bm:%08lx mask:%02lx, width:%2u, mstart:%2d, fb:%2u, lb:%2u"
                         " (bu:%2d, tb:%2d, bl:%2d, n:%2d, t:%2d, x:%2d) errors:%3d %s\n",
-                        (unsigned long) bitmask, mask, width, mstart,
+			(unsigned long) bitmask, mask, width, mstart,
                         firstbit, lastbit, bubble, tbubble, blank, narrow,
-                        trailing, toolong, errors, (errors) ? "=> invalid" : "");
+			trailing, toolong, errors, (errors) ? "=> invalid" : "");
 
     return errors;
 }
@@ -3605,7 +3594,7 @@ static int nonsequential_delays(rlevel_byte_data_t *rlevel_byte,
            the magnitude of the change, and scale the penalty by the amount that
            the size is larger than the provided limit.
          */
-	if ((max_adj_delay_inc != 0) && (delay_inc > max_adj_delay_inc)) {
+        if ((max_adj_delay_inc != 0) && (delay_inc > max_adj_delay_inc)) {
 	    adj_err = (delay_inc - max_adj_delay_inc) * RLEVEL_ADJACENT_DELAY_ERROR;
 	} else {
             adj_err = 0;
@@ -3615,16 +3604,16 @@ static int nonsequential_delays(rlevel_byte_data_t *rlevel_byte,
         error += seq_err + adj_err;
 
         debug_bitmask_print("Byte %d: %d, Byte %d: %d, delay_trend: %ld, prev_trend: %ld, [%ld/%ld]%s%s\n",
-                            byte_idx+0, rlevel_byte[byte_idx+0].delay,
-                            byte_idx+1, rlevel_byte[byte_idx+1].delay,
-                            delay_trend, prev_trend, seq_err, adj_err,
-                            (seq_err) ? " => Nonsequential byte delay" : "",
-                            (adj_err) ? " => Adjacent delay error" : ""
-                            );
+                      byte_idx+0, rlevel_byte[byte_idx+0].delay,
+                      byte_idx+1, rlevel_byte[byte_idx+1].delay,
+                      delay_trend, prev_trend, seq_err, adj_err,
+                      (seq_err) ? " => Nonsequential byte delay" : "",
+                      (adj_err) ? " => Adjacent delay error" : ""
+                      );
 
 	if (delay_trend != 0) {
-	    prev_trend = delay_trend;
-        }
+            prev_trend = delay_trend;
+    }
     }
     return (int)error;
 }
@@ -3817,8 +3806,8 @@ change_dll_offset_enable(uint32_t cpu_id, int node, int ddr_interface_num, int c
 
 unsigned short
 load_dll_offset(int node, int ddr_interface_num,
-                uint32_t cpu_id, int dll_offset_mode,
-                int byte_offset, int byte)
+				      uint32_t cpu_id, int dll_offset_mode,
+				      int byte_offset, int byte)
 {
     cvmx_lmcx_dll_ctl3_t ddr_dll_ctl3;
     int field_width = 6;
@@ -3850,7 +3839,7 @@ load_dll_offset(int node, int ddr_interface_num,
 
 static void
 process_custom_dll_offsets(int node, int ddr_interface_num, uint32_t cpu_id, const char *enable_str,
-                           const int8_t *offsets, const char *byte_str, int mode)
+				       const int8_t *offsets, const char *byte_str, int mode)
 {
     const char *s;
     int enabled;
@@ -3947,12 +3936,12 @@ static void perform_ddr_init_sequence(uint32_t cpu_id, int node, int rank_mask,
             if (!(rank_mask & (1 << rankx)))
                 continue;
 
-            if (OCTEON_IS_OCTEON3())
-                perform_octeon3_ddr3_sequence(cpu_id, node, (1 << rankx),
-                                              ddr_interface_num, 0); /* power-up/init */
-            else
-                perform_ddr3_sequence(cpu_id, (1 << rankx),
-                                      ddr_interface_num, 0); /* power-up/init */
+                if (OCTEON_IS_OCTEON3())
+                    perform_octeon3_ddr3_sequence(cpu_id, node, (1 << rankx),
+                                                  ddr_interface_num, 0); /* power-up/init */
+                else
+                    perform_ddr3_sequence(cpu_id, (1 << rankx),
+                                          ddr_interface_num, 0); /* power-up/init */
 
             cvmx_wait_usec(1000);   /* Wait a while. */
 
@@ -10049,18 +10038,18 @@ int initialize_ddr_clock(uint32_t cpu_id,
 
             // 73XX pass 1.3 has LMC0 DCLK_INVERT tied to 1; earlier 73xx passes are tied to 0
             // 75XX needs LMC0 DCLK_INVERT set to 1 to minimize duty cycle falling points
-            // and we default all other chips LMC0 to DCLK_INVERT=0
+            // and we default all other chips LMC0 to DCLK_INVERT=0 
             ddr_pll_ctl.cn78xx.dclk_invert = !!(octeon_is_cpuid(OCTEON_CN73XX_PASS1_3) ||
                                                 octeon_is_cpuid(OCTEON_CNF75XX));
 
             // allow override of LMC0 desired setting for DCLK_INVERT, but not on 73XX;
             // we cannot change LMC0 DCLK_INVERT on 73XX any pass
             if (! (octeon_is_cpuid(OCTEON_CN73XX))) {
-                if ((s = lookup_env_parameter("ddr0_set_dclk_invert")) != NULL) {
-                    ddr_pll_ctl.cn78xx.dclk_invert = !!simple_strtoul(s, NULL, 0);
-                    ddr_print("LMC0: override DDR_PLL_CTL[dclk_invert] to %d\n",
-                              ddr_pll_ctl.cn78xx.dclk_invert);
-                }
+            if ((s = lookup_env_parameter("ddr0_set_dclk_invert")) != NULL) {
+                ddr_pll_ctl.cn78xx.dclk_invert = !!simple_strtoul(s, NULL, 0);
+                ddr_print("LMC0: override DDR_PLL_CTL[dclk_invert] to %d\n",
+                          ddr_pll_ctl.cn78xx.dclk_invert);
+            }
             }
 
             ddr_config_write_csr_node(node, CVMX_LMCX_DDR_PLL_CTL(0), ddr_pll_ctl.u64);
@@ -10072,7 +10061,7 @@ int initialize_ddr_clock(uint32_t cpu_id,
 
                 /* For CNF75XX, both LMC0 and LMC1 use the same PLL,
                  * so we use the LMC0 setting of DCLK_INVERT for LMC1.
-                 */
+                */
                 if (! octeon_is_cpuid(OCTEON_CNF75XX)) {
                     int override = 0;
 
@@ -10622,7 +10611,7 @@ int initialize_ddr_clock(uint32_t cpu_id,
                 if (octeon_is_cpuid(OCTEON_CNF75XX)) {
                     ddr_dll_ctl3.cn78xx.dll90_byte_sel = 7;
                 } else {
-                    ddr_dll_ctl3.cn78xx.dll90_byte_sel = 1;
+                ddr_dll_ctl3.cn78xx.dll90_byte_sel = 1;
                 }
 
                 ddr_config_write_csr_node(node, CVMX_LMCX_DLL_CTL3(temp_lmc_interface_num),
@@ -10732,15 +10721,15 @@ int initialize_ddr_clock(uint32_t cpu_id,
                     /* cnf75xx 2-LMC Mode: LMC0 DRESET must occur after Step 5 */
                     cn78xx_lmc_dreset_init(node, 0);
                 } else {
-                    cn78xx_lmc_dreset_init(node, 1);
-                }
+                cn78xx_lmc_dreset_init(node, 1);
+            }
             }
 
             /* FOUR-LMC MODE AFTER STEP 5 */
             if (ddr_interface_mask == 0xf) {
                 cn78xx_lmc_dreset_init(node, 0);
                 cn78xx_lmc_dreset_init(node, 1);
-
+            
                 /* Enable periodic recalibration of DDR90 delay line in. */
                 ddr_dll_ctl3.u64 = cvmx_read_csr_node(node, CVMX_LMCX_DLL_CTL3(0));
                 ddr_dll_ctl3.cn78xx.dclk90_recal_dis = 0;
@@ -10794,7 +10783,7 @@ int initialize_ddr_clock(uint32_t cpu_id,
             }
         } /* Do this once */
 
-        /*
+            /*
          * 5.9.6 LMC RESET Initialization
          *
          * NOTE: this is now done as the first step in init_octeon3_ddr3_interface,
@@ -10803,7 +10792,7 @@ int initialize_ddr_clock(uint32_t cpu_id,
          *       being forced to resort to resetting the chip and starting all over.
          *
          *       Look for the code in octeon3_lmc.h: perform_lmc_reset().
-         */
+             */
     }
 #endif /* CONFIG_OCTEON_DISABLE_DDR3 */
 
@@ -11252,7 +11241,7 @@ int octeon_ddr_initialize(uint32_t cpu_id,
     }
 #endif
 
-    ddr_print(OCTEON_SDK_VERSION_STRING": $Revision: 167267 $\n");
+    ddr_print(OCTEON_SDK_VERSION_STRING": $Revision: 163731 $\n");
 
     if ((octeon_is_cpuid(OCTEON_CN61XX) || octeon_is_cpuid(OCTEON_CNF71XX))
         && ddr_max_speed > 533333333)
@@ -11935,10 +11924,12 @@ static uint8_t __attribute__((unused)) octeon_ebb7804_cfg1_spd_values[256] =
 static uint8_t __attribute__((unused)) octeon_nic73_cfg0_spd_values[512] =
 					{ OCTEON_NIC73_CFG0_SPD_VALUES };
 #endif
+
 #if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_COPPERHEAD)
 static uint8_t __attribute__((unused)) octeon_copperhead_cfg0_spd_values[512] =
 					{ OCTEON_COPPERHEAD_CFG0_SPD_VALUES };
 #endif
+
 #if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_NIC25E)
 static uint8_t __attribute__((unused)) octeon_nic25e_cfg0_spd_values[512] =
 					{ OCTEON_NIC25E_CFG0_SPD_VALUES };
@@ -12286,21 +12277,6 @@ const board_table_entry_t octeon_board_ddr_config_table[] =
 	}
     },
 #endif
-# if defined(CONFIG_OCTEON_IM8724) || \
-     defined(CONFIG_OCTEON_IM8724_EMMC_STAGE2) || \
-     defined(CONFIG_OCTEON_IM8724_SPI_STAGE2) || \
-     !defined(CVMX_BUILD_FOR_UBOOT)
-     {
-	.board_type = CVMX_BOARD_TYPE_CUST_IM8724,
-	.eeprom_addr = OCTEON_IM8724_BOARD_EEPROM_TWSI_ADDR,
-	.chip_ddr_config =
-	{
-	    {
-		.ddr_config = { OCTEON_IM8724_DDR_CONFIGURATION }
-	    }
-	}
-     },
-# endif
 #if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_SFF7800)
     {
 	.board_type = CVMX_BOARD_TYPE_SFF7800,
@@ -12382,17 +12358,27 @@ const board_table_entry_t octeon_board_ddr_config_table[] =
 	    }
 	}
     },
-#endif
-#if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_CNF7300)
+# endif
+# if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_UBNT_E1000)
     {
-	.board_type = CVMX_BOARD_TYPE_CNF7300,
-	.eeprom_addr = OCTEON_CNF7300_BOARD_EEPROM_TWSI_ADDR,
+	.board_type = CVMX_BOARD_TYPE_UBNT_E1000,
+	.eeprom_addr = OCTEON_UBNT_E1000_BOARD_EEPROM_TWSI_ADDR,
 	.chip_ddr_config =
 	{
 	    {
-		.ddr_config = { OCTEON_CNF7300_DDR_CONFIGURATION }
+		.ddr_config = { OCTEON_UBNT_E1000_DDR_CONFIGURATION }
 	    }
 	}
+    },
+    {
+    .board_type = CVMX_BOARD_TYPE_UBNT_E1020,
+    .eeprom_addr = OCTEON_UBNT_E1000_BOARD_EEPROM_TWSI_ADDR,
+    .chip_ddr_config =
+    {
+        {
+        .ddr_config = { OCTEON_UBNT_E1000_DDR_CONFIGURATION }
+        }
+    }
     },
 #endif
 #if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_EBB7504)
@@ -12405,30 +12391,6 @@ const board_table_entry_t octeon_board_ddr_config_table[] =
 		.ddr_config = { OCTEON_EBB7504_DDR_CONFIGURATION }
 	    }
 	}
-    },
-#endif
-#if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_EBB7500)
-    {
-	.board_type = CVMX_BOARD_TYPE_EBB7500,
-	.eeprom_addr = OCTEON_EBB7500_BOARD_EEPROM_TWSI_ADDR,
-	.chip_ddr_config =
-	{
-	    {
-		.ddr_config = { OCTEON_EBB7500_DDR_CONFIGURATION }
-	    }
-	}
-    },
-#endif
-#if 0 /*!defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_CNF7300)*/
-    {
-        .board_type = CVMX_BOARD_TYPE_CNF7300,
-        .eeprom_addr = OCTEON_CNF7300_BOARD_EEPROM_TWSI_ADDR,
-        .chip_ddr_config =
-        {
-            {
-                .ddr_config = { OCTEON_CNF7300_DDR_CONFIGURATION }
-            }
-        }
     },
 #endif
 #if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_NIC73) || \
@@ -12503,12 +12465,13 @@ const board_table_entry_t octeon_board_ddr_config_table[] =
 	    }
 	}
     },
-# endif
-# if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_NICX40E)
+#endif
+#if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_NICX40E)
     {
 	    .board_type = CVMX_BOARD_TYPE_NICX40E,
 	    .eeprom_addr = OCTEON_NICX40E_BOARD_EEPROM_TWSI_ADDR,
-	    .chip_ddr_config = {
+	.chip_ddr_config =
+	{
 		    {
 			    .ddr_config = { OCTEON_NICX40E_DDR_CONFIGURATION }
 		    }
@@ -12774,18 +12737,19 @@ const board_table_entry_t octeon_board_ddr_config_table[] =
 # endif
 # if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_COPPERHEAD)
     {
-	.board_type = CVMX_BOARD_TYPE_COPPERHEAD,
-	.eeprom_addr = OCTEON_COPPERHEAD_BOARD_EEPROM_TWSI_ADDR,
-	.chip_ddr_config =
-	{
-	    {
-		.ddr_config = {
-		    OCTEON_COPPERHEAD_DDR_CONFIGURATION
-		}
-	    }
-	}
+       .board_type = CVMX_BOARD_TYPE_COPPERHEAD,
+       .eeprom_addr = OCTEON_COPPERHEAD_BOARD_EEPROM_TWSI_ADDR,
+       .chip_ddr_config =
+       {
+           {
+               .ddr_config = {
+                   OCTEON_COPPERHEAD_DDR_CONFIGURATION
+               }
+           }
+       }
     },
 # endif
+
 # if !defined(CVMX_BUILD_FOR_UBOOT) || defined(CONFIG_OCTEON_SNIC10E)
     {
         .board_type = CVMX_BOARD_TYPE_SNIC10E,

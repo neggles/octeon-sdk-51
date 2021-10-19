@@ -315,7 +315,7 @@
 					0x11 0xC3FF 0x0C00	/* flip polarity of LED0/1 */
 					0x1f 0x0000 0x0003	/* go to page 3 */
 					0x10 0xEF7F 0x1080	/* enable MAC autoneg */
-				>;
+				>;	 
 			};
 			phy17: ethernet-phy@17 {
 				/* cavium,qlm-trim = "0,qsgmii"; */
@@ -330,7 +330,7 @@
 					0x00 0x7FFF 0x8000  /* set bit 15 */
 					0x1f 0x0000 0x0003	/* go to page 3 */
 					0x10 0xEF7F 0x1080	/* enable MAC autoneg */
-				>;
+				>;	 
 			};
 			phy18: ethernet-phy@18 {
 				/* cavium,qlm-trim = "0,qsgmii"; */
@@ -345,7 +345,7 @@
 					0x00 0x7FFF 0x8000  /* set bit 15 */
 					0x1f 0x0000 0x0003	/* go to page 3 */
 					0x10 0xEF7F 0x1080	/* enable MAC autoneg */
-				>;
+				>;	 
 			};
 		};
 
@@ -425,7 +425,7 @@
 			ranges; /* Direct mapping */
 			#address-cells = <2>;
 			#size-cells = <2>;
-
+		
 			uahc-port@0 {
 				#address-cells = <1>;
 				#size-cells = <0>;

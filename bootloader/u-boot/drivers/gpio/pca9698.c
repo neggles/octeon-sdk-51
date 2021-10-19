@@ -26,6 +26,7 @@
 /*
  * The pca9698 registers
  */
+
 #define PCA9698_REG_INPUT		0x00
 #define PCA9698_REG_OUTPUT		0x08
 #define PCA9698_REG_POLARITY		0x10

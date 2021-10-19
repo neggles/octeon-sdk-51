@@ -80,7 +80,7 @@ int octeon_fdt_vitesse_config(const struct eth_device *ethdev);
  * @returns 0 for success, error otherwise
  */
 int octeon_vitesse_vsc8488_sfp_config(struct eth_device *ethdev);
-#  endif
+# endif
 # endif
 #endif
 
@@ -547,10 +547,11 @@ static int octeon_fdt_cortina_config(struct eth_device *ethdev,
 	struct cortina_phy_info *pinfo = phydev->priv;
 	struct octeon_sfp_info *sfp = &ethinfo->sfp;
 	struct phy_sfp_info sfp_info;
-	const uint32_t *eeprom_handle;
+	const uint32_t *eeprom_handle, *mod_abs_handle;
 	int phandle;
 	int eeprom_node;
 	int i2c_bus_node;
+	int mod_abs_node;
 	bool sfp_valid = false;
 #endif
 
@@ -806,8 +807,8 @@ int octeon_board_phy_init(void)
 		if (!octeon_fdt_compat_vendor(gd->fdt_blob, phy_off,
 					      "vitesse")) {
 			debug("Configuring Vitesse PHY\n");
-			if (!need_coma) octeon_vitesse_coma(true);
 			need_coma = 1;
+			octeon_vitesse_coma(true);
 
 			rc = octeon_fdt_vitesse_config(ethdev);
 #if defined(CONFIG_PHYLIB_10G) && defined(CONFIG_PHY_SFP)

@@ -137,7 +137,7 @@ get_octeon3_ddr3_reference_clock(uint32_t alt_refclk,
 		ddr_type = get_ddr_type(dimm_config, 0);
 		spd_dimm_type = get_dimm_module_type(dimm_config, 0, ddr_type);
 
-		printf("ddr type: 0x%x, dimm type: 0x%x\n", ddr_type, spd_dimm_type);
+		debug("ddr type: 0x%x, dimm type: 0x%x\n", ddr_type, spd_dimm_type);
 		/* Is DDR4 and RDIMM just to be sure. */
 		if ((ddr_type == DDR4_DRAM) &&
                     ((spd_dimm_type == 1) || (spd_dimm_type == 5) || (spd_dimm_type == 8))) {
@@ -253,7 +253,7 @@ static void octeon_clear_dram(void)
 					 U_BOOT_CACHE_ENV_SIZE);
 		/* If the environment is loaded into the L2
 		 * cache then preserve it.
-		 */
+ */
 #if (U_BOOT_CACHE_ENV_ADDR + U_BOOT_CACHE_ENV_SIZE < OCTEON_DRAM_LATE_ZERO_OFFSET)
 		octeon_bzero64_pfs(0xffffffff80000000ULL,
 				   U_BOOT_CACHE_ENV_ADDR);
@@ -388,14 +388,14 @@ int octeon_init_dram(void)
 
 		ddr_hertz = gd->mem_clk * 1000000;
 
-		if ((eptr = getenv("ddr_clock_hertz")) != NULL) {
-			ddr_hertz = simple_strtoul(eptr, NULL, 0);
-			gd->mem_clk = divide_nint(ddr_hertz, 1000000);
+			if ((eptr = getenv("ddr_clock_hertz")) != NULL) {
+				ddr_hertz = simple_strtoul(eptr, NULL, 0);
+				gd->mem_clk = divide_nint(ddr_hertz, 1000000);
 			printf("Parameter found in environment.  ddr_clock_hertz = %d\n",
 			       ddr_hertz);
 		}
 
-		ddr_ref_hertz = gd->arch.ddr_ref_hertz;
+                ddr_ref_hertz = gd->arch.ddr_ref_hertz;
 
 #ifndef CONFIG_OCTEON_DISABLE_DDR3
 		ddr_ref_hertz =
@@ -406,31 +406,31 @@ int octeon_init_dram(void)
 
 		ddr_ref_hertz = getenv_ulong("ddr_ref_hertz", 10, ddr_ref_hertz);
 
-		printf("Initializing DDR, clock = %uhz, reference = %uhz\n",
+		debug("Initializing DDR, clock = %uhz, reference = %uhz\n",
 		      ddr_hertz, ddr_ref_hertz);
 #ifdef CONFIG_OCTEON_OCX
-		cvmx_coremask_for_each_node(node, gd->arch.node_mask) {
-			debug("%s: Initializing memory for node %d\n",
-			     __func__, node);
-			mem_mbytes = octeon_ddr_initialize(cpu_id,
-							   cvmx_clock_get_rate_node(node, CVMX_CLOCK_CORE),
-							   ddr_hertz,
-							   ddr_ref_hertz,
-							   ddr_config_valid_mask,
-							   ddr_config_ptr,
-							   &measured_ddr_hertz,
-							   gd->arch.board_desc.board_type,
-							   gd->arch.board_desc.rev_major,
-							   gd->arch.board_desc.rev_minor,
-							   node);
-			if (mem_mbytes > 0)
-				gd->arch.ram_sizes[node] = mem_mbytes;
-			debug("Flushing L2 cache after initializing node %d, node mask: 0x%x\n",
-			      node, gd->arch.node_mask);
-			cvmx_l2c_flush();
-			debug("Node %d mem size in MBYTES: %d\n",
-			      node, mem_mbytes);
-		}
+			cvmx_coremask_for_each_node(node, gd->arch.node_mask) {
+				debug("%s: Initializing memory for node %d\n",
+				     __func__, node);
+				mem_mbytes = octeon_ddr_initialize(cpu_id,
+								     cvmx_clock_get_rate_node(node, CVMX_CLOCK_CORE),
+								     ddr_hertz,
+								     ddr_ref_hertz,
+								     ddr_config_valid_mask,
+								     ddr_config_ptr,
+								     &measured_ddr_hertz,
+								     gd->arch.board_desc.board_type,
+								     gd->arch.board_desc.rev_major,
+								     gd->arch.board_desc.rev_minor,
+								     node);
+				if (mem_mbytes > 0)
+					gd->arch.ram_sizes[node] = mem_mbytes;
+				debug("Flushing L2 cache after initializing node %d, node mask: 0x%x\n",
+				      node, gd->arch.node_mask);
+				cvmx_l2c_flush();
+				debug("Node %d mem size in MBYTES: %d\n",
+				      node, mem_mbytes);
+			}
 #else
 		mem_mbytes = octeon_ddr_initialize(cpu_id,
 						   cvmx_clock_get_rate(CVMX_CLOCK_CORE),
@@ -481,15 +481,15 @@ int octeon_init_dram(void)
 		if (gd->flags & GD_FLG_BOARD_DESC_MISSING)
 			puts("Warning: Board descriptor tuple not found in eeprom, using defaults\n");
 
-		new_mem_mbytes = getenv_ulong("dram_size_mbytes", 0,
-					      mem_mbytes);
-		if (mem_mbytes > 0 && new_mem_mbytes != mem_mbytes) {
-			/* Override the actual DRAM size. */
-			if (new_mem_mbytes < mem_mbytes) {
+			new_mem_mbytes = getenv_ulong("dram_size_mbytes", 0,
+						      mem_mbytes);
+			if (mem_mbytes > 0 && new_mem_mbytes != mem_mbytes) {
+				/* Override the actual DRAM size. */
+				if (new_mem_mbytes < mem_mbytes) {
 				printf("!!! Overriding DRAM size: dram_size_mbytes = %d MBytes !!!\n",
-				       mem_mbytes);
-				mem_mbytes = new_mem_mbytes;
-			} else {
+					       mem_mbytes);
+					       mem_mbytes = new_mem_mbytes;
+				} else {
 				puts("!!! Memory size override failed due to actual memory size being smaller than requested size !!!\n");
 			}
 		}
@@ -569,6 +569,7 @@ static void octeon_dram_clear_70xx_ecc_errors(void)
 		       cvmx_read_csr(CVMX_CIU_CIB_L2C_RAWX(0)));
 	cvmx_write_csr(CVMX_L2C_TADX_INT(0),
 		       cvmx_read_csr(CVMX_L2C_TADX_INT(0)));
+
 }
 
 /**

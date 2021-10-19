@@ -40,7 +40,7 @@
 #define __OCTEON_FDT_H__
 /**
  *
- * $Id: octeon_fdt.h 167267 2017-10-19 21:58:08Z cchavva $
+ * $Id: octeon_fdt.h 152568 2017-01-19 00:05:57Z cchavva $
  *
  */
 
@@ -50,7 +50,6 @@ struct phy_device;
 enum octeon_gpio_type {
 	GPIO_TYPE_OCTEON,	/** Native Octeon */
 	GPIO_TYPE_PCA953X,	/** PCA953X i2c GPIO expander */
-	GPIO_TYPE_PCA9554,	/** PCA9554 i2c GPIO expander */
 	GPIO_TYPE_PCA9555,	/** PCA9555 i2c GPIO expander */
 	GPIO_TYPE_PCA9698,	/** PCA9698 i2c GPIO expander */
 #ifdef CONFIG_PHY_VITESSE
@@ -206,6 +205,7 @@ int octeon_fdt_get_soc_node(const void *fdt, int nodeoffset);
  */
 int octeon_fdt_node_check_compatible(const void *fdt, int node_offset,
 				     const char * const *strlist);
+
 /**
  * Given a node offset, find the i2c bus number for that node
  *

@@ -1651,7 +1651,7 @@ void print_mmc_device_info(struct mmc *mmc)
 		if ((host->ext_csd[EXT_CSD_REV] > 4)
 		    && ((mmc->cid[3] >> 8) & 0xf) <= 12)
 			start_year = 2013;
-		else
+	else
 			start_year = 1997;
 		printf("Manufacturing Date:    %d/%d\n",
 		       (mmc->cid[3] >> 12) & 0xf,
@@ -1746,29 +1746,29 @@ void print_mmc_device_info(struct mmc *mmc)
 			printf(" SDXC Speed Class Control (CMD20) supported\n");
 	} else {
 		if (card_type != 0 && mmc->version == MMC_VERSION_4) {
-			puts("Supported bus speeds: ");
-			if (card_type & EXT_CSD_CARD_TYPE_26) {
-				puts(" 26MHz");
-				prev = 1;
-			}
-			if (card_type & EXT_CSD_CARD_TYPE_52) {
-				if (prev)
-					putc(',');
-				puts(" 52MHz");
-				prev = 1;
-			}
-			if (card_type & EXT_CSD_CARD_TYPE_DDR_1_8V) {
-				if (prev)
-					putc(',');
+		puts("Supported bus speeds: ");
+		if (card_type & EXT_CSD_CARD_TYPE_26) {
+			puts(" 26MHz");
+			prev = 1;
+		}
+		if (card_type & EXT_CSD_CARD_TYPE_52) {
+			if (prev)
+				putc(',');
+			puts(" 52MHz");
+			prev = 1;
+		}
+		if (card_type & EXT_CSD_CARD_TYPE_DDR_1_8V) {
+			if (prev)
+				putc(',');
 				puts(" DDR 1.8V, 3V");
-				prev = 1;
-			}
-			if (card_type & EXT_CSD_CARD_TYPE_DDR_1_2V) {
-				if (prev)
-					putc(',');
-				puts(" DDR 1.2V");
-				prev = 1;
-			}
+			prev = 1;
+		}
+		if (card_type & EXT_CSD_CARD_TYPE_DDR_1_2V) {
+			if (prev)
+				putc(',');
+			puts(" DDR 1.2V");
+			prev = 1;
+		}
 			if (card_type & EXT_CSD_CARD_TYPE_HS200_1_8V) {
 				if (prev)
 					putc(',');
@@ -1793,8 +1793,8 @@ void print_mmc_device_info(struct mmc *mmc)
 				puts(" HS400 1.2V");
 				prev = 1;
 			}
-			puts("\n");
-		}
+		puts("\n");
+	}
 		printf("Current power Class:   %smA\n",
 		       power_classes[host->ext_csd[EXT_CSD_POWER_CLASS] & 0xF]);
 		printf("Power 4-bit@52MHz:     %smA\n",
@@ -3047,7 +3047,7 @@ again:
 	if (emm_switch.s.switch_err0) {
 		/* Error while performing POWER_CLASS switch */
 		debug("%s: Error: Could not change power class to %d\n",
-		      __func__, power_class);
+			      __func__, power_class);
 	}
 	if (emm_switch.s.switch_err1) {
 		/* Error while performing HS_TIMING switch */
@@ -3257,7 +3257,7 @@ again:
 
 	if (ddr && hs_timing && clock >= 26000000) {
 		if (clock >= 52000000)
-			mmc->card_caps |= MMC_MODE_DDR_52MHz;
+		mmc->card_caps |= MMC_MODE_DDR_52MHz;
 
 		switch (mmc->bus_width) {
 		case 8:
@@ -3667,7 +3667,7 @@ int mmc_send_if_cond(struct mmc *mmc)
 		debug("%s failed\n", __func__);
 		err = sd_version_1_x(mmc);
 		if (err) {
-			return err;
+		return err;
 		} else {
 			debug("%s: detected SD version 1.x\n", __func__);
 			mmc->version = SD_VERSION_1_0;

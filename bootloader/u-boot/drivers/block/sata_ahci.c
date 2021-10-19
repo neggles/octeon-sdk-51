@@ -1498,9 +1498,11 @@ int ahci_scan_device(struct ata_device *dev, bool verbose)
 	struct ata_port *ap;
 	void __iomem *port_mmio;
 	u32 port_cmd;
+	int pmp;
 
 	DPRINTK("ENTER (%d)\n", dev->devno);
 
+	pmp = sata_srst_pmp(dev->link);
 	ap = dev->link->ap;
 	port_mmio  = ahci_port_base(ap);
 	ahci_stop_engine(ap);

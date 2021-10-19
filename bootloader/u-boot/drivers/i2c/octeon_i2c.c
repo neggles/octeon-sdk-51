@@ -106,7 +106,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 struct octeon_i2c_bus_fdt {
 	struct list_head list;			/** Linked list of buses */
-	struct octeon_i2c_bus_fdt *parent;	/** If muxed bus, parent bus */
+	struct octeon_i2c_bus_fdt *parent;		/** If muxed bus, parent bus */
 	char name[OCTEON_I2C_BUS_NAME_SIZE];	/** Name of bus */
 	int node;				/** Device tree node */
 	int bus_num;				/** i2c bus number */
@@ -197,8 +197,7 @@ int is_i2c_bus_valid(uint8_t i2c_bus)
 	if (octeon_has_feature(OCTEON_FEATURE_MULTINODE))
 		return !!(gd->arch.node_mask & (1 << (i2c_bus >> 1)));
 #else
-	if (((OCTEON_IS_MODEL(OCTEON_CNF75XX)) && (i2c_bus <= 2))
-	    || (i2c_bus < 2))
+	if ((OCTEON_IS_MODEL(OCTEON_CNF75XX) && (i2c_bus <= 2)) || (i2c_bus < 2))
 		return 1;
 #endif
 	return 0;
@@ -291,6 +290,7 @@ static void octeon_i2c_write_int(int i2c_bus, cvmx_mio_tws_int_t int_reg)
 static int octeon_i2c_test_iflg(int bus)
 {
 	cvmx_mio_tws_sw_twsi_t sw_twsi;
+
 	if (!is_i2c_bus_valid(bus))
 		return 0;
 	sw_twsi.u64 = 0;
@@ -1105,7 +1105,7 @@ int octeon_i2c_process_fdt(void)
 			if (OCTEON_IS_MODEL(OCTEON_CNF75XX))
 				bus_num = 2;
 			else
-				bus_num = 1;
+			bus_num = 1;
 			break;
 		case FDT_ADDR_T_NONE:
 			puts("Error: i2c node in device tree missing \"reg\" field.\n");
@@ -1278,7 +1278,7 @@ int i2c_get_bus_num_fdt(int node)
 		if (i2c_bus->node == node) {
 			debug("  Found match %d\n", i2c_bus->bus_num);
 			return i2c_bus->bus_num;
-		}
+	}
 	}
 	return -1;
 }

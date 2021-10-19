@@ -57,9 +57,10 @@ static const char devname[20] = "mdio-octeon0\0";
  */
 static int marvell_sense_multi_chip_mode(void)
 {
+	int result;
 	uint16_t value;
 
-	mdio_read(devname, 0x19, 3, &value);
+	result = mdio_read(devname, 0x19, 3, &value);
 	return (value != 0x1a52);
 }
 
@@ -140,8 +141,6 @@ int checkboard(void)
 int early_board_init(void)
 {
 	int cpu_ref = 50;
-	union cvmx_dbg_data dbg_data;
-	int mul;
 
 	/* NOTE: this is early in the init process, so the serial port is not yet configured */
 
@@ -186,8 +185,9 @@ int early_board_init(void)
 	octeon_board_get_mac_addr();
 
 	/* Read CPU clock multiplier */
+	cvmx_dbg_data_t dbg_data;
 	dbg_data.u64 = cvmx_read_csr(CVMX_DBG_DATA);
-	mul = dbg_data.cn30xx.c_mul;
+	int mul = dbg_data.cn30xx.c_mul;
 	gd->cpu_clk = mul * cpu_ref;
 
 	/* adjust for 33.33 Mhz clock */
@@ -197,16 +197,6 @@ int early_board_init(void)
 	if (gd->cpu_clk < 100 || gd->cpu_clk > 900)
 		gd->cpu_clk = DEFAULT_ECLK_FREQ_MHZ;
 	gd->cpu_clk *= 1000000;
-
-	return 0;
-}
-
-int late_board_init(void)
-{
-	char prompt[32];
-	snprintf(prompt, sizeof(prompt), "Octeon cn%c010_evb_hs5",
-		 OCTEON_IS_MODEL(OCTEON_CN3XXX) ? '3' : '5');
-	setenv("prompt", prompt);
 
 	return 0;
 }

@@ -1155,7 +1155,7 @@ rootdir_done:
 	if (dogetsize)
 		ret = FAT2CPU32(dentptr->size);
 	else
-		ret = get_contents(mydata, dentptr, pos, buffer, maxsize);
+	ret = get_contents(mydata, dentptr, pos, buffer, maxsize);
 	debug("Size: %d, got: %ld\n", FAT2CPU32(dentptr->size), ret);
 
 exit:

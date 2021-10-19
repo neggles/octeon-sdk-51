@@ -91,7 +91,7 @@
  * The 'mtdids' environment variable is used in conjunction with the 'mtdparts'
  * variable to define the MTD partitions for u-boot.
  */
-#define MTDPARTS_DEFAULT			\
+#define MTDPARTS_DEFAULT				\
 	"mtdparts=octeon_nor0:3m(bootloader)ro,"        \
         "2m(kernel),"                                   \
         "3064k(cramfs),"                                \
@@ -180,10 +180,6 @@
  */
 #define CONFIG_OCTEON_SPI_BOOT_START		0x10000
 
-/** Enable NVME support */
-#define CONFIG_NVME
-#define CONFIG_CMD_NVME
-#define CONFIG_SYS_NVME_MAX_DEVICE		8
 /**
  * End of the SPI boot partition which is searched for a bootloader.  Must be
  * on an erase block boundary.

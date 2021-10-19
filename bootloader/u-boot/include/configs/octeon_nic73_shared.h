@@ -149,64 +149,64 @@
 #define OCTEON_NIC73_MODEREG_PARAMS1_1RANK_1SLOT	\
 {							\
 		.cn78xx = {					\
-			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
+		.pasr_00	= 0,			\
+		.asr_00		= 0,			\
+		.srt_00		= 0,			\
 			.rtt_wr_00	= ddr4_rttwr_80ohm&3,	\
 			.rtt_wr_00_ext	= (ddr4_rttwr_80ohm>>2)&1,	\
 			.dic_00		= ddr4_dic_34ohm,	\
 			.rtt_nom_00	= 0,                    \
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= 0,			\
+		.pasr_01	= 0,			\
+		.asr_01		= 0,			\
+		.srt_01		= 0,			\
+		.rtt_wr_01	= 0,			\
 			.dic_01		= ddr4_dic_34ohm,	\
-			.rtt_nom_01	= 0,			\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,			\
-			.rtt_wr_10	= 0,			\
+		.rtt_nom_01	= 0,			\
+		.pasr_10	= 0,			\
+		.asr_10		= 0,			\
+		.srt_10		= 0,			\
+		.rtt_wr_10	= 0,			\
 			.dic_10		= ddr4_dic_34ohm,	\
-			.rtt_nom_10	= 0,			\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= 0,			\
+		.rtt_nom_10	= 0,			\
+		.pasr_11	= 0,			\
+		.asr_11		= 0,			\
+		.srt_11		= 0,			\
+		.rtt_wr_11	= 0,			\
 			.dic_11		= ddr4_dic_34ohm,	\
-			.rtt_nom_11	= 0,			\
-		}						\
+		.rtt_nom_11	= 0,			\
+	}						\
 	}
 
 #define OCTEON_NIC73_MODEREG_PARAMS1_1RANK_2SLOT	\
 {							\
 		.cn78xx = {					\
-			.pasr_00	= 0,			\
-			.asr_00		= 0,			\
-			.srt_00		= 0,			\
+		.pasr_00	= 0,			\
+		.asr_00		= 0,			\
+		.srt_00		= 0,			\
 			.rtt_wr_00	= ddr4_rttwr_80ohm&3,	\
 			.rtt_wr_00_ext	= (ddr4_rttwr_80ohm>>2)&1,	\
 			.dic_00		= ddr4_dic_34ohm,	\
 			.rtt_nom_00	= 0,			\
-			.pasr_01	= 0,			\
-			.asr_01		= 0,			\
-			.srt_01		= 0,			\
-			.rtt_wr_01	= 0,			\
+		.pasr_01	= 0,			\
+		.asr_01		= 0,			\
+		.srt_01		= 0,			\
+		.rtt_wr_01	= 0,			\
 			.dic_01		= ddr4_dic_34ohm,	\
-			.rtt_nom_01	= 0,			\
-			.pasr_10	= 0,			\
-			.asr_10		= 0,			\
-			.srt_10		= 0,                    \
+		.rtt_nom_01	= 0,			\
+		.pasr_10	= 0,			\
+		.asr_10		= 0,			\
+		.srt_10		= 0,			\
 			.rtt_wr_10	= ddr4_rttwr_80ohm&3,	\
 			.rtt_wr_10_ext	= (ddr4_rttwr_80ohm>>2)&1,	\
 			.dic_10		= ddr4_dic_34ohm,	\
 			.rtt_nom_10	= 0,			\
-			.pasr_11	= 0,			\
-			.asr_11		= 0,			\
-			.srt_11		= 0,			\
-			.rtt_wr_11	= 0,			\
+		.pasr_11	= 0,			\
+		.asr_11		= 0,			\
+		.srt_11		= 0,			\
+		.rtt_wr_11	= 0,			\
 			.dic_11		= ddr4_dic_34ohm,	\
-			.rtt_nom_11	= 0			\
-		}                                               \
+		.rtt_nom_11	= 0			\
+	}						\
 }
 
 #define OCTEON_NIC73_MODEREG_PARAMS2_1RANK_1SLOT	\

@@ -812,7 +812,7 @@ int validate_spi_bootloader(struct spi_flash *sf, uint32_t offset, size_t size)
 		}
 	}
 
-	free(buffer);
+		free(buffer);
 
 	return rc;
 }
@@ -878,7 +878,7 @@ static void print_image_map(const struct bootloader_map *map, int count)
 		default:
 			type = "unknown or undefined";
 			break;
-		}
+	}
 
 		printf("%d: offset: 0x%x, image size: %#x, map size: 0x%x, type: %s, free: %s\n",
 		       i, map[i].offset, map[i].image_size, map[i].size, type,
@@ -932,7 +932,7 @@ static int spi_write_image(struct spi_flash *sf, uint32_t offset,
 				       __func__, i, sf->erase_size);
 				return -1;
 			}
-		}
+	}
 	}
 
 	rc = spi_flash_write(sf, offset, blen, (void *)header);
@@ -1126,7 +1126,7 @@ int spi_reorder_bootloaders(struct spi_flash *sf,
 		       __func__, header_index, *count - 1);
 		rc = -1;
 		goto done;
-	}
+			}
 
 	/* Count number of bootloaders in the map */
 	for (i = 0; i < *count; i++)
@@ -1229,7 +1229,7 @@ int spi_reorder_bootloaders(struct spi_flash *sf,
 		new_map[i].offset = offset;
 		if (map_indices[i] >= 0 && !map[map_indices[i]].free_space)
 			offset += new_map[i].size;
-		else
+			else
 			offset += berase;
 	}
 	/* Make sure they all fit */
@@ -1308,7 +1308,7 @@ int spi_reorder_bootloaders(struct spi_flash *sf,
 				       __func__, bsize, new_map[i].offset);
 				goto done;
 			}
-		} else {
+			} else {
 
 			debug("%s: Writing image: %d, offset: 0x%x, size: 0x%x bytes\n",
 			      __func__, i, new_map[i].offset, new_map[i].size);
@@ -1347,13 +1347,13 @@ int spi_reorder_bootloaders(struct spi_flash *sf,
 				if (buffer[i] != 0xff) {
 					erase_needed = true;
 					break;
-				}
 			}
+		}
 			if (erase_needed) {
 				debug("Erasing free space offset 0x%x\n",
 				      offset);
 				spi_flash_erase(sf, offset, sf->erase_size);
-			} else {
+	} else {
 				debug("Erase not needed for offset 0x%x\n",
 				      offset);
 			}
@@ -1431,7 +1431,7 @@ int spi_install_stage2_stage3(struct spi_flash *sf,
 				      map[i].type, i);
 				break;
 			}
-		}
+	}
 	}
 	debug("%s: first stage 2 index: %d, last stage 2 index: %d, first stage 3 index: %d, last stage 3 index: %d\n",
 	       __func__, first_s2, last_s2, first_s3, last_s3);
@@ -1988,7 +1988,7 @@ int do_bootloader_update(cmd_tbl_t * cmdtp, int flag, int argc,
 #if defined(CONFIG_OCTEON_NO_FAILSAFE)
 	if (!force_spi && !force_nand && !force_mmc) {
 		debug("%s: No NOR failsafe support for this board\n", __func__);
-		burn_addr = 0x1fc00000;
+	burn_addr = 0x1fc00000;
 		failsafe = true;
 	}
 #endif
@@ -2116,7 +2116,7 @@ int do_bootloader_update(cmd_tbl_t * cmdtp, int flag, int argc,
 			if (offset > 8192) {
 				printf("Error: stage 1 bootloader size %d exceeds 8192 bytes\n",
 				       get_image_size(header));
-				return 1;
+			return 1;
 			} else {
 				debug("Rounded stage 1 bootloader size: %d\n",
 				      offset);
@@ -2130,8 +2130,8 @@ int do_bootloader_update(cmd_tbl_t * cmdtp, int flag, int argc,
 				image_len = offset + get_image_size(header2);
 			} else {
 				printf("Invalid or missing stage 1.5 bootloader at 0x%p, header: %d, data: %d\n",
-				       header2, validate_header(header2),
-				       validate_data(header2));
+				      header2, validate_header(header2),
+				      validate_data(header2));
 				return 1;
 			}
 		}

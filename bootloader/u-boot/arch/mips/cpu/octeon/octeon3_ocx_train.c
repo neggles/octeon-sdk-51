@@ -61,7 +61,7 @@
  * the INITIALIZE coefficients update is received.  It is also the TX SWING Tap
  * value used when the Base-R Link Training begins.
  *
- * The default value is 0xD which is optimal for the ebb780x boards.
+ * The default value is 0xD.
  *
  * This is for the opposite node.
  */

@@ -362,7 +362,6 @@ static int bootm_load_os(bootm_headers_t *images, unsigned long *load_end,
 	__maybe_unused uint unc_len = CONFIG_SYS_BOOTM_LEN;
 	int no_overlap = 0;
 	void *load_buf, *image_buf;
-	int i;
 #if defined(CONFIG_LZMA) || defined(CONFIG_LZO)
 	int ret;
 #endif /* defined(CONFIG_LZMA) || defined(CONFIG_LZO) */
@@ -404,7 +403,7 @@ static int bootm_load_os(bootm_headers_t *images, unsigned long *load_end,
 		 * use slower decompression algorithm which requires
 		 * at most 2300 KB of memory.
 		 */
-		i = BZ2_bzBuffToBuffDecompress(load_buf, &unc_len,
+		int i = BZ2_bzBuffToBuffDecompress(load_buf, &unc_len,
 			image_buf, image_len,
 			CONFIG_SYS_MALLOC_LEN < (4096 * 1024), 0);
 		if (i != BZ_OK) {

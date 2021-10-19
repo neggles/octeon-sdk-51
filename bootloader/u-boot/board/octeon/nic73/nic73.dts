@@ -43,13 +43,13 @@
 			 * size should have 4MB added to the end.
 			 */
 			ranges = <0 0  0       0x1fb00000  0x500000>,
-				 <1 0  0x10000 0x10000000  0>,
-				 <2 0  0x10000 0x20000000  0>,
-				 <3 0  0x10000 0x30000000  0>,
-				 <4 0  0x10000 0x40000000  0>,
-				 <5 0  0x10000 0x50000000  0>,
-				 <6 0  0x10000 0x60000000  0>,
-				 <7 0  0x10000 0x70000000  0>;
+			<1 0  0x10000 0x10000000  0>,
+			<2 0  0x10000 0x20000000  0>,
+			<3 0  0x10000 0x30000000  0>,
+			<4 0  0x10000 0x40000000  0>,
+			<5 0  0x10000 0x50000000  0>,
+			<6 0  0x10000 0x60000000  0>,
+			<7 0  0x10000 0x70000000  0>;
 
 			cavium,cs-config@0 {
 				compatible = "cavium,octeon-3860-bootbus-config";
@@ -78,7 +78,7 @@
 				#address-cells = <1>;
 				#size-cells = <1>;
 				cavium,board-trim = "4,nor-flash";
-
+				
 				partition@0 {
 					label = "unused";
 					reg = <0 0x10000>;
@@ -274,11 +274,11 @@
 					<0x87 0x4021>,
 					/* Turn off adaptive input equalization
 					 * and VGA adaptive algorithm control.
-					*/
+					 */
 					<0x89 0x7313>,
 					/* Turn on adaptive input equalization
 					 * and VGA adaptive algorithm control.
-					*/
+					 */
 					<0x89 0x7f13>;
 
 				vitesse-channel@0 {
@@ -314,7 +314,6 @@
 					reg = <1>;
 					/* Ignore mod_abs and module */
 					direction-rx;
-
 					/* Disable pre-tap */
 					pretap-disable;
 
@@ -330,7 +329,6 @@
 					 * NOTE: if taps are disabled then they
 					 *       are not programmed.
 					 */
-
 					taps = <0 0x0a 0x0b 0x10>;
 
 					sfp-mac = <&eth0>;

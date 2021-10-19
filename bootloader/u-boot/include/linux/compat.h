@@ -57,7 +57,4 @@
 				  , __FILE__, __LINE__); }
 
 #define PAGE_SIZE	4096
-
-typedef int	wait_queue_head_t;
-
 #endif

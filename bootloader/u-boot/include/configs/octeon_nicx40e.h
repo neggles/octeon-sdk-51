@@ -26,9 +26,6 @@
 # define CONFIG_OCTEON_PCI_HOST		0
 #endif
 
-/** Enable the more powerful hush command parser */
-#define CONFIG_SYS_HUSH_PARSER
-
 #define CONFIG_OCTEON_BIG_STACK_SIZE		0x4000	/** 16K stack */
 #define CONFIG_SYS_NO_FLASH		/** No NOR flash present */
 

@@ -64,7 +64,7 @@ int do_octeonwd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 	if (argc < 2)
 		return cmd_usage(cmdtp);
-
+	
 	if (!strcmp(argv[1], "start")) {
 		if (argc == 3) {
 			tout = simple_strtoul(argv[2], NULL, 0);
@@ -91,7 +91,7 @@ int do_octeonwd(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	} else {
 		return cmd_usage(cmdtp);
 	}
-
+	
 	return 0;
 }
 

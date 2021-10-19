@@ -12,9 +12,6 @@
 #ifndef __OCTEON_COPPERHEAD_H__
 #define __OCTEON_COPPERHEAD_H__
 
-/** Enable the more powerful hush command parser */
-#define CONFIG_SYS_HUSH_PARSER
-
 #define CONFIG_OCTEON_BIG_STACK_SIZE		0x4000	/** 16K stack */
 
 #define CONFIG_API		/** Enable U-Boot native applications */

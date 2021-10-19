@@ -546,7 +546,7 @@ u32 xhci_readl(volatile uint32_t *addr32)
 		debug("%s(%p (0x%llx)) => 0x%x\n", __func__, addr32,
 		      addr64, val);
 #endif
-	    } else {
+	} else {
 		val = le32_to_cpu(*addr32);
 #ifdef DEBUG_IO
 		debug("%s(0x%p) => 0x%x\n", __func__, addr32, val);
@@ -642,7 +642,7 @@ static uint64_t node_to_addr(int node, uint64_t addr)
 
 /**
  * Returns true if the GPIO node in the device tree is Octeon compatible
- */
+	 */
 static int octeon3_usb_gpio_compatible(int gpio_offset)
 {
 	return !(fdt_node_check_compatible(gd->fdt_blob, gpio_offset,
@@ -650,7 +650,6 @@ static int octeon3_usb_gpio_compatible(int gpio_offset)
 		 fdt_node_check_compatible(gd->fdt_blob, gpio_offset,
 					   "cavium,octeon-7890-gpio"));
 }
-
 /**
  * Configure the power from the device tree.
  *
@@ -1264,6 +1263,7 @@ retry:
 		uctl_ctl.s.uctl_rst = 1;
 		cvmx_write_csr_node(node,
 				    CVMX_USBDRDX_UCTL_CTL(index), uctl_ctl.u64);
+
 		/* Step 5a: Reset the clock dividers */
 		uctl_ctl.u64 = cvmx_read_csr_node(node,
 						  CVMX_USBDRDX_UCTL_CTL(index));
@@ -1500,7 +1500,7 @@ retry:
 
 #ifdef DEBUG
 		if (!dwc3_uphy_indirect_read(node, index,
-					     DWC3_INT_IND_PLL_LOCK_REG))
+			DWC3_INT_IND_PLL_LOCK_REG))
 			printf("Detected no lock on USB 2 PHY PLL\n");
 #endif
 

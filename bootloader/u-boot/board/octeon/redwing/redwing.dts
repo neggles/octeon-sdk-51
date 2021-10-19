@@ -256,7 +256,7 @@
 					read-only;
 				};
 			};
-
+			
 			psram0: psram@2,0 {
 				compatible = "micron,mt45w8mw16bgx";
 				reg = <2 0 0x1000000>;

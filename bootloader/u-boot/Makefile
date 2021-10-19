@@ -8,7 +8,7 @@
 VERSION = 2013
 PATCHLEVEL = 07
 SUBLEVEL =
-EXTRAVERSION = $(shell git rev-parse --short HEAD)
+EXTRAVERSION =
 ifneq "$(SUBLEVEL)" ""
 U_BOOT_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
 else
@@ -280,10 +280,8 @@ LIBS-y += drivers/mtd/nand/libnand.o
 LIBS-y += drivers/mtd/onenand/libonenand.o
 LIBS-y += drivers/mtd/ubi/libubi.o
 LIBS-y += drivers/mtd/spi/libspi_flash.o
-LIBS-y += drivers/nvme/libnvme.o
 LIBS-y += drivers/net/libnet.o
 LIBS-y += drivers/net/phy/libphy.o
-LIBS-$(CONFIG_PHY_MARVELL88X5113) += drivers/net/phy/marvell88x5113/libmarvell88x5113.o
 LIBS-y += drivers/pci/libpci.o
 LIBS-y += drivers/pcmcia/libpcmcia.o
 LIBS-y += drivers/power/libpower.o \
@@ -569,6 +567,8 @@ archive: $(ARCHIVE_FILES)
 		# Rename the u-boot files to match the configuration that was built
 $(obj)rename: $(obj)u-boot $(obj)u-boot.bin $(obj)System.map
 	mv $(obj)u-boot $(obj)u-boot-$(CPU)_$(BOARD)
+#--------------------------------------------------------------------------
+#-------------------------------------------------------------------------	
 	mv $(obj)u-boot.bin $(obj)u-boot-$(CPU)_$(BOARD).bin
 	mv $(obj)u-boot.map $(obj)u-boot-$(CPU)_$(BOARD).map
 	mv $(obj)System.map $(obj)System-$(CPU)_$(BOARD).map

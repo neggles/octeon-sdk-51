@@ -188,7 +188,6 @@
 				 * are supported even though it's only a single
 				 * PHY device.
 				 */
-
 				phy01000: ethernet-phy@0 {
 					compatible = "cortina,cs4343-slice";
 					reg = <0>;

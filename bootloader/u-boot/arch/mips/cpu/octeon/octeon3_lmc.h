@@ -79,7 +79,7 @@
 
 #define COUNT_RL_CANDIDATES 1
 
-#define LOOK_FOR_STUCK_BYTE      0
+#define LOOK_FOR_STUCK_BYTE 0
 #define ENABLE_STUCK_BYTE_RESET  0
 
 #define DDR3_DAC_OVERRIDE  1
@@ -398,21 +398,21 @@ static int test_dram_byte64(uint32_t cpu_id, int node, int ddr_interface_num,
 		cvmx_write64_uint64(p2, v1);
 
 #ifdef __U_BOOT__
-		/* Write back and invalidate the cache lines
-		 *
-		 * For OCX we cannot limit the number of L2 ways
-		 * so instead we just write back and invalidate
-		 * the L2 cache lines.  This is not possible
-		 * when booting remotely, however so this is
-		 * only enabled for U-Boot right now.
-		 * Potentially the BDK can also take advantage
-		 * of this.
-		 */
-		CVMX_CACHE_WBIL2(p1, 0);
-		CVMX_CACHE_WBIL2(p2, 0);
+	    /* Write back and invalidate the cache lines
+	     *
+	     * For OCX we cannot limit the number of L2 ways
+	     * so instead we just write back and invalidate
+	     * the L2 cache lines.  This is not possible
+	     * when booting remotely, however so this is
+	     * only enabled for U-Boot right now.
+	     * Potentially the BDK can also take advantage
+	     * of this.
+	     */
+            CVMX_CACHE_WBIL2(p1, 0);
+            CVMX_CACHE_WBIL2(p2, 0);
 #endif
-	    }
 	}
+    }
     }
 #ifdef __U_BOOT__
     CVMX_DCACHE_INVALIDATE;
@@ -442,25 +442,25 @@ static int test_dram_byte64(uint32_t cpu_id, int node, int ddr_interface_num,
 		/* test_dram_byte_print("[0x%016llX]: 0x%016llX, [0x%016llX]: 0x%016llX\n",
 		 *            p1, v, p2, v1);
 		 */
-		cvmx_write64_uint64(p1, v);
-		cvmx_write64_uint64(p2, v1);
+                cvmx_write64_uint64(p1, v);
+                cvmx_write64_uint64(p2, v1);
 
 #ifdef __U_BOOT__
-		/* Write back and invalidate the cache lines
-		 *
-		 * For OCX we cannot limit the number of L2 ways
-		 * so instead we just write back and invalidate
-		 * the L2 cache lines.  This is not possible
-		 * when booting remotely, however so this is
-		 * only enabled for U-Boot right now.
-		 * Potentially the BDK can also take advantage
-		 * of this.
-		 */
-		CVMX_CACHE_WBIL2(p1, 0);
-		CVMX_CACHE_WBIL2(p2, 0);
+            /* Write back and invalidate the cache lines
+             *
+             * For OCX we cannot limit the number of L2 ways
+             * so instead we just write back and invalidate
+             * the L2 cache lines.  This is not possible
+             * when booting remotely, however so this is
+             * only enabled for U-Boot right now.
+             * Potentially the BDK can also take advantage
+             * of this.
+             */
+            CVMX_CACHE_WBIL2(p1, 0);
+            CVMX_CACHE_WBIL2(p2, 0);
 #endif
-	    }
 	}
+    }
     }
 #ifdef __U_BOOT__
     CVMX_DCACHE_INVALIDATE;
@@ -470,7 +470,7 @@ static int test_dram_byte64(uint32_t cpu_id, int node, int ddr_interface_num,
     // NOTE: the ordering of loops is purposeful: test full cachelines to detect
     //       an error occuring in any slot thereof
     for (k = 0; k < (1 << bitno); k += (1 << 14)) {
-	for (j = 0; j < (1 << 12); j += (1 << 9)) {
+	    for (j = 0; j < (1 << 12); j += (1 << 9)) {
 	    for (i = 0; i < (1 << 7); i += 8) {
 		int bybit = 1;
 		uint64_t bymsk = 0xffULL; // start in byte lane 0
@@ -484,7 +484,7 @@ static int test_dram_byte64(uint32_t cpu_id, int node, int ddr_interface_num,
 		d2 = cvmx_read64_uint64(p2);
 #else
 		v = test_pattern[index%(sizeof(test_pattern)/sizeof(uint64_t))];
-		d1 = cvmx_read64_uint64(p1);
+                d1 = cvmx_read64_uint64(p1);
 		d2 = ~cvmx_read64_uint64(p2);
 #endif
 		/* test_dram_byte_print("[0x%016llX]: 0x%016llX, [0x%016llX]: 0x%016llX\n",
@@ -734,18 +734,18 @@ test_dram_byte64(uint32_t cpu_id, int node, int lmc, uint64_t p,
 				datamask &= ~bymsk; // clear the byte lane in the mask
 #if EXIT_WHEN_ALL_LANES_HAVE_ERRORS
 				if (datamask == 0) { // nothing left to do
-				    return errors; // completely done when errors found in all byte lanes in datamask
-				}
-#endif /* EXIT_WHEN_ALL_LANES_HAVE_ERRORS */
-			    }
-			    bymsk <<= 8; // move mask into next byte lane
-			    bybit <<= 1; // move bit into next byte position
+			    return errors; // completely done when errors found in all byte lanes in datamask
 			}
+#endif /* EXIT_WHEN_ALL_LANES_HAVE_ERRORS */
 		    }
+		    bymsk <<= 8; // move mask into next byte lane
+		    bybit <<= 1; // move bit into next byte position
+		}
+	    }
 		    BDK_CACHE_WBI_L2(p1);
 		    BDK_CACHE_WBI_L2(p2);
 		}
-	    }
+	}
 	} /* for (ii = 0; ii < (1ULL << 31); ii += (1ULL << 29)) */
 
         debug_print("N%d.LMC%d: dram_tuning_mem_xor: done TEST loop\n", 
@@ -770,7 +770,7 @@ test_dram_byte64(uint32_t cpu_id, int node, int lmc, uint64_t p,
 
 static void
 ddr4_mrw(uint32_t cpu_id, int node, int ddr_interface_num, int rank,
-         int mr_wr_addr, int mr_wr_sel, int mr_wr_bg1)
+                     int mr_wr_addr, int mr_wr_sel, int mr_wr_bg1)
 {
     cvmx_lmcx_mr_mpr_ctl_t lmc_mr_mpr_ctl;
 
@@ -1371,7 +1371,7 @@ Validate_HW_WL_Settings(int node, int ddr_interface_num,
     int rseq2[] = { 4,5,6,7,-1 }; // index 0 has byte 4, then go up
     int useqno[] = { 0,1,2,3,4,5,6,7,-1 }; // index 0 has byte 0, etc, no ECC
     int rseq1no[] = { 3,2,1,0,-1 }; // index 0 is byte 3, then go down, no ECC
-    
+
     // in the CSR, bytes 0-7 are always data, byte 8 is ECC
     for (byte = 0; byte < (8+ecc_ena); byte++) {
 	wl[byte] = (get_wlevel_rank_struct(lmc_wlevel_rank, byte) >> 1) & 3; // preprocess :-)
@@ -1461,14 +1461,14 @@ Get_Deskew_Settings(int node, int ddr_interface_num,
                 //phy_ctl.u = BDK_CSR_READ(node, BDK_LMCX_PHY_CTL(ddr_interface_num));
                 phy_ctl.u64 = cvmx_read_csr_node(node, CVMX_LMCX_PHY_CTL(ddr_interface_num));
             } while (phy_ctl.s.dsk_dbg_rd_complete != 1);
-			
+
             // record the data
             dskdat->bytes[byte_lane].bits[bit_index] = phy_ctl.s.dsk_dbg_rd_data & 0x3ff;
             bit_index++;
 
         } /* for (bit_num = 0; bit_num <= bit_end; ++bit_num) */
     } /* for (byte_lane = 0; byte_lane < byte_limit; byte_lane++) */
-	
+
     return;
 }
 
@@ -1535,7 +1535,6 @@ static void Validate_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
 	nib_min[0] = 127; nib_min[1] = 127;
 	nib_max[0] = 0;   nib_max[1] = 0;
 	nib_unl[0] = 0;   nib_unl[1] = 0;
-
 #if LOOK_FOR_STUCK_BYTE
         bl_mask[0] = bl_mask[1] = 0;
 #endif
@@ -1562,14 +1561,14 @@ static void Validate_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
 
             counts->saturated += !!(flags & 6);
             counts->unlocked  +=  !(flags & 1);
-
+			
             nib_unl[nib_num]  +=  !(flags & 1);
 
             // Do range calc even when locked; it could happen that a bit
             // is still unlocked after final retry, and we want to have
             // an external retry if a RANGE error is present at exit...
-            nib_min[nib_num] = min(nib_min[nib_num], deskew);
-            nib_max[nib_num] = max(nib_max[nib_num], deskew);
+	    nib_min[nib_num] = min(nib_min[nib_num], deskew);
+	    nib_max[nib_num] = max(nib_max[nib_num], deskew);
 
 #if LOOK_FOR_STUCK_BYTE
             bl_mask[(deskew >> 6) & 1] |= 1UL << (deskew & 0x3f);
@@ -1583,14 +1582,14 @@ static void Validate_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
 	/*
           Now look for nibble errors
 
-	  For bit 55, it looks like a bit deskew problem. When the upper nibble of byte 6
+	  For bit 55, it looks like a bit deskew problem. When the upper nibble of byte 6 
 	   needs to go to saturation, bit 7 of byte 6 locks prematurely at 64.
 	  For DIMMs with raw card A and B, can we reset the deskew training when we encounter this case?
 	  The reset criteria should be looking at one nibble at a time for raw card A and B;
 	  if the bit-deskew setting within a nibble is different by > 33, we'll issue a reset
 	  to the bit deskew training.
 
-	  LMC0 Bit Deskew Byte(6): 64 0 - 0 - 0 - 26 61 35 64
+	  LMC0 Bit Deskew Byte(6): 64 0 - 0 - 0 - 26 61 35 64 
 	*/
 	// upper nibble range, then lower nibble range
 	nibrng_errs  = ((nib_max[1] - nib_min[1]) > 33) ? 1 : 0;
@@ -1598,7 +1597,7 @@ static void Validate_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
 
 	// check for nibble all unlocked
 	nibunl_errs = ((nib_unl[0] == 4) || (nib_unl[1] == 4)) ? 1 : 0;
-
+	
 	// check for bit value errors, ie < 17 or > 110
         // FIXME? assume max always > MIN_BITVAL and min < MAX_BITVAL
 	bitval_errs  = ((nib_max[1] > MAX_BITVAL) || (nib_max[0] > MAX_BITVAL)) ? 1 : 0;
@@ -1608,7 +1607,7 @@ static void Validate_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
             && print_enable)
         {
 	    ddr_print(" %c%c%c", (nibrng_errs)?'R':' ', (nibunl_errs)?'U':' ', (bitval_errs)?'V':' ');
-        }
+	}
 
 #if LOOK_FOR_STUCK_BYTE
         bit_values = __builtin_popcountll(bl_mask[0]) + __builtin_popcountll(bl_mask[1]);
@@ -1636,7 +1635,7 @@ static void Validate_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
 #endif
 
     } /* for (byte_lane = 0; byte_lane < 8+lmc_config.s.ecc_ena; byte_lane++) */
-
+	
     return;
 }
 
@@ -1654,13 +1653,13 @@ load_dac_override(uint32_t cpu_id, int node, int ddr_interface_num,
 
     ddr_dll_ctl3.cn73xx.bit_select    = 0x9; /* No-op */
     ddr_config_write_csr_node(node, CVMX_LMCX_DLL_CTL3(ddr_interface_num), ddr_dll_ctl3.u64);
-
+               
     ddr_dll_ctl3.cn73xx.bit_select    = 0xC; /* Vref bypass setting load */
     ddr_config_write_csr_node(node, CVMX_LMCX_DLL_CTL3(ddr_interface_num), ddr_dll_ctl3.u64);
-
+               
     ddr_dll_ctl3.cn73xx.bit_select    = 0xD; /* Vref bypass on. */
     ddr_config_write_csr_node(node, CVMX_LMCX_DLL_CTL3(ddr_interface_num), ddr_dll_ctl3.u64);
-
+               
     ddr_dll_ctl3.cn73xx.bit_select    = 0x9; /* No-op */
     ddr_config_write_csr_node(node, CVMX_LMCX_DLL_CTL3(ddr_interface_num), ddr_dll_ctl3.u64);
 
@@ -1787,7 +1786,7 @@ Perform_Offset_Training(int node, int rank_mask, int ddr_interface_num, uint32_t
     if (lmc_phy_ctl.u64 != orig_phy_ctl) {
         ddr_print("PHY_CTL                                       : 0x%016llx\n", lmc_phy_ctl.u64);
         ddr_config_write_csr_node(node, CVMX_LMCX_PHY_CTL(ddr_interface_num), lmc_phy_ctl.u64);
-    }
+        }
 
 #if 0
     // FIXME? do we really need to show RODT here?
@@ -1810,7 +1809,7 @@ Perform_Offset_Training(int node, int rank_mask, int ddr_interface_num, uint32_t
     perform_octeon3_ddr3_sequence(cpu_id, node, rank_mask, ddr_interface_num, 0x0B);
 
 }
-
+			
 static void
 Perform_Internal_VREF_Training(int node, int rank_mask, int ddr_interface_num, uint32_t cpu_id)
 {
@@ -1870,12 +1869,12 @@ process_samples_average(int16_t *bytes, int num_samples, int lmc, int lane_no)
         if (bytes[i] < smin) smin = bytes[i];
         if (bytes[i] > smax) smax = bytes[i];
         dbg_avg(" %3d", bytes[i]);
-    }
+            }
 
     dbg_avg(" (%3d, %3d)", smin, smax);
 
     asum = sum - smin - smax;
-
+	
     sadj = divide_nint(asum * 10, (num_samples - 2));
 
     trunc = asum / (num_samples - 2);
@@ -1896,7 +1895,7 @@ process_samples_average(int16_t *bytes, int num_samples, int lmc, int lane_no)
 }
 
 
-#define DEFAULT_SAT_RETRY_LIMIT    11       // 1 + 10 retries
+#define DEFAULT_SAT_RETRY_LIMIT    11    // 1 + 10 retries
 
 #if defined(__U_BOOT__)
 #define default_lock_retry_limit   20       // 20 retries
@@ -2028,8 +2027,8 @@ static int Perform_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
 		}
 	    } else {
 		if (lock_retries_total > 0) // only print if we did try
-		    ddr_print("N%d.LMC%d: LOCK RETRIES successful after %d retries\n",
-                              node, ddr_interface_num, lock_retries);
+		ddr_print("N%d.LMC%d: LOCK RETRIES successful after %d retries\n",
+			  node, ddr_interface_num, lock_retries);
 	    }
 	} /* if (unsaturated || spd_rawcard_AorB) */
 
@@ -2044,10 +2043,10 @@ static int Perform_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
             cvmx_lmcx_config_t lmc_config;
             lmc_config.u64 = cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num));
             if (do_stuck_reset && lmc_config.s.mode_x4dev) { // FIXME: only when x4!!
-                unsaturated = 0; // to always make sure the while continues
+            unsaturated = 0; // to always make sure the while continues
                 ddr_print("N%d.LMC%d: STUCK BYTES (0x%x), forcing deskew RESET\n",
                           node, ddr_interface_num, dsk_counts.bytes_stuck);
-                continue; // bypass the rest to get back to the RESET
+            continue; // bypass the rest to get back to the RESET
             } else {
                 ddr_print("N%d.LMC%d: STUCK BYTES (0x%x), ignoring deskew RESET\n",
                           node, ddr_interface_num, dsk_counts.bytes_stuck);
@@ -2078,13 +2077,13 @@ static int Perform_Deskew_Training(uint32_t cpu_id, int node, int rank_mask,
         !unsaturated)
     {
         debug_print("N%d.LMC%d: Nibble or Saturation Error(s) found, returning FAULT\n",
-                  node, ddr_interface_num);
+		      node, ddr_interface_num);
 #if 1
         // FIXME: do we want this output always for errors? 
         Validate_Deskew_Training(cpu_id, node, rank_mask, ddr_interface_num, &dsk_counts, 1);
 #endif
-        return -1; // we did retry locally, they did not help
-    }
+	    return -1; // we did retry locally, they did not help
+	}
 
     // NOTE: we (currently) always print one last training validation before starting Read Leveling...
 
@@ -2097,21 +2096,21 @@ static void Write_Deskew_Config(uint32_t cpu_id, int node, int rank_mask, int dd
     /*
     **
     ** Reuse read bit-deskew settings for write bit-deskew.
-    **
+    ** 
     ** 1) Run read bit deskew and make sure everything is
     **    locked and valid.
-    **
+    ** 
     ** 2) Enable write_bit_deskew:
-    **
+    ** 
     **    a.  DLL_CTL3.BIT_SELECT.set(10);   // Enable reuse read deskew settings
     **    b.  DLL_CTL3.BYTE_SEL.set(10);     // Select all bytes
     **    c.  DLL_CTL3.WR_DESKEW_ENA.set(1); // Enable write bit-deskew
     **    d.  Then write DLL_CTL3
     **    e.  DLL_CTL3.WR_DESKEW_LD.set(1);  // go
     **    f.  Then write DLL_CTL3
-    **
+    ** 
     ** 3) Now that write-bit-deskew is on,  re-run Write and Read leveling.
-    **
+    ** 
     */
 
     cvmx_lmcx_dll_ctl3_t ddr_dll_ctl3;
@@ -2330,7 +2329,7 @@ compute_vref_value(int node, int ddr_interface_num, int rankx,
 	    }
             // we must have adjusted it, so print it out if verbosity is right
             debug_print("N%d.LMC%d.R%d: adjusting computed vref from %2d (0x%02x) to %2d (0x%02x)\n",
-                        node, ddr_interface_num, rankx, 
+                      node, ddr_interface_num, rankx, 
                         computed_final_vref_value, computed_final_vref_value,
                         computed_final_vref_value + adj, computed_final_vref_value + adj);
             computed_final_vref_value += adj;
@@ -2487,16 +2486,16 @@ display_RL_with_computed(int node, int ddr_interface_num, cvmx_lmcx_rlevel_rankx
 }
 
 // flag values
-#define WITH_RODT_BLANK      0
-#define WITH_RODT_SKIPPING   1
-#define WITH_RODT_BESTROW    2
+#define WITH_RODT_BLANK    0
+#define WITH_RODT_SKIPPING 1
+#define WITH_RODT_BESTROW  2
 #define WITH_RODT_BESTSCORE  3
 // control
 #define SKIP_SKIPPING 1
 
 static const char *with_rodt_canned_msgs[4] = { "          ", "SKIPPING  ", "BEST ROW  ", "BEST SCORE" }; 
 
-static void display_RL_with_RODT(int node, int ddr_interface_num,
+static void display_RL_with_RODT(int node, int ddr_interface_num, 
 				 cvmx_lmcx_rlevel_rankx_t lmc_rlevel_rank, int rank, int score,
 				 int nom_ohms, int rodt_ohms, int flag)
 {
@@ -2511,7 +2510,7 @@ static void display_RL_with_RODT(int node, int ddr_interface_num,
     } else {
         snprintf(set_buf, sizeof(set_buf), "NOM %3d RODT %3d", nom_ohms, rodt_ohms);        
     }
-
+    
     ddr_print("N%d.LMC%d.R%d: Rlevel %s   %s  : %5d %5d %5d %5d %5d %5d %5d %5d %5d (%d)\n",
 	      node, ddr_interface_num, rank,
 	      set_buf, msg_buf,
@@ -2539,39 +2538,26 @@ do_display_WL(int node, int ddr_interface_num,
     if (flags & WITH_FINAL) {
 	msg_buf = "  FINAL SETTINGS  ";
         //vbl = VBL_NORM;
-	ddr_print2("N%d.LMC%d.R%d: Wlevel Rank %#4x, %s  : %5d %5d %5d %5d %5d %5d %5d %5d %5d\n",
-            node, ddr_interface_num, rank,
-            lmc_wlevel_rank.s.status,
-            msg_buf,
-            lmc_wlevel_rank.s.byte8,
-            lmc_wlevel_rank.s.byte7,
-            lmc_wlevel_rank.s.byte6,
-            lmc_wlevel_rank.s.byte5,
-            lmc_wlevel_rank.s.byte4,
-            lmc_wlevel_rank.s.byte3,
-            lmc_wlevel_rank.s.byte2,
-            lmc_wlevel_rank.s.byte1,
-            lmc_wlevel_rank.s.byte0
-            );
     } else {
 	snprintf(hex_buf, sizeof(hex_buf), "0x%016llX", (long long unsigned int)lmc_wlevel_rank.u64);
 	msg_buf = hex_buf;
         //vbl = VBL_FAE;
-	ddr_print("N%d.LMC%d.R%d: Wlevel Rank %#4x, %s  : %5d %5d %5d %5d %5d %5d %5d %5d %5d\n",
-            node, ddr_interface_num, rank,
-            lmc_wlevel_rank.s.status,
-            msg_buf,
-            lmc_wlevel_rank.s.byte8,
-            lmc_wlevel_rank.s.byte7,
-            lmc_wlevel_rank.s.byte6,
-            lmc_wlevel_rank.s.byte5,
-            lmc_wlevel_rank.s.byte4,
-            lmc_wlevel_rank.s.byte3,
-            lmc_wlevel_rank.s.byte2,
-            lmc_wlevel_rank.s.byte1,
-            lmc_wlevel_rank.s.byte0
-            );
     }
+
+    ddr_print("N%d.LMC%d.R%d: Wlevel Rank %#4x, %s  : %5d %5d %5d %5d %5d %5d %5d %5d %5d\n",
+	      node, ddr_interface_num, rank,
+	      lmc_wlevel_rank.s.status,
+            msg_buf,
+	      lmc_wlevel_rank.s.byte8,
+	      lmc_wlevel_rank.s.byte7,
+	      lmc_wlevel_rank.s.byte6,
+	      lmc_wlevel_rank.s.byte5,
+	      lmc_wlevel_rank.s.byte4,
+	      lmc_wlevel_rank.s.byte3,
+	      lmc_wlevel_rank.s.byte2,
+	      lmc_wlevel_rank.s.byte1,
+	      lmc_wlevel_rank.s.byte0
+	      );
 }
 
 static inline void
@@ -2603,8 +2589,8 @@ PPBM(uint64_t bm)
 #define XUP(i,e) (((i) < 4)?(i):(e)?(((i)>4)?(i)-1:8):(i))
 
 // flag values
-#define WITH_WL_BITMASKS      0
-#define WITH_RL_BITMASKS      1
+#define WITH_WL_BITMASKS   0
+#define WITH_RL_BITMASKS   1
 #define WITH_RL_MASK_SCORES   2
 #define WITH_RL_SEQ_SCORES    3
 static void
@@ -2628,7 +2614,7 @@ do_display_BM(int node, int ddr_interface_num, int rank, void *bm, int flags, in
     } else
     if (flags == WITH_RL_BITMASKS) { // rlevel_bitmask array in PACKED index order, so just print them
         rlevel_bitmask_t *rlevel_bitmask = (rlevel_bitmask_t *)bm;
-        ddr_print("N%d.LMC%d.R%d: Rlevel Debug Bitmasks        8:0      : %05lx %05lx %05lx %05lx %05lx %05lx %05lx %05lx %05lx\n",
+        ddr_print("N%d.LMC%d.R%d: Rlevel Debug Bitmasks      8:0        : %05lx %05lx %05lx %05lx %05lx %05lx %05lx %05lx %05lx\n",
                   node, ddr_interface_num, rank,
                   PPBM(rlevel_bitmask[8].bm),
                   PPBM(rlevel_bitmask[7].bm),
@@ -3132,8 +3118,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
         const char *signal_load[4] = {"", "MLS", "3DS", "RSV"};
         imp_values = &ddr4_impedence_values;
 
-        spd_addr  = read_spd(&dimm_config_table[0], 0, DDR4_SPD_ADDRESSING_ROW_COL_BITS);
-        spd_org   = read_spd(&dimm_config_table[0], 0, DDR4_SPD_MODULE_ORGANIZATION);
+        spd_addr = read_spd(&dimm_config_table[0], 0, DDR4_SPD_ADDRESSING_ROW_COL_BITS);
+        spd_org = read_spd(&dimm_config_table[0], 0, DDR4_SPD_MODULE_ORGANIZATION);
         spd_banks = 0xFF & read_spd(&dimm_config_table[0], 0, DDR4_SPD_DENSITY_BANKS);
 
         bank_bits = (2 + ((spd_banks >> 4) & 0x3)) + ((spd_banks >> 6) & 0x3);
@@ -3200,7 +3186,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 	    ddr_print("DDR4: RDIMM Register Manufacturer ID 0x%x Revision 0x%x\n",
 		      spd_mfgr_id, spd_register_rev);
 
-	    // RAWCARD A or B must be bit 7=0 and bits 4-0 either 00000(A) or 00001(B)
+	    // RAWCARD A or B must be bit 7=0 and bits 4-0 either 00000(A) or 00001(B) 
 	    spd_rawcard_AorB = ((spd_rawcard & 0x9fUL) <= 1);
             // RDIMM Module Attributes
             spd_mod_attr = 0xFFU & read_spd(&dimm_config_table[0], 0, DDR4_SPD_UDIMM_ADDR_MAPPING_FROM_EDGE);
@@ -3265,7 +3251,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 	    spd_thermal_sensor = 0xFFU & read_spd(&dimm_config_table[0], 0, DDR3_SPD_MODULE_THERMAL_SENSOR);
 	    ddr_print("DDR3: Module Thermal Sensor (0x%x): %s\n", spd_thermal_sensor,
                       (spd_thermal_sensor & 0x80) ? "Present" : "Not Present");
-        }
+	}
 #endif
         dimm_type_name = ddr3_dimm_types[spd_dimm_type];
     }
@@ -4538,19 +4524,19 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				  lmc_modereg_params1.u64);
     }
 
-    if (ddr_type == DDR4_DRAM) {
+        if (ddr_type == DDR4_DRAM) {
         cvmx_lmcx_modereg_params2_t lmc_modereg_params2;
         lmc_modereg_params2.u64 = odt_config[odt_idx].modereg_params2.u64;
 
 #if 0
-        for (i=0; i<4; ++i) {
-            uint64_t value;
-            if ((s = lookup_env_parameter("ddr_vref_value_%1d%1d", !!(i&2), !!(i&1))) != NULL) {
-                value = simple_strtoul(s, NULL, 0);
-                lmc_modereg_params2.u64 &= ~((uint64_t)0x3f  << (i*10+3));
-                lmc_modereg_params2.u64 |=  ( (value & 0x3f) << (i*10+3));
+            for (i=0; i<4; ++i) {
+                uint64_t value;
+                if ((s = lookup_env_parameter("ddr_vref_value_%1d%1d", !!(i&2), !!(i&1))) != NULL) {
+                    value = simple_strtoul(s, NULL, 0);
+                    lmc_modereg_params2.u64 &= ~((uint64_t)0x3f  << (i*10+3));
+                    lmc_modereg_params2.u64 |=  ( (value & 0x3f) << (i*10+3));
+                }
             }
-        }
 #endif
         if ((s = lookup_env_parameter("ddr_rtt_park")) != NULL) {
             uint64_t value = simple_strtoul(s, NULL, 0);
@@ -4560,45 +4546,45 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             }
         }
 
-        for (i=0; i<4; ++i) {
-            uint64_t value;
-            if ((s = lookup_env_parameter("ddr_rtt_park_%1d%1d", !!(i&2), !!(i&1))) != NULL) {
-                value = simple_strtoul(s, NULL, 0);
-                lmc_modereg_params2.u64 &= ~((uint64_t)0x7  << (i*10+0));
-                lmc_modereg_params2.u64 |=  ( (value & 0x7) << (i*10+0));
+            for (i=0; i<4; ++i) {
+                uint64_t value;
+                if ((s = lookup_env_parameter("ddr_rtt_park_%1d%1d", !!(i&2), !!(i&1))) != NULL) {
+                    value = simple_strtoul(s, NULL, 0);
+                    lmc_modereg_params2.u64 &= ~((uint64_t)0x7  << (i*10+0));
+                    lmc_modereg_params2.u64 |=  ( (value & 0x7) << (i*10+0));
+                }
             }
-        }
 
-        if ((s = lookup_env_parameter_ull("ddr_modereg_params2")) != NULL) {
-            lmc_modereg_params2.u64    = simple_strtoull(s, NULL, 0);
-        }
+            if ((s = lookup_env_parameter_ull("ddr_modereg_params2")) != NULL) {
+                lmc_modereg_params2.u64    = simple_strtoull(s, NULL, 0);
+            }
 
-        ddr_print("RTT_PARK    %3d, %3d, %3d, %3d ohms           :  %x,%x,%x,%x\n",
-                  imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_11],
-                  imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_10],
-                  imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_01],
-                  imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_00],
-                  lmc_modereg_params2.s.rtt_park_11,
-                  lmc_modereg_params2.s.rtt_park_10,
-                  lmc_modereg_params2.s.rtt_park_01,
-                  lmc_modereg_params2.s.rtt_park_00);
+            ddr_print("RTT_PARK    %3d, %3d, %3d, %3d ohms           :  %x,%x,%x,%x\n",
+                      imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_11],
+                      imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_10],
+                      imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_01],
+                      imp_values->rtt_nom_ohms[lmc_modereg_params2.s.rtt_park_00],
+                      lmc_modereg_params2.s.rtt_park_11,
+                      lmc_modereg_params2.s.rtt_park_10,
+                      lmc_modereg_params2.s.rtt_park_01,
+                      lmc_modereg_params2.s.rtt_park_00);
 
-        ddr_print("%-45s :  0x%x,0x%x,0x%x,0x%x\n", "VREF_RANGE",
-                  lmc_modereg_params2.s.vref_range_11,
-                  lmc_modereg_params2.s.vref_range_10,
-                  lmc_modereg_params2.s.vref_range_01,
-                  lmc_modereg_params2.s.vref_range_00);
+            ddr_print("%-45s :  0x%x,0x%x,0x%x,0x%x\n", "VREF_RANGE",
+                      lmc_modereg_params2.s.vref_range_11,
+                      lmc_modereg_params2.s.vref_range_10,
+                      lmc_modereg_params2.s.vref_range_01,
+                      lmc_modereg_params2.s.vref_range_00);
 
-        ddr_print("%-45s :  0x%x,0x%x,0x%x,0x%x\n", "VREF_VALUE",
-                  lmc_modereg_params2.s.vref_value_11,
-                  lmc_modereg_params2.s.vref_value_10,
-                  lmc_modereg_params2.s.vref_value_01,
-                  lmc_modereg_params2.s.vref_value_00);
+            ddr_print("%-45s :  0x%x,0x%x,0x%x,0x%x\n", "VREF_VALUE",
+                      lmc_modereg_params2.s.vref_value_11,
+                      lmc_modereg_params2.s.vref_value_10,
+                      lmc_modereg_params2.s.vref_value_01,
+                      lmc_modereg_params2.s.vref_value_00);
 
         ddr_print("MODEREG_PARAMS2                               : 0x%016llx\n", lmc_modereg_params2.u64);
         ddr_config_write_csr_node(node,
-                                  CVMX_LMCX_MODEREG_PARAMS2(ddr_interface_num),
-                                  lmc_modereg_params2.u64);
+				  CVMX_LMCX_MODEREG_PARAMS2(ddr_interface_num),
+				  lmc_modereg_params2.u64);
     }
 
     /* LMC(0)_MODEREG_PARAMS3 */
@@ -4766,7 +4752,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 	    ddr_print("N%d.LMC%d: Forcing DDR4 COMP_CTL2[CK_CTL] to %d, %d ohms\n",
                       node, ddr_interface_num, comp_ctl2.s.ck_ctl,
 		      imp_values->drive_strength[comp_ctl2.s.ck_ctl]);
-	}
+        }
 	// if DDR4, 2DPC, UDIMM, force CONTROL_CTL and CMD_CTL to 26 ohms, if DCLK speed is 1 GHz or more...
 	if ((ddr_type == DDR4_DRAM)
             && (dimm_count == 2)
@@ -5223,15 +5209,15 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
         perform_ddr_init_sequence(cpu_id, node, rank_mask, ddr_interface_num);
 
         lmc_modereg_params0.s.dllr    = 0; /* Clear for normal operation */
-        ddr_config_write_csr_node(node,
+            ddr_config_write_csr_node(node,
                                   CVMX_LMCX_MODEREG_PARAMS0(ddr_interface_num),
                                   lmc_modereg_params0.u64);
-    }
+        }
 
     if ((spd_rdimm) && (ddr_type == DDR4_DRAM) && octeon_is_cpuid(OCTEON_CN7XXX)) {
         ddr_print("Running init sequence 1\n");
         change_rdimm_mpr_pattern (cpu_id, node, rank_mask, ddr_interface_num, dimm_count);
-    }
+        }
 
     memset(lanes, 0, sizeof(lanes));
 
@@ -5243,7 +5229,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
         num_samples = DEFAULT_DAC_SAMPLES;
     } else {
         num_samples = 1; // if DDR3 or no ability to write DAC values
-    }
+        }
 
  perform_internal_vref_training:
 
@@ -5266,7 +5252,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             if ((num_samples == 1) /*|| ddr_verbose()*/) { // FIXME? verbosity
                 display_DAC_DBI_settings(node, ddr_interface_num, /*DAC*/1, use_ecc,
                                          dac_settings, "Internal VREF");
-            }
+        }
 
             // for DDR4, evaluate the DAC settings and retry if any issues
             if (ddr_type == DDR4_DRAM) {
@@ -5326,31 +5312,31 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
      */
     if (! disable_deskew_training) {
 
-        deskew_training_errors = Perform_Deskew_Training(cpu_id, node, rank_mask, ddr_interface_num, spd_rawcard_AorB);
+    deskew_training_errors = Perform_Deskew_Training(cpu_id, node, rank_mask, ddr_interface_num, spd_rawcard_AorB);
 
-        // All the Deskew lock and saturation retries (may) have been done,
-        //  but we ended up with  nibble errors; so, as a last ditch effort,
-        //  try the Internal Vref Training again...
-        if (deskew_training_errors) {
-            if (internal_retries < DEFAULT_INTERNAL_VREF_TRAINING_LIMIT) {
-                internal_retries++;
-                ddr_print("N%d.LMC%d: Deskew training results still unsettled - retrying internal Vref training (%d)\n",
-                          node, ddr_interface_num, internal_retries);
-                goto perform_internal_vref_training;
-            } else {
+    // All the Deskew lock and saturation retries (may) have been done,
+    //  but we ended up with  nibble errors; so, as a last ditch effort,
+    //  try the Internal Vref Training again...
+    if (deskew_training_errors) {
+	if (internal_retries < DEFAULT_INTERNAL_VREF_TRAINING_LIMIT) {
+	    internal_retries++;
+	    ddr_print("N%d.LMC%d: Deskew training results still unsettled - retrying internal Vref training (%d)\n",
+		      node, ddr_interface_num, internal_retries);
+	    goto perform_internal_vref_training;
+	} else {
                 if (restart_if_dsk_incomplete) {
                     ddr_print("N%d.LMC%d: INFO: Deskew training incomplete - %d retries exhausted, Restarting LMC init...\n",
                           node, ddr_interface_num, internal_retries);
                     return 0; // 0 indicates restart possible...
                 }
-                ddr_print("N%d.LMC%d: Deskew training incomplete - %d retries exhausted, but continuing...\n",
-                          node, ddr_interface_num, internal_retries);
-            }
-        } /* if (deskew_training_errors) */
+	    ddr_print("N%d.LMC%d: Deskew training incomplete - %d retries exhausted, but continuing...\n",
+		      node, ddr_interface_num, internal_retries);
+	}
+    } /* if (deskew_training_errors) */
 
-        // FIXME: treat this as the final DSK print from now on, and print if VBL_NORM or above
-        // also, save the results of the original training in case we want them later
-        Validate_Deskew_Training(cpu_id, node, rank_mask, ddr_interface_num, &deskew_training_results, 1);
+    // FIXME: treat this as the final DSK print from now on, and print if VBL_NORM or above
+    // also, save the results of the original training in case we want them later
+    Validate_Deskew_Training(cpu_id, node, rank_mask, ddr_interface_num, &deskew_training_results, 1);
 
 #if !ENABLE_WRITE_DESKEW_VERIFY
         // do write bit-deskew if enabled...
@@ -5401,7 +5387,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
     /* LMC(0)_EXT_CONFIG */
     {
         cvmx_lmcx_ext_config_t ext_config;
-        ext_config.u64  = cvmx_read_csr_node(node, CVMX_LMCX_EXT_CONFIG(ddr_interface_num));
+        ext_config.u64 = cvmx_read_csr_node(node, CVMX_LMCX_EXT_CONFIG(ddr_interface_num));
         ext_config.s.vrefint_seq_deskew = 0;
         ext_config.s.read_ena_bprch = 1;
         ext_config.s.read_ena_fprch = 1;
@@ -5647,9 +5633,9 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				  lmc_config.u64);
         ddr_print("%-45s : %d\n", "MODE32B", lmc_config.cn78xx.mode32b);
 
-        if ((s = lookup_env_parameter("ddr_wlevel_roundup")) != NULL) {
-            ddr_wlevel_roundup = simple_strtoul(s, NULL, 0);
-        }
+            if ((s = lookup_env_parameter("ddr_wlevel_roundup")) != NULL) {
+                ddr_wlevel_roundup = simple_strtoul(s, NULL, 0);
+            }
 
 	if ((s = lookup_env_parameter("ddr_wlevel_printall")) != NULL) {
 	    ddr_wlevel_printall = strtoul(s, NULL, 0);
@@ -5663,7 +5649,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 	}
 
         if ((s = lookup_env_parameter("ddr_wlevel_rtt_nom")) != NULL) {
-            default_wlevel_rtt_nom = simple_strtoul(s, NULL, 0);
+            default_wlevel_rtt_nom   = simple_strtoul(s, NULL, 0);
         }
 
         if ((s = lookup_env_parameter("ddr_match_wlevel_rtt_nom")) != NULL) {
@@ -5707,7 +5693,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
     start_hardware_write_leveling:
 
         // Start the hardware write-leveling loop per rank
-        for (rankx = 0; rankx < dimm_count * 4;rankx++) {
+            for (rankx = 0; rankx < dimm_count * 4;rankx++) {
 	    int wloop = 0;
 	    int wloop_retries = 0; // retries per sample for HW-related issues with bitmasks or values
             int wloop_retries_total = 0;
@@ -5723,8 +5709,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 #endif            
             int rank_nom = 0;
 
-            if (!(rank_mask & (1 << rankx)))
-                continue;
+                if (!(rank_mask & (1 << rankx)))
+                    continue;
 
             if (match_wlevel_rtt_nom) { // FIXME
                 if (rankx == 0)
@@ -5837,8 +5823,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                 // check validity only if no bitmask errors
                 if (wlevel_bitmask_errors == 0) {
                     if (((spd_dimm_type == 1) || (spd_dimm_type == 2)) && // normal [RU]DIMM
-                        (dram_width != 16)    &&
-                        (ddr_interface_64b)   &&
+                        (dram_width != 16)   &&
+                        (ddr_interface_64b)  &&
                         !(disable_hwl_validity))
                     { // bypass if [mini|SO]-[RU]DIMM or x16 or 32-bit
                         wlevel_validity_errors =
@@ -5857,7 +5843,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			// this printout is per-retry: only when VBL is high enough (DEV?)
                         // FIXME: do we want to show the bad bitmaps or delays here also?
 			debug_print("N%d.LMC%d.R%d: H/W Write-Leveling had %s errors - retrying...\n",
-                                    node, ddr_interface_num, rankx,
+			  node, ddr_interface_num, rankx,
                                     (wlevel_bitmask_errors) ? "Bitmask" : "Validity");
 			continue; // this takes us back to the top without counting a sample
 		    } else { // ran out of retries for this sample
@@ -5873,8 +5859,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
 		// when only 1 sample or forced, print the bitmasks then current HW WL
 		if ((wlevel_loops == 1) || ddr_wlevel_printall) {
-                    display_WL_BM(node, ddr_interface_num, rankx, wlevel_bitmask);
-                    display_WL(node, ddr_interface_num, lmc_wlevel_rank, rankx);
+		    display_WL_BM(node, ddr_interface_num, rankx, wlevel_bitmask);
+                display_WL(node, ddr_interface_num, lmc_wlevel_rank, rankx);
                 }
 
                 if (ddr_wlevel_roundup) { /* Round up odd bitmask delays */
@@ -6314,16 +6300,16 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             ? custom_lmc_config->offset_rdimm
             : custom_lmc_config->offset_udimm;
 
-        rlevel_ctl.cn78xx.delay_unload_0 = 1; /* should normally be set */
-        rlevel_ctl.cn78xx.delay_unload_1 = 1; /* should normally be set */
-        rlevel_ctl.cn78xx.delay_unload_2 = 1; /* should normally be set */
-        rlevel_ctl.cn78xx.delay_unload_3 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_0 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_1 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_2 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_3 = 1; /* should normally be set */
 
         // use OR_DIS=1 to try for better results
         rlevel_ctl.cn78xx.or_dis = 1;
 
-        /* If we will be switching to 32bit mode level based on only
-           four bits because there are only 4 ECC bits. */
+            /* If we will be switching to 32bit mode level based on only
+               four bits because there are only 4 ECC bits. */
         rlevel_ctl.cn78xx.bitmask = (ddr_interface_64b) ? 0xFF : 0x0F;
 
         // allow overrides
@@ -6408,7 +6394,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                 if (!(rank_mask & (1 << rankx)))
                     continue;
 
-
+		
                 lmc_rlevel_rank.u64 = cvmx_read_csr_node(node, CVMX_LMCX_RLEVEL_RANKX(rankx, ddr_interface_num));
 
                 i = 0;
@@ -6509,12 +6495,12 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 		if (dyn_rtt_nom_mask == 0) {
                     print_nom_ohms = -1; // flag not to print NOM ohms
                     if (rtt_idx != min_rtt_nom_idx)
-                        continue;
+		    continue;
                 } else {
-                    if (dyn_rtt_nom_mask & 1) lmc_modereg_params1.s.rtt_nom_00 = rtt_nom;
-                    if (dyn_rtt_nom_mask & 2) lmc_modereg_params1.s.rtt_nom_01 = rtt_nom;
-                    if (dyn_rtt_nom_mask & 4) lmc_modereg_params1.s.rtt_nom_10 = rtt_nom;
-                    if (dyn_rtt_nom_mask & 8) lmc_modereg_params1.s.rtt_nom_11 = rtt_nom;
+		if (dyn_rtt_nom_mask & 1) lmc_modereg_params1.s.rtt_nom_00 = rtt_nom;
+		if (dyn_rtt_nom_mask & 2) lmc_modereg_params1.s.rtt_nom_01 = rtt_nom;
+		if (dyn_rtt_nom_mask & 4) lmc_modereg_params1.s.rtt_nom_10 = rtt_nom;
+		if (dyn_rtt_nom_mask & 8) lmc_modereg_params1.s.rtt_nom_11 = rtt_nom;
                     // FIXME? rank 0 ohms always?
                     print_nom_ohms = imp_values->rtt_nom_ohms[lmc_modereg_params1.s.rtt_nom_00];
                 }
@@ -6547,19 +6533,19 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                     if (!(rank_mask & (1 << rankx)))
                         continue;
 
-                    for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) {
+		for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) {
 #if PICK_BEST_RANK_SCORE_NOT_AVG
                         rlevel_best_rank_score = DEFAULT_BEST_RANK_SCORE;
 #endif
-                        rlevel_rodt_errors = 0;
-                        lmc_comp_ctl2.u64 = cvmx_read_csr_node(node, CVMX_LMCX_COMP_CTL2(ddr_interface_num));
-                        lmc_comp_ctl2.cn78xx.rodt_ctl = rodt_ctl;
-                        ddr_config_write_csr_node(node, CVMX_LMCX_COMP_CTL2(ddr_interface_num), lmc_comp_ctl2.u64);
-                        lmc_comp_ctl2.u64 = cvmx_read_csr_node(node, CVMX_LMCX_COMP_CTL2(ddr_interface_num));
-                        cvmx_wait_usec(1); /* Give it a little time to take affect */
+		    rlevel_rodt_errors = 0;
+		    lmc_comp_ctl2.u64 = cvmx_read_csr_node(node, CVMX_LMCX_COMP_CTL2(ddr_interface_num));
+		    lmc_comp_ctl2.cn78xx.rodt_ctl = rodt_ctl;
+		    ddr_config_write_csr_node(node, CVMX_LMCX_COMP_CTL2(ddr_interface_num), lmc_comp_ctl2.u64);
+		    lmc_comp_ctl2.u64 = cvmx_read_csr_node(node, CVMX_LMCX_COMP_CTL2(ddr_interface_num));
+		    cvmx_wait_usec(1); /* Give it a little time to take affect */
                         if (ddr_rlevel_printall) {
-                            ddr_print("Read ODT_CTL                                  : 0x%x (%d ohms)\n",
-                                      lmc_comp_ctl2.cn78xx.rodt_ctl, imp_values->rodt_ohms[lmc_comp_ctl2.cn78xx.rodt_ctl]);
+		    ddr_print("Read ODT_CTL                                  : 0x%x (%d ohms)\n",
+			      lmc_comp_ctl2.cn78xx.rodt_ctl, imp_values->rodt_ohms[lmc_comp_ctl2.cn78xx.rodt_ctl]);
                         }
                         memset(rlevel_byte, 0, sizeof(rlevel_byte));
 
@@ -6761,27 +6747,27 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                 // also do not print if we were redoing the NONSEQ score for using COMPUTED
 				if (!redoing_nonseq_errs && (rlevel_avg_loops < 2)) {
                                     if (ddr_rlevel_printall) {
-                                        display_RL_BM(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
-                                        display_RL_BM_scores(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
-                                        display_RL_SEQ_scores(node, ddr_interface_num, rankx, rlevel_byte, ecc_ena);
+                                    display_RL_BM(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
+                                    display_RL_BM_scores(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
+                                    display_RL_SEQ_scores(node, ddr_interface_num, rankx, rlevel_byte, ecc_ena);
                                     }
-                                    display_RL_with_score(node, ddr_interface_num, lmc_rlevel_rank, rankx, rlevel_rank_errors);
+				display_RL_with_score(node, ddr_interface_num, lmc_rlevel_rank, rankx, rlevel_rank_errors);
                                 }
 
 				if (ddr_rlevel_compute) {
                                     if (!redoing_nonseq_errs) {
-                                        /* Recompute the delays based on the bitmask */
-                                        for (byte_idx = 0; byte_idx < (8+ecc_ena); ++byte_idx) {
-                                            if (!(ddr_interface_bytemask & (1 << byte_idx)))
-                                                continue;
-                                            update_rlevel_rank_struct(&lmc_rlevel_rank, byte_idx,
-                                                                      compute_ddr3_rlevel_delay(rlevel_bitmask[byte_idx].mstart,
-                                                                                                rlevel_bitmask[byte_idx].width,
-                                                                                                rlevel_ctl));
-                                        }
+				    /* Recompute the delays based on the bitmask */
+				    for (byte_idx = 0; byte_idx < (8+ecc_ena); ++byte_idx) {
+					if (!(ddr_interface_bytemask & (1 << byte_idx)))
+					    continue;
+					update_rlevel_rank_struct(&lmc_rlevel_rank, byte_idx,
+								  compute_ddr3_rlevel_delay(rlevel_bitmask[byte_idx].mstart,
+											    rlevel_bitmask[byte_idx].width,
+											    rlevel_ctl));
+				    }
 
-                                        /* Override the copy of byte delays with the computed results. */
-                                        unpack_rlevel_settings(ddr_interface_bytemask, ecc_ena, rlevel_byte, lmc_rlevel_rank);
+				    /* Override the copy of byte delays with the computed results. */
+				    unpack_rlevel_settings(ddr_interface_bytemask, ecc_ena, rlevel_byte, lmc_rlevel_rank);
 
                                         redoing_nonseq_errs = 1;
                                         goto redo_nonseq_errs;
@@ -6812,7 +6798,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                     // xlate UNPACKED index to PACKED index to get from rlevel_bitmask
 				    rlevel_byte[byte_idx].bm     = rlevel_bitmask[XUP(byte_idx, !!ecc_ena)].bm;
 				    rlevel_byte[byte_idx].bmerrs = rlevel_bitmask[XUP(byte_idx, !!ecc_ena)].errs;
-				}
+			    }
 			    }
 #else /* PICK_BEST_RANK_SCORE_NOT_AVG */
 
@@ -6843,7 +6829,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			for (byte_idx = 0; byte_idx < 9; ++byte_idx) {
 			    rlevel_byte[byte_idx].delay = rlevel_byte[byte_idx].best;
                             rlevel_byte[byte_idx].sqerrs = rlevel_byte[byte_idx].bestsq;
-                        }
+			}
 #else /* PICK_BEST_RANK_SCORE_NOT_AVG */
 			/* Compute the average score across averaging loops */
 			rlevel_scoreboard[rtt_nom][rodt_ctl][rankx].score =
@@ -6875,9 +6861,9 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                             }
                             // maybe print bitmasks/scores here  
                             if (ddr_rlevel_printall) {
-                                display_RL_BM(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
-                                display_RL_BM_scores(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
-                                display_RL_SEQ_scores(node, ddr_interface_num, rankx, rlevel_byte, ecc_ena);
+                            display_RL_BM(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
+                            display_RL_BM_scores(node, ddr_interface_num, rankx, rlevel_bitmask, ecc_ena);
+                            display_RL_SEQ_scores(node, ddr_interface_num, rankx, rlevel_byte, ecc_ena);
                             }
                             display_RL_with_RODT(node, ddr_interface_num, lmc_rlevel_rank, rankx,
                                                  rlevel_scoreboard[rtt_nom][rodt_ctl][rankx].score,
@@ -6896,7 +6882,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
 			rlevel_scoreboard[rtt_nom][rodt_ctl][rankx].setting = lmc_rlevel_rank.u64;
 
-                    } /* for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) */
+		} /* for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) */
                 } /* for (rankx = 0; rankx < dimm_count*4; rankx++) */
 	    } /*  for (rtt_idx=min_rtt_nom_idx; rtt_idx<max_rtt_nom_idx; ++rtt_idx) */
 
@@ -6991,7 +6977,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 #endif /* NOSKIP_FOR_2S_1R */
 		} else { // must be DDR3
                     rodt_row_skip_mask |= (1 << rodt_ctl_20_ohm); // skip RODT row 20 ohms for all DDR3
-                }
+		}
 
 		ddr_print("Evaluating Read-Leveling Scoreboard for AUTO settings.\n");
 		for (rtt_idx=min_rtt_nom_idx; rtt_idx<=max_rtt_nom_idx; ++rtt_idx) {
@@ -7215,7 +7201,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				best_rank_ohms      = next_ohms;
 				best_rankx          = orankx;
 				lmc_rlevel_rank.u64 = rlevel_scoreboard[rtt_nom][rodt_ctl][orankx].setting;
-
+ 
 			    } /* for (int orankx = 0; orankx < dimm_count * 4; orankx++) */
 			} /* for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) */
 		    } /* for (rtt_idx = min_rtt_nom_idx; rtt_idx <= max_rtt_nom_idx; ++rtt_idx) */
@@ -7237,7 +7223,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                     MAX_RANK_SCORE = best_rank_score;
                     if (ddr_type == DDR4_DRAM) {
                         // halve the range if 2 DIMMs unless they are single rank...
-                        MAX_RANK_SCORE += (MAX_RANK_SCORE_LIMIT / ((num_ranks > 1) ? dimm_count : 1));
+                    MAX_RANK_SCORE += (MAX_RANK_SCORE_LIMIT / ((num_ranks > 1) ? dimm_count : 1));
                     } else {
                         // Since DDR3 typically has a wider score range, keep more of them always
                         MAX_RANK_SCORE += MAX_RANK_SCORE_LIMIT;
@@ -7253,11 +7239,11 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
 		    saved_rlevel_rank.u64 = lmc_rlevel_rank.u64;
 
-		    ////////////////// this is the start of the PRINT LOOP
+		    ////////////////// this is the start of the PRINT LOOP 
 		    {
 		    int pass;
 
-		    // for pass==0, print current rank, pass==1 print other rank(s)
+		    // for pass==0, print current rank, pass==1 print other rank(s) 
 		    // this is done because we want to show each ranks RODT values together, not interlaced
 #if COUNT_RL_CANDIDATES
                     // keep separates for ranks - pass=0 target rank, pass=1 other rank on DIMM
@@ -7279,7 +7265,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				if (dyn_rtt_nom_mask == 0) {
                                     print_nom_ohms = -1;
                                     if (rtt_idx != min_rtt_nom_idx)
-                                        continue;
+				    continue;
                                 } else {
                                     print_nom_ohms = imp_values->rtt_nom_ohms[rtt_nom];
                                 }
@@ -7321,11 +7307,11 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                     }
 
                                     if (ddr_rlevel_printall) {
-                                        display_RL_with_RODT(node, ddr_interface_num,
-                                                             temp_rlevel_rank, orankx, temp_score,
+				    display_RL_with_RODT(node, ddr_interface_num, 
+							 temp_rlevel_rank, orankx, temp_score,
                                                              print_nom_ohms,
-                                                             imp_values->rodt_ohms[rodt_ctl],
-                                                             skip_row);
+							 imp_values->rodt_ohms[rodt_ctl],
+							 skip_row);
                                     }
 
 				} /* for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) */
@@ -7341,7 +7327,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                            score_skipped[0], score_skipped[1]);
 #endif /* COUNT_RL_CANDIDATES */
 		    }
-		    ////////////////// this is the end of the PRINT LOOP
+		    ////////////////// this is the end of the PRINT LOOP 
 
 		    // now evaluate which bytes need adjusting
 		    // collect the new byte values; first init with current best for neighbor use
@@ -7349,7 +7335,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			rank_best_bytes[byte_idx] = (lmc_rlevel_rank.u64 >> byte_sh) & byte_msk;
 		    }
 
-		    ////////////////// this is the start of the BEST BYTE LOOP
+		    ////////////////// this is the start of the BEST BYTE LOOP 
 
 		    for (byte_idx = 0, byte_sh = 0; byte_idx < 8+ecc_ena; byte_idx++, byte_sh += 6) {
 			int sum = 0, count = 0;
@@ -7365,7 +7351,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
 			best_byte = orig_best_byte = rank_best_bytes[byte_idx];
 
-			////////////////// this is the start of the BEST BYTE AVERAGING LOOP
+			////////////////// this is the start of the BEST BYTE AVERAGING LOOP 
 
 			// validate the initial "best" byte by looking at the average of the unskipped byte-column entries
 			// we want to do this before we go further, so we can try to start with a better initial value
@@ -7398,21 +7384,21 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			    } /* for (rodt_ctl = max_rodt_ctl; rodt_ctl >= min_rodt_ctl; --rodt_ctl) */
 			} /* for (rtt_idx=min_rtt_nom_idx; rtt_idx<=max_rtt_nom_idx; ++rtt_idx) */
 
-			////////////////// this is the end of the BEST BYTE AVERAGING LOOP
+			////////////////// this is the end of the BEST BYTE AVERAGING LOOP 
 
 
 			avg_byte = divide_nint(sum, count); // FIXME: validate count and sum??
 			avg_diff = (int)best_byte - (int)avg_byte;
 			new_byte = best_byte;
-			if (avg_diff != 0) {
+			if (avg_diff != 0) { 
 			    // bump best up/dn by 1, not necessarily all the way to avg
 			    new_byte = best_byte + ((avg_diff > 0) ? -1: 1);
 			}
 
                         if (ddr_rlevel_printall) {
-                            ddr_print("N%d.LMC%d.R%d: START:   Byte %d: best %d is different by %d from average %d, using %d.\n",
-                                      node, ddr_interface_num, rankx,
-                                      byte_idx, (int)best_byte, avg_diff, (int)avg_byte, (int)new_byte);
+			ddr_print("N%d.LMC%d.R%d: START: Byte %d: best %d is different by %d from average %d, using %d.\n",
+                                  node, ddr_interface_num, rankx,
+					byte_idx, (int)best_byte, avg_diff, (int)avg_byte, (int)new_byte);
                         }
 			best_byte = new_byte;
 #if FAILSAFE_CHECK
@@ -7425,7 +7411,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			//
 			// best_byte will not change from here on...
 
-			////////////////// this is the start of the BEST BYTE COUNTING LOOP
+			////////////////// this is the start of the BEST BYTE COUNTING LOOP 
 
 			// NOTE: we do this next loop separately from above, because we count relative to "best_byte"
 			// which may have been modified by the above averaging operation...
@@ -7478,20 +7464,20 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
                         if (ddr_rlevel_printall) {
 #if RANK_MAJORITY
-                            ddr_print("N%d.LMC%d.R%d: COUNT:   Byte %d: orig %d now %d, more %d same %d less %d (%d/%d/%d)\n",
-                                      node, ddr_interface_num, rankx,
-                                      byte_idx, (int)orig_best_byte, (int)best_byte,
-                                      count_more, count_same, count_less,
-                                      rank_more, rank_same, rank_less);
+			ddr_print("N%d.LMC%d.R%d: COUNT: Byte %d: orig %d now %d, more %d same %d less %d (%d/%d/%d)\n",
+					node, ddr_interface_num, rankx,
+					byte_idx, (int)orig_best_byte, (int)best_byte,
+					count_more, count_same, count_less,
+					rank_more, rank_same, rank_less);
 #else /* RANK_MAJORITY */
-                            ddr_print("N%d.LMC%d.R%d: COUNT:   Byte %d: orig %d now %d, more %d same %d less %d\n",
-                                      node, ddr_interface_num, rankx,
-                                      byte_idx, (int)orig_best_byte, (int)best_byte,
-                                      count_more, count_same, count_less);
+			ddr_print("N%d.LMC%d.R%d: COUNT: Byte %d: orig %d now %d, more %d same %d less %d\n",
+                                  node, ddr_interface_num, rankx,
+				  byte_idx, (int)orig_best_byte, (int)best_byte,
+				  count_more, count_same, count_less);
 #endif /* RANK_MAJORITY */
                         }
 
-			////////////////// this is the end of the BEST BYTE COUNTING LOOP
+			////////////////// this is the end of the BEST BYTE COUNTING LOOP 
 
 			// choose the new byte value
 			// we need to check that there is no gap greater than 2 between adjacent bytes
@@ -7521,10 +7507,10 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				new_byte += (neigh_byte > new_byte) ? 1 : -1;
 
                             if (ddr_rlevel_printall) {
-                                ddr_print("N%d.LMC%d.R%d: AVERAGE: Byte %d: neighbor %d too different %d from average %d, picking %d.\n",
-                                          node, ddr_interface_num, rankx,
-                                          byte_idx, neighbor, (int)neigh_byte, (int)avg_pick, (int)new_byte);
-                            }
+			    ddr_print("N%d.LMC%d.R%d: AVERAGE: Byte %d: neighbor %d too different %d from average %d, picking %d.\n",
+                                      node, ddr_interface_num, rankx,
+					    byte_idx, neighbor, (int)neigh_byte, (int)avg_pick, (int)new_byte);
+			}
 			}
 #if MAJORITY_OVER_AVG
 			// NOTE:
@@ -7546,17 +7532,17 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			    if (maj_byte != new_byte) {
 				// print only when majority choice is different from average
                                 if (ddr_rlevel_printall) {
-                                    ddr_print("N%d.LMC%d.R%d: MAJORTY: Byte %d: picking majority of %d over average %d.\n",
-                                              node, ddr_interface_num, rankx,
-                                              byte_idx, (int)maj_byte, (int)new_byte);
+				ddr_print("N%d.LMC%d.R%d: MAJORTY: Byte %d: picking majority of %d over average %d.\n",
+                                          node, ddr_interface_num, rankx,
+						byte_idx, (int)maj_byte, (int)new_byte);
                                 }
 				new_byte = maj_byte;
 			    } else {
                                 if (ddr_rlevel_printall) {
-                                    ddr_print("N%d.LMC%d.R%d: AVERAGE: Byte %d: picking average of %d.\n",
-                                              node, ddr_interface_num, rankx,
-                                              byte_idx, (int)new_byte);
-                                }
+				ddr_print("N%d.LMC%d.R%d: AVERAGE: Byte %d: picking average of %d.\n",
+                                          node, ddr_interface_num, rankx,
+                                          byte_idx, (int)new_byte);
+			    }
 			    }
 #if RANK_MAJORITY
 			    // rank majority is dependent on the rank counts, which are relative to best_byte,
@@ -7570,7 +7556,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			    rank_sum = rank_more + rank_same + rank_less;
 
 			    // now, let rank majority possibly rule over the current new_byte however we got it
-			    if (rank_maj != new_byte) { // only if different
+			    if (rank_maj != new_byte) { // only if different 
 				// Here is where we decide whether to completely apply RANK_MAJORITY or not
                                 if (rank_maj < new_byte) { // ignore if less than
 				    // print only when rank majority choice is selected
@@ -7585,29 +7571,29 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				if ((dimm_count > 1) || (rank_sum > 2)) {
 				    // print only when rank majority choice is selected
                                     if (ddr_rlevel_printall) {
-                                        ddr_print("N%d.LMC%d.R%d: RANKMAJ: Byte %d: picking %d over %d.\n",
-                                                  node, ddr_interface_num, rankx,
-                                                  byte_idx, (int)rank_maj, (int)new_byte);
+				    ddr_print("N%d.LMC%d.R%d: RANKMAJ: Byte %d: picking %d over %d.\n",
+						    node, ddr_interface_num, rankx,
+						    byte_idx, (int)rank_maj, (int)new_byte);
                                     }
 				    new_byte = rank_maj;
 				} else { // FIXME: print some info when we could have chosen RANKMAJ but did not
                                     if (ddr_rlevel_printall) {
-                                        ddr_print("N%d.LMC%d.R%d: RANKMAJ: Byte %d: NOT using %d over %d (best=%d,sum=%d).\n",
-                                                  node, ddr_interface_num, rankx,
-                                                  byte_idx, (int)rank_maj, (int)new_byte,
-                                                  (int)best_byte, rank_sum);
-                                    }
+				    ddr_print("N%d.LMC%d.R%d: RANKMAJ: Byte %d: NOT using %d over %d (best=%d,sum=%d).\n",
+						    node, ddr_interface_num, rankx,
+						    byte_idx, (int)rank_maj, (int)new_byte,
+						    (int)best_byte, rank_sum);
 				}
+			    }
 			    }
 #endif /* RANK_MAJORITY */
 			}
 #else
 			else {
                             if (ddr_rlevel_printall) {
-                                ddr_print("N%d.LMC%d.R%d: AVERAGE: Byte %d: picking average of %d.\n",
-                                          node, ddr_interface_num, rankx,
-                                          byte_idx, (int)new_byte);
-                            }
+			    ddr_print("N%d.LMC%d.R%d: AVERAGE: Byte %d: picking average of %d.\n",
+                                      node, ddr_interface_num, rankx,
+                                      byte_idx, (int)new_byte);
+			}
 			}
 #endif
 #if FAILSAFE_CHECK
@@ -7617,10 +7603,10 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                         if ((new_byte == count_byte) && (count_same == 0)) {
                             new_byte = orig_best_byte;
                             if (ddr_rlevel_printall) {
-                                ddr_print("N%d.LMC%d.R%d: FAILSAF: Byte %d: going back to original %d.\n",
-                                          node, ddr_interface_num, rankx,
-                                          byte_idx, (int)new_byte);
-                            }
+			    ddr_print("N%d.LMC%d.R%d: FAILSAF: Byte %d: going back to original %d.\n",
+                                      node, ddr_interface_num, rankx,
+                                      byte_idx, (int)new_byte);
+                        }
                         }
 #endif /* FAILSAFE_CHECK */
 #if PERFECT_BITMASK_COUNTING
@@ -7690,17 +7676,17 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                 // FIXME: remove or increase VBL for this output...
                                 if (ddr_rlevel_printall) {
                                     ddr_print("N%d.LMC%d.R%d: PERFECT: Byte %d: ZERO perfect bitmasks\n",
-                                              node, ddr_interface_num, rankx, byte_idx);
-                                }
+                                          node, ddr_interface_num, rankx, byte_idx);
+                            }
                             }
                         } /* if (rank_perfect_counts[rankx].total[byte_idx] > 0) */
 #endif /* PERFECT_BITMASK_COUNTING */
 
                         if (ddr_rlevel_printall) {
-                            ddr_print("N%d.LMC%d.R%d: SUMMARY: Byte %d: %s: orig %d now %d, more %d same %d less %d, using %d\n",
-                                      node, ddr_interface_num, rankx,
-                                      byte_idx, "AVG", (int)orig_best_byte,
-                                      (int)best_byte, count_more, count_same, count_less, (int)new_byte);
+			ddr_print("N%d.LMC%d.R%d: SUMMARY: Byte %d: %s: orig %d now %d, more %d same %d less %d, using %d\n",
+                                  node, ddr_interface_num, rankx,
+					byte_idx, "AVG", (int)orig_best_byte, 
+					(int)best_byte, count_more, count_same, count_less, (int)new_byte);
                         }
 
 			// update the byte with the new value (NOTE: orig value in the CSR may not be current "best")
@@ -7711,7 +7697,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
 		    } /* for (byte_idx = 0; byte_idx < 8+ecc_ena; byte_idx++) */
 
-		    ////////////////// this is the end of the BEST BYTE LOOP
+		    ////////////////// this is the end of the BEST BYTE LOOP 
 
 		    if (saved_rlevel_rank.u64 != lmc_rlevel_rank.u64) {
 			ddr_config_write_csr_node(node, CVMX_LMCX_RLEVEL_RANKX(rankx, ddr_interface_num), lmc_rlevel_rank.u64);
@@ -7803,7 +7789,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             uint64_t value;
             int parameter_set = 0;
             if (!(rank_mask & (1 << rankx)))
-                continue;
+			    continue;
 
             lmc_rlevel_rank.u64 = cvmx_read_csr_node(node, CVMX_LMCX_RLEVEL_RANKX(rankx, ddr_interface_num));
 
@@ -7814,13 +7800,13 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
                     update_rlevel_rank_struct(&lmc_rlevel_rank, i, value);
                 }
-            }
+			    }
 
             if ((s = lookup_env_parameter_ull("ddr%d_rlevel_rank%d", ddr_interface_num, rankx)) != NULL) {
                 parameter_set |= 1;
                 value = simple_strtoull(s, NULL, 0);
                 lmc_rlevel_rank.u64 = value;
-            }
+                                }
 
             if (parameter_set) {
                 ddr_config_write_csr_node(node,
@@ -7830,7 +7816,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                 display_RL(node, ddr_interface_num, lmc_rlevel_rank, rankx);
             }
         }
-    }
+		    }
 
     /* Workaround Trcd overflow by using Additive latency. */
     if (octeon_is_cpuid(OCTEON_CN78XX_PASS1_X)) {
@@ -7866,7 +7852,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
             for (rankx = 0; rankx < dimm_count * 4;rankx++) {
                 if (!(rank_mask & (1 << rankx)))
-                    continue;
+				continue;
 
                 ddr4_mrw(cpu_id, node, ddr_interface_num, rankx, -1, 1, 0); /* MR1 */
             }
@@ -7901,9 +7887,9 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
         for (byte = 0; byte < 8; ++byte) {
             if (!(ddr_interface_bytemask & (1 << byte)))
-                continue;
+                                        continue;
             increased_dsk_adj |= (((phy_ctl2.u64 >> (byte * 3)) & 0x7) > 4);
-        }
+                                    }
 
         if ((dll_ctl3.s.wr_deskew_ena == 1) && increased_dsk_adj) {
             ext_config.s.drive_ena_bprch = 1;
@@ -7955,7 +7941,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
         if ((s = lookup_env_parameter("ddr_software_wlevel")) != NULL) {
             sw_wlevel_enable = strtoul(s, NULL, 0);
-        }
+                            }
 
         cvmx_rng_enable();
 
@@ -7985,16 +7971,16 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             measured_vref_flag = custom_lmc_config->measured_vref;
             if ((s = lookup_env_parameter("ddr_measured_vref")) != NULL) {
                 measured_vref_flag = !!strtoul(s, NULL, 0);
-            }
+				}
         } else {
             measured_vref_flag = 0; // OFF for DDR3
-        }
+			    }
 
         /* Ensure disabled ECC for DRAM tests using the SW algo, else leave it untouched */
         if (!sw_wlevel_hw_default) {
-            lmc_config.u64 = cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num));
-            lmc_config.cn78xx.ecc_ena = 0;
-            ddr_config_write_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num), lmc_config.u64);
+        lmc_config.u64 = cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num));
+        lmc_config.cn78xx.ecc_ena = 0;
+        ddr_config_write_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num), lmc_config.u64);
         }
 
 #ifndef __U_BOOT__
@@ -8100,7 +8086,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                     final_vref_range = 1;
                                 } else {
                                     final_vref_range = 0; final_vref_value -= VREF_RANGE2_LIMIT;
-                                }
+                }
                                 {
                                     int vvlo = best_vref_values_start;
                                     int vrlo;
@@ -8110,8 +8096,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                         vrlo = 2;
                                     } else {
                                         vrlo = 1; vvlo -= VREF_RANGE2_LIMIT;
-                                    }
-                                    
+            }
+
                                     if (vvhi < VREF_RANGE2_LIMIT) {
                                         vrhi = 2;
                                     } else {
@@ -8124,7 +8110,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                               final_vref_value, final_vref_range + 1,
                                               vvhi, vrhi,
                                               best_vref_values_count-1);
-                                }
+            }
 #endif
 
 			    } else {
@@ -8139,14 +8125,14 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 					  node, ddr_interface_num, rankx,
                                           final_vref_value, final_vref_value, 
 					  final_vref_value, final_vref_value, final_vref_range+1);
-			    }
-			}
+            }
+        }
 
 			// allow override
                         if ((s = lookup_env_parameter("ddr%d_vref_value_%1d%1d",
                                                       ddr_interface_num, !!(rankx&2), !!(rankx&1))) != NULL) {
                             final_vref_value = strtoul(s, NULL, 0);
-                        }
+    }
 
 			set_vref(cpu_id, node, ddr_interface_num, rankx, final_vref_range, final_vref_value);
 
@@ -8172,7 +8158,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			rank_addr += 0x10000000;
 
                     debug_print("N%d.LMC%d.R%d: Active Rank %d Address: 0x%llx\n",
-                                node, ddr_interface_num, rankx, active_rank, rank_addr);
+			      node, ddr_interface_num, rankx, active_rank, rank_addr);
 
 		    { // start parallel write-leveling block for delay high-order bits
 			int errors = 0;
@@ -8201,7 +8187,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 				byte_delay[byte] = 0;
 			    } else {
 				byte_delay[byte] = get_wlevel_rank_struct(&lmc_wlevel_rank, byte);
-			    }
+            }
 			} /* for (byte = 0; byte < 9; ++byte) */
 
 			do {
@@ -8243,11 +8229,11 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                     continue; // to end of do-while
                             } else
                                 no_errors_count = 0; // reset
-			    
+
 			    // check errors by byte
 			    for (byte = 0; byte < 9; ++byte) {
 				if (!(bytes_todo & (1 << byte)))
-				    continue;
+                continue;
 
 				delay = byte_delay[byte];
 				if (errors & (1 << byte)) { // yes, an error in this byte lane
@@ -8277,7 +8263,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                         {
                                             unsigned bits_bad;
 					    if (byte < 8) {
-                                                bytemask &= ~(0xffULL << (8*byte)); // test no longer, remove from byte mask
+					    bytemask &= ~(0xffULL << (8*byte)); // test no longer, remove from byte mask
                                                 bits_bad = (unsigned)((bad_bits[0] >> (8 * byte)) & 0xffUL);
                                             } else {
                                                 bits_bad = (unsigned)(bad_bits[1] & 0xffUL);
@@ -8288,8 +8274,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                                             if (!measured_vref_flag) { // this is too noisy when doing measured VREF
                                                 ddr_print("N%d.LMC%d.R%d: SWL: Byte %d (0x%02x): delay %d EXHAUSTED \n",
                                                           node, ddr_interface_num, rankx, byte, bits_bad, delay);
-                                            }
-                                        }
+        }
+    }
 				    }
 				} else { // no error, stay with current delay, but keep testing it...
 				    debug_print("        byte %d delay %2d Passed\n", byte, delay);
@@ -8314,7 +8300,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 			if (errors) {
 			    debug_print("End WLEV_64 while loop: vref_value %d(0x%x), errors 0x%02x\n",
 				      vref_value, vref_value, errors);
-			}
+    }
 		    } // end parallel write-leveling block for delay high-order bits
 
                     if (sw_wlevel_hw) {
@@ -8944,7 +8930,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
         ddr_print("%-45s : 0x%08llx\n", "LMC_INT",
                   cvmx_read_csr_node(node, CVMX_LMCX_INT(ddr_interface_num)));
-    }
+        }
 
     return mem_size_mbytes;
 }
@@ -9006,7 +8992,7 @@ cvmx_dram_get_num_bank_bits(int node, int lmc)
     int bank_width;
 
     lmcx_dll_ctl2.u64 = cvmx_read_csr_node(node, CVMX_LMCX_DLL_CTL2(lmc)); // can always read this
-    
+
     if (lmcx_dll_ctl2.cn78xx.dreset) // check LMCn
         return 0;
 
@@ -9131,7 +9117,7 @@ static int test_dram_byte_hw(int node, uint32_t cpu_id, int ddr_interface_num,
 {
     uint64_t p1;
     uint64_t k;
-    int errors = 0;
+			int errors = 0;
 
     uint64_t mpr_data0, mpr_data1;
     uint64_t bad_bits[2] = {0,0};
@@ -9207,11 +9193,11 @@ static int test_dram_byte_hw(int node, uint32_t cpu_id, int ddr_interface_num,
     if ((int)node != node_address) {
         error_print("ERROR: Node address mismatch\n");
         return 0;
-    }
+                                    }
     if (lmc != ddr_interface_num) {
         error_print("ERROR: LMC address mismatch\n");
         return 0;
-    }
+                                }
 
     /*
       7) Set PHY_CTL[PHY_RESET] = 1 (LMC automatically clears this as it’s a one-shot operation).
@@ -9311,7 +9297,7 @@ static int test_dram_byte_hw(int node, uint32_t cpu_id, int ddr_interface_num,
 
             // data bytes
             if (~mpr_data0) {
-                for (byte = 0; byte < 8; byte++) {
+            for (byte = 0; byte < 8; byte++) {
                     if ((~mpr_data0 >> (8 * byte)) & 0xffUL)
                         biter_errs |= (1 << byte);
                 }
@@ -9473,9 +9459,9 @@ run_best_hw_patterns(uint32_t cpu_id, int node, int lmc, uint64_t phys_addr,
             debug_print("%s: LFSR at A:0x%012lx errors 0x%x\n",
                       __FUNCTION__, phys_addr, errors);
     } else {
-        for (pattern = 0; pattern < NUM_BYTE_PATTERNS; pattern++) {
-            pattern_p = byte_patterns[pattern];
-            setup_hw_pattern(node, lmc, pattern_p);
+    for (pattern = 0; pattern < NUM_BYTE_PATTERNS; pattern++) {
+	pattern_p = byte_patterns[pattern];
+        setup_hw_pattern(node, lmc, pattern_p);
 
             errs = test_dram_byte_hw(node, cpu_id, lmc, phys_addr, mode, xor_data);
             debug_print("%s: PATTERN %d at A:0x%012lx errors 0x%x\n",
@@ -9540,8 +9526,8 @@ hw_assist_test_dll_offset(int node, uint32_t cpu_id, int dll_offset_mode,
 	memset(pat_best_offset, 0, sizeof(pat_best_offset));
 
         if (mode == DBTRAIN_TEST) {
-            pattern_p = byte_patterns[pattern];
-            setup_hw_pattern(node, lmc, pattern_p);
+	pattern_p = byte_patterns[pattern];
+        setup_hw_pattern(node, lmc, pattern_p);
         } else {
             setup_lfsr_pattern(node, lmc, 0);
         }
@@ -9569,14 +9555,13 @@ hw_assist_test_dll_offset(int node, uint32_t cpu_id, int dll_offset_mode,
 
 	    // run the test on each rank
 	    // only 1 call per rank should be enough, let the bursts, loops, etc, control the load...
-	
+
 	    off_errors = 0; // errors for this byte_offset, all ranks
 
             active_ranks = 0;
-
 	    for (rankx = 0; rankx < 4; rankx++) {
-                if (!(rank_mask & (1 << rankx)))
-                    continue;
+            if (!(rank_mask & (1 << rankx)))
+                continue;
 
 		phys_addr = hw_rank_offset * active_ranks;
 		// FIXME: now done by test_dram_byte_hw()
@@ -9603,14 +9588,14 @@ hw_assist_test_dll_offset(int node, uint32_t cpu_id, int dll_offset_mode,
                             ddr_print4("N%d.LMC%d.R%d: Bytelane %d DLL %s Offset Test %3d: stopping a run here\n",
                                        node, lmc, rankx, byte, mode_str, byte_offset);
                             rank_delay_count[rankx][byte] = 0;   // stop now
-                        }
+                }
                         // FIXME: else had not started run - nothing else to do?
                     } else { // no error in the byte lane
                         if (rank_delay_count[rankx][byte] == 0) { // first success, set run start
                             ddr_print4("N%d.LMC%d.R%d: Bytelane %d DLL %s Offset Test %3d: starting a run here\n",
                                        node, lmc, rankx, byte, mode_str, byte_offset);
                             rank_delay_start[rankx][byte] = byte_offset;
-                        }
+            }
                         rank_delay_count[rankx][byte] += BYTE_OFFSET_INCR; // bump run length
 
                         // is this now the biggest window?
@@ -9620,8 +9605,8 @@ hw_assist_test_dll_offset(int node, uint32_t cpu_id, int dll_offset_mode,
                             debug_print("N%d.LMC%d.R%d: Bytelane %d DLL %s Offset Test %3d: updating best to %d/%d\n",
                                         node, lmc, rankx, byte, mode_str, byte_offset,
                                         rank_delay_best_start[rankx][byte], rank_delay_best_count[rankx][byte]);
-                        }
-                    }
+            }
+            }
                 } /* for (byte = byte_lo; byte <= byte_hi; byte++) */
 	    } /* for (rankx = 0; rankx < 4; rankx++) */
 
@@ -9714,12 +9699,12 @@ perform_HW_dll_offset_tuning(int node, uint32_t cpu_id, int dll_offset_mode, int
     // see if we want to do the tuning more than once per LMC...
     if ((s = getenv("ddr_tune_ecc_loops"))) {
 	loops = strtoul(s, NULL, 0);
-    }
+            }
 
     // allow override of the test repeats (bursts)
     if ((s = getenv("ddr_tune_byte_bursts")) != NULL) {
         dram_tune_byte_bursts = strtoul(s, NULL, 10);
-    }
+        }
 
     // print current working values
     ddr_print2("N%d: H/W Tuning for bytelane %d will use %d loops, %d bursts, and %d patterns.\n",
@@ -9755,7 +9740,7 @@ perform_HW_dll_offset_tuning(int node, uint32_t cpu_id, int dll_offset_mode, int
 	    hw_assist_test_dll_offset(node,  cpu_id, 2 /* 2=read */, lmc, bytelane,
                                       ddr_interface_64b, dram_tune_rank_offset,
                                       dram_tune_byte_bursts);
-	}
+        }
 
 	// perform cleanup on active LMC   
 	ddr_print4("N%d: H/W Tuning: finishing LMC%d bytelane %d tune.\n", node, lmc, bytelane);
@@ -9774,7 +9759,7 @@ perform_HW_dll_offset_tuning(int node, uint32_t cpu_id, int dll_offset_mode, int
 		load_dll_offset(node, lmc, cpu_id, 2 /* 2=read */, dllro, by); // FIXME
 		change_dll_offset_enable(cpu_id, node, lmc, 1);
 	    }
-	}
+    }
 
     } /* for (lmc = 0; lmc < num_lmcs; lmc++) */
 
@@ -9810,7 +9795,7 @@ static int cvmx_tune_node(int node, uint32_t cpu_id)
 	ddr_print("N%d: Finished DLL Write Offset Tuning for LMCs, %d errors\n",
                   node, errs);
 	tot_errs += errs;
-    }
+            }
 
     return tot_errs;
 }
@@ -9845,7 +9830,7 @@ static const uint32_t ddr_speed_filter[2][2][2] = {
 	[IS_UDIMM] = {
 	    [IS_1SLOT] =    0, // disabled
 	    [IS_2SLOT] =    0  // disabled
-	}
+        }
     }
 };
 
@@ -9957,7 +9942,7 @@ static void cvmx_dbi_switchover_interface(int node, uint32_t cpu_id, int lmc)
          MODEREG_PARAMS3.WR_DBI=1
          MODEREG_PARAMS3.RD_DBI=1
          PHY_CTL.DBI_MODE_ENA=1
-    */
+     */
     modereg_params0.u64 = cvmx_read_csr_node(node, CVMX_LMCX_MODEREG_PARAMS0(lmc));
 
     modereg_params3.u64 = cvmx_read_csr_node(node, CVMX_LMCX_MODEREG_PARAMS3(lmc));
@@ -9971,7 +9956,7 @@ static void cvmx_dbi_switchover_interface(int node, uint32_t cpu_id, int lmc)
 
     /*
         there are two options for data to send.  Lets start with (1) and could move to (2) in the future:
-        
+
         1) DBTRAIN_CTL[LFSR_PATTERN_SEL] = 0 (or for older chips where this does not exist)
            set data directly in these reigsters.  this will yield a clk/2 pattern:
            GENERAL_PURPOSE0.DATA == 64'h00ff00ff00ff00ff;
@@ -9992,7 +9977,7 @@ static void cvmx_dbi_switchover_interface(int node, uint32_t cpu_id, int lmc)
     /* 
       3. adjust cas_latency (only necessary if RD_DBI is set).
          here is my code for doing this:
- 
+
          if (csr_model.MODEREG_PARAMS3.RD_DBI.value == 1) begin
            case (csr_model.MODEREG_PARAMS0.CL.value)
              0,1,2,3,4: csr_model.MODEREG_PARAMS0.CL.value += 2; // CL 9-13 -> 11-15
@@ -10126,7 +10111,7 @@ restart_training:
                 ddr_print("N%d.LMC%d: DBI switchover: LOCK: %d retries exhausted.\n",
                           node, lmc, retries);
             }
-        }
+    }
     } /* for (rankx = 0; rankx < 4; rankx++) */
 
     // print out the final DBI settings array

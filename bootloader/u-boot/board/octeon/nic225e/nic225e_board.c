@@ -139,7 +139,7 @@ void octeon_board_poll(void)
 {
 	cvmx_update_rx_activity_led(0, 0, true);
 	if (gd->arch.board_desc.board_type == CVMX_BOARD_TYPE_NIC225E)
-		cvmx_update_rx_activity_led(1, 0, true);
+	cvmx_update_rx_activity_led(1, 0, true);
 
 	octeon_board_restore_pf();
 }
@@ -240,42 +240,18 @@ void bgx_set_test_pattern(int interface, int lane, bool enable)
 		       tp_control.u64);
 }
 
-static bool get_enable_fec(int port)
-{
-	char env_name[16];
-	const char *value;
-
-	snprintf(env_name, sizeof(env_name), "enable_fec%d", port);
-	value = getenv(env_name);
-
-	if (!value)
-		return false;
-
-	switch (*value) {
-	case 'y':
-	case 'Y':
-	case '1':
-	case 't':
-	case 'T':
-		return true;
-	default:
-		return false;
-	}
-}
-
 /**
  * Callback called after network initializtion.  This initializes the
  * Avago/Broadcom AVSP-5410.
  */
 void board_net_postinit(void)
 {
-	bool enable_fec0 = get_enable_fec(0);
-	bool enable_fec1 = get_enable_fec(1);
+	bool enable_fec0 = getenv_ulong("enable_fec0", 0, 0);
+	bool enable_fec1 = getenv_ulong("enable_fec1", 0, 0);
 	struct avago_serdes_tx_eq line_tx_eq;
 	ulong tx_atten0 = getenv_ulong("avago_line_tx_atten0", 0, 0x18);
 	ulong tx_atten1 = getenv_ulong("avago_line_tx_atten1", 0, 0x18);
 	cvmx_helper_interface_mode_t mode;
-	bool is_10g;
 
 	line_tx_eq.pre = getenv_ulong("avago_pre0", 0, 0);
 	line_tx_eq.atten = getenv_ulong("avago_atten0", 0, 0);
@@ -285,15 +261,11 @@ void board_net_postinit(void)
 	line_tx_eq.pre3 = getenv_ulong("avago_pre30", 0, 0);
 	line_tx_eq.vert = getenv_ulong("avago_vert0", 0, 0);
 
+	debug("Initializing Avago port 0\n");
 	/* Set attenuation to 24 */
 	mode = cvmx_helper_interface_get_mode(0);
-	is_10g = (mode == CVMX_HELPER_INTERFACE_MODE_XFI);
-	if (is_10g)
-		enable_fec0 = false;
-	debug("Initializing Avago port 0, FEC: %sabled, speed: %dGbps\n",
-	      enable_fec0 ? "en" : "dis", is_10g ? 10 : 25);
 	uboot_garnet_init(0, 0x4e, 0, 0, enable_fec0, tx_atten0, &line_tx_eq,
-			  is_10g);
+			  mode == CVMX_HELPER_INTERFACE_MODE_XFI);
 
 	if (gd->arch.board_desc.board_type == CVMX_BOARD_TYPE_NIC225E) {
 		line_tx_eq.pre = getenv_ulong("avago_pre1", 0, 0);
@@ -304,14 +276,11 @@ void board_net_postinit(void)
 		line_tx_eq.pre3 = getenv_ulong("avago_pre31", 0, 0);
 		line_tx_eq.vert = getenv_ulong("avago_vert1", 0, 0);
 		mode = cvmx_helper_interface_get_mode(1);
-		is_10g = (mode == CVMX_HELPER_INTERFACE_MODE_XFI);
-		if (is_10g)
-			enable_fec1 = false;
-		debug("Initializing Avago port 1, FEC: %sabled, speed: %dGbps\n",
-		      enable_fec1 ? "en" : "dis", is_10g ? 10 : 25);
+		debug("Initializing Avago port 1\n");
 		/* Set attenuation to 24 */
 		uboot_garnet_init(0, 0x47, 0, 0, enable_fec1, tx_atten1,
-				  &line_tx_eq, is_10g);
+				  &line_tx_eq,
+				  mode == CVMX_HELPER_INTERFACE_MODE_XFI);
 	}
 	avago_initialized = true;
 }
@@ -340,7 +309,7 @@ int board_fixup_fdt(void)
 	int rc;
 
 	rc = octeon_fdt_patch_rename(working_fdt, fdt_key, NULL, true,
-				     NULL, NULL);
+				NULL, NULL);
 	if (rc)
 		printf("%s: Error fixing up board with key %s\n", __func__,
 		       fdt_key);
@@ -542,6 +511,7 @@ static inline int spi_flash_cmd_write_disable(struct spi_flash *flash)
 	return spi_flash_cmd(flash->spi, CMD_WRITE_DISABLE, NULL, 0);
 }
 
+
 static int do_fixspi32(cmd_tbl_t *cmdtp, int flag, int argc,
 		       char * const argv[])
 {
@@ -615,7 +585,6 @@ int on_enablefec(const char *name, const char *value, enum env_op op, int flags)
 	int i2c_bus = 0;
 	int i2c_addr;
 	cvmx_helper_interface_mode_t mode;
-	bool is_10g = false;
 	if (!avago_initialized)
 		return 0;
 
@@ -624,11 +593,9 @@ int on_enablefec(const char *name, const char *value, enum env_op op, int flags)
 	if (!strcmp(name, "enable_fec0")) {
 		device = 0;
 		i2c_addr = 0x4e;
-		is_10g = eth0_10g;
 	} else if (!strcmp(name, "enable_fec1")) {
 		device = 1;
 		i2c_addr = 0x47;
-		is_10g = eth1_10g;
 	} else {
 		printf("%s(%s, %s, %d, 0x%x): invalid name\n",
 		       __func__, name, value, op, flags);
@@ -664,9 +631,9 @@ int on_enablefec(const char *name, const char *value, enum env_op op, int flags)
 		break;
 	case env_op_delete:
 	default:
-		printf("disabling forward error correction for eth%d\n",
+		printf("Enabling forward error correction for eth%d\n",
 		       device);
-		uboot_garnet_set_fec(i2c_bus, i2c_addr, 0, 0, false, is_10g);
+		uboot_garnet_set_fec(i2c_bus, i2c_addr, 0, 0, true, false);
 	}
 
 	return 0;

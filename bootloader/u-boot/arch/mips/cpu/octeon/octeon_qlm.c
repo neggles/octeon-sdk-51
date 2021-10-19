@@ -2196,6 +2196,7 @@ static int octeon_configure_qlm_cn70xx(int qlm, int speed, int mode, int rc,
  * @param baud_mhz The speed the QLM needs to be configured in Mhz.
  * @param mode     The QLM to be configured as SGMII/XAUI/PCIe.
  */
+
 void octeon_qlm_dfe_disable(int node, int qlm, int lane, int baud_mhz, int mode)
 {
 	int num_lanes = cvmx_qlm_get_lanes(qlm);
@@ -2356,7 +2357,7 @@ int octeon_qlm_dfe_disable_ctle_agc(int node, int qlm, int lane, int baud_mhz, i
 		return 0;
 	case CVMX_QLM_MODE_SATA_2X1:
 		return 0;
-	default:
+	default:    
 		break;
 	}
 
@@ -2454,13 +2455,13 @@ void octeon_qlm_tune_per_lane_v3(int node, int qlm, int baud_mhz, int lane,
 
 	if ((OCTEON_IS_MODEL(OCTEON_CN73XX) && (qlm == 6))
 	    || (OCTEON_IS_MODEL(OCTEON_CNF75XX) && (qlm == 5)))
-		lmac = 2;
-	else
-		lmac = lane;
+			lmac = 2;
+		else
+			lmac = lane;
 
-	/* No need to tune 10G-KR and 40G-KR interfaces */
-	pmd_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_BR_PMD_CONTROL(lmac, bgx));
-	if (pmd_control.s.train_en)
+ 		/* No need to tune 10G-KR and 40G-KR interfaces */
+ 		pmd_control.u64 = cvmx_read_csr_node(node, CVMX_BGXX_SPUX_BR_PMD_CONTROL(lmac, bgx));
+ 		if (pmd_control.s.train_en)
 		return;
 
 	if ((tx_pre != -1) && (tx_post == -1)) {
@@ -2513,27 +2514,27 @@ void octeon_qlm_tune_per_lane_v3(int node, int qlm, int baud_mhz, int lane,
 
 	debug("N%d.QLM%d: Lane %d: TX_SWING=%d, TX_PRE=%d, TX_POST=%d, TX_GAIN=%d, TX_VBOOST=%d\n",
 		node, qlm, lane, tx_swing, tx_pre, tx_post, tx_gain, tx_vboost);
-
-	/* Complete the Tx swing and Tx equilization programming */
-	/* 1) Enable Tx swing and Tx emphasis overrides */
-	tx_cfg1.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_1(lane, qlm));
+ 
+ 		/* Complete the Tx swing and Tx equilization programming */
+ 		/* 1) Enable Tx swing and Tx emphasis overrides */
+ 			tx_cfg1.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_1(lane, qlm));
 	tx_cfg1.s.tx_swing_ovrrd_en = (tx_swing != -1);
 	tx_cfg1.s.tx_premptap_ovrrd_val = (tx_pre != -1) && (tx_post != -1);
 	tx_cfg1.s.tx_vboost_en_ovrrd_en = (tx_vboost != -1); /* Vboost override */;
-	cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_1(lane, qlm), tx_cfg1.u64);
-	/* 2) Program the Tx swing and Tx emphasis Pre-cursor and Post-cursor values */
-	/* CFG_TX_PREMPTAP[8:4] = Lane X's TX post-cursor value (C+1) */
-	/* CFG_TX_PREMPTAP[3:0] = Lane X's TX pre-cursor value (C-1) */
+			cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_1(lane, qlm), tx_cfg1.u64);
+		/* 2) Program the Tx swing and Tx emphasis Pre-cursor and Post-cursor values */
+		/* CFG_TX_PREMPTAP[8:4] = Lane X's TX post-cursor value (C+1) */
+		/* CFG_TX_PREMPTAP[3:0] = Lane X's TX pre-cursor value (C-1) */
 	if (tx_swing != -1) {
-		tx_cfg0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_0(lane, qlm));
-		tx_cfg0.s.cfg_tx_swing = tx_swing;
-		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_0(lane, qlm), tx_cfg0.u64);
+ 			tx_cfg0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_0(lane, qlm));
+ 		tx_cfg0.s.cfg_tx_swing = tx_swing;
+ 			cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_0(lane, qlm), tx_cfg0.u64);
 	}
 
 	if ((tx_pre != -1) && (tx_post != -1)) {
-		pre_emphasis.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_PRE_EMPHASIS(lane, qlm));
+ 			pre_emphasis.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_PRE_EMPHASIS(lane, qlm));
 		pre_emphasis.s.cfg_tx_premptap = (tx_post << 4) | tx_pre;
-		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_PRE_EMPHASIS(lane, qlm), pre_emphasis.u64);
+ 			cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_PRE_EMPHASIS(lane, qlm), pre_emphasis.u64);
 	}
 
 	/* Apply TX gain settings */
@@ -2550,39 +2551,39 @@ void octeon_qlm_tune_per_lane_v3(int node, int qlm, int baud_mhz, int lane,
 		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_3(lane, qlm), tx_cfg3.u64);
 	}
 
-	/* 3) Program override for the Tx coefficient request */
-	pcs_ctlifc_0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_0(lane, qlm));
+ 		/* 3) Program override for the Tx coefficient request */
+ 		pcs_ctlifc_0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_0(lane, qlm));
 	if (((tx_pre != -1) && (tx_post != -1)) || (tx_swing != -1))
 		pcs_ctlifc_0.s.cfg_tx_coeff_req_ovrrd_val = 0x1;
 	if (tx_vboost != -1)
             	pcs_ctlifc_0.s.cfg_tx_vboost_en_ovrrd_val = 1;
-	cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_0(lane, qlm), pcs_ctlifc_0.u64);
+		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_0(lane, qlm), pcs_ctlifc_0.u64);
 
-	/* 4) Enable the Tx coefficient request override enable */
-	pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
+		/* 4) Enable the Tx coefficient request override enable */
+		pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
 	if (((tx_pre != -1) && (tx_post != -1)) || (tx_swing != -1))
 		pcs_ctlifc_2.s.cfg_tx_coeff_req_ovrrd_en = 0x1;
 	if (tx_vboost != -1)
 		pcs_ctlifc_2.s.cfg_tx_vboost_en_ovrrd_en = 1;
-	cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
+		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
 
-	/* 5) Issue a Control Interface Configuration Override request to start the Tx equalizer */
-	pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
-	pcs_ctlifc_2.s.ctlifc_ovrrd_req = 0x1;
-	cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
+ 		/* 5) Issue a Control Interface Configuration Override request to start the Tx equalizer */
+ 		pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
+ 		pcs_ctlifc_2.s.ctlifc_ovrrd_req = 0x1;
+		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
 
-	/* 6) Wait 1 ms for the request to complete */
-	cvmx_wait_usec(1000);
+		/* 6) Wait 1 ms for the request to complete */
+		cvmx_wait_usec(1000);
 
-	/* Steps 7 & 8 required for subsequent Tx swing and Tx equilization adjustment */
-	/* 7) Disable the Tx coefficient request override enable */
-	pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
-	pcs_ctlifc_2.s.cfg_tx_coeff_req_ovrrd_en = 0;
-	cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
-	/* 8) Issue a Control Interface Configuration Override request */
-	pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
-	pcs_ctlifc_2.s.ctlifc_ovrrd_req = 0x1;
-	cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
+		/* Steps 7 & 8 required for subsequent Tx swing and Tx equilization adjustment */
+		/* 7) Disable the Tx coefficient request override enable */
+		pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
+		pcs_ctlifc_2.s.cfg_tx_coeff_req_ovrrd_en = 0;
+		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
+		/* 8) Issue a Control Interface Configuration Override request */
+		pcs_ctlifc_2.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm));
+		pcs_ctlifc_2.s.ctlifc_ovrrd_req = 0x1;
+		cvmx_write_csr_node(node, CVMX_GSERX_LANEX_PCS_CTLIFC_2(lane, qlm), pcs_ctlifc_2.u64);
 }
 
 /**
@@ -2611,7 +2612,7 @@ void octeon_qlm_tune_v3(int node, int qlm, int baud_mhz, int tx_swing,
 
 		octeon_qlm_tune_per_lane_v3(node, qlm, baud_mhz, lane, tx_swing,
 				tx_pre, tx_post, tx_gain, tx_vboost);
-	}
+		}
 }
 
 /**
@@ -3932,14 +3933,14 @@ static int __qlm_errata_gser_26150(int node, int qlm, int is_pcie)
 		pll_cfg_3.s.pcs_sds_pll_vco_amp = 0;
 		pll_cfg_3.s.pll_vctrl_sel_lcvco_val = 2;
 		cvmx_write_csr_node(node, CVMX_GSERX_GLBL_PLL_CFG_3(qlm), pll_cfg_3.u64);
-
+		
 		/* Step 2: Set GSER()_GLBL_MISC_CONFIG_1[PCS_SDS_TRIM_CHP_REG] = 0x2. */
 		misc_config_1.u64 = cvmx_read_csr_node(node, CVMX_GSERX_GLBL_MISC_CONFIG_1(qlm));
 		misc_config_1.s.pcs_sds_trim_chp_reg = 2;
 		cvmx_write_csr_node(node, CVMX_GSERX_GLBL_MISC_CONFIG_1(qlm), misc_config_1.u64);
 		return 0;
 	}
-
+	  
 	/* Applying this errata twice causes problems */
 	pll_cfg_3.u64 = cvmx_read_csr_node(node, CVMX_GSERX_GLBL_PLL_CFG_3(qlm));
 	if (pll_cfg_3.s.pll_vctrl_sel_lcvco_val == 0x2)
@@ -4216,7 +4217,7 @@ static int __get_lane_mode_for_speed_and_ref_clk(int ref_clk_sel,
 			*alt_pll_settings = true;
 
 		if (ref_clk_sel == 2 || ref_clk_sel == 3)
-			return R_103125G_REFCLK15625_KR;
+		return R_103125G_REFCLK15625_KR;
 
 	default:
 		printf("Error: Invalid speed\n");
@@ -4974,15 +4975,16 @@ int octeon_configure_qlm_cn78xx(int node, int qlm, int baud_mhz,
 						   CVMX_BGXX_SPUX_BR_PMD_CONTROL(index, bgx));
 
 			if (mode == CVMX_QLM_MODE_10G_KR || mode == CVMX_QLM_MODE_40G_KR4)
-				spu_pmd_control.s.train_en = 1;
+			spu_pmd_control.s.train_en = 1;
 			else if (mode == CVMX_QLM_MODE_XFI || mode == CVMX_QLM_MODE_XLAUI)
-				spu_pmd_control.s.train_en = 0;
+			spu_pmd_control.s.train_en = 0;
 
 			cvmx_write_csr_node(node,
 				CVMX_BGXX_SPUX_BR_PMD_CONTROL(index, bgx),
 					spu_pmd_control.u64);
 		}
 	}
+
 
 	/* Configure the gser pll */
 	if (!is_pcie)
@@ -5041,9 +5043,7 @@ int octeon_configure_qlm_cn78xx(int node, int qlm, int baud_mhz,
 	}
 
 	/* Reduce the voltage amplitude coming from Marvell PHY and also change
-	   DFE threshold settings for RXAUI interface. For Cortina PHY slightly different
-	   parameters are required (0xcf6f -> 0xff6f, 0x12 -> 0x13). */
-
+	   DFE threshold settings for RXAUI interface */
 	if (is_bgx && mode == CVMX_QLM_MODE_RXAUI) {
 		int l;
 		for (l = 0; l < 2; l++) {
@@ -5051,13 +5051,13 @@ int octeon_configure_qlm_cn78xx(int node, int qlm, int baud_mhz,
 			cvmx_gserx_lanex_tx_cfg_0_t cfg0;
 			/* Change the Q/QB error sampler 0 threshold from 0xD to 0xF */
 			cfg4.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_RX_CFG_4(l, qlm));
-			cfg4.s.cfg_rx_errdet_ctrl = 0xff6f;
+			cfg4.s.cfg_rx_errdet_ctrl = 0xcf6f;
 			cvmx_write_csr_node(node, CVMX_GSERX_LANEX_RX_CFG_4(l, qlm), cfg4.u64);
 			/* Reduce the voltage swing to roughly 460mV */
 			cfg0.u64 = cvmx_read_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_0(l, qlm));
-			cfg0.s.cfg_tx_swing = 0x13;
+			cfg0.s.cfg_tx_swing = 0x12;
 			cvmx_write_csr_node(node, CVMX_GSERX_LANEX_TX_CFG_0(l, qlm), cfg0.u64);
-		}
+	}
 	}
 
 	return 0;
@@ -5083,10 +5083,10 @@ static int __is_qlm_valid_bgx_cn73xx(int qlm)
  * 			gen3 = 1 GEN2 mode
  * 			gen3 = 0 GEN1 mode
  *
- * @param ref_clk_sel   The reference-clock selection to use to configure QLM
- *			0 = REF_100MHZ
- *			1 = REF_125MHZ
- *			2 = REF_156MHZ
+ * @param ref_clk_sel    The reference-clock selection to use to configure QLM
+ * 			 0 = REF_100MHZ
+ * 			 1 = REF_125MHZ
+ * 			 2 = REF_156MHZ
  *			3 = REF_161MHZ
  *
  * @param ref_clk_input  The reference-clock input to use to configure QLM
@@ -5548,9 +5548,9 @@ static int octeon_configure_qlm_cn73xx(int qlm, int baud_mhz,
 	}
 
 	if (is_pcie == 0)
-		lane_mode = __get_lane_mode_for_speed_and_ref_clk(ref_clk_sel,
-								  baud_mhz,
-								  &alt_pll);
+	lane_mode = __get_lane_mode_for_speed_and_ref_clk(ref_clk_sel,
+							  baud_mhz,
+							  &alt_pll);
 	debug("%s: %d lane mode: %d, alternate PLL: %s\n", __func__,
 	      mode, lane_mode, alt_pll ? "true" : "false");
 	if (lane_mode == -1)
@@ -5774,7 +5774,7 @@ static int __rmac_pll_config(int baud_mhz, int qlm, int mode)
 		printf("Invalid speed for CPRI/SDL configuration\n");
 		return -1;
 	}
-
+	
 	lmode.u64 = cvmx_read_csr(CVMX_GSERX_LANE_MODE(qlm));
 	cvmx_write_csr(CVMX_GSERX_PLL_PX_MODE_0(lmode.s.lmode, qlm), pmode0.u64);
 	cvmx_write_csr(CVMX_GSERX_PLL_PX_MODE_1(lmode.s.lmode, qlm), pmode1.u64);
@@ -5967,11 +5967,6 @@ static int octeon_configure_qlm_cnf75xx(int qlm, int baud_mhz,
 	case CVMX_QLM_MODE_SRIO_4X1:
 	{
 		int spd = 0xf;
-		if (cvmx_fuse_read(1601)) {
-			debug("SRIO is not supported on cnf73xx model\n");
-			return -1;
-		}
-
 		switch(baud_mhz) {
 		case 1250:
 			switch (ref_clk_sel) {
@@ -6097,7 +6092,7 @@ static int octeon_configure_qlm_cnf75xx(int qlm, int baud_mhz,
 	}
 
 	if ((is_rmac_pipe == 0) && (is_pcie == 0))
-		lane_mode = __get_lane_mode_for_speed_and_ref_clk(ref_clk_sel,
+	lane_mode = __get_lane_mode_for_speed_and_ref_clk(ref_clk_sel,
 							  baud_mhz,
 							  &alt_pll);
 	debug("%s: %d lane mode: %d, alternate PLL: %s\n", __func__,

@@ -131,7 +131,6 @@ COBJS-$(CONFIG_MP) += cmd_mp.o
 COBJS-$(CONFIG_CMD_MTDPARTS) += cmd_mtdparts.o
 COBJS-$(CONFIG_CMD_NAND) += cmd_nand.o
 COBJS-$(CONFIG_CMD_NET) += cmd_net.o
-COBJS-$(CONFIG_CMD_NVME) += cmd_nvme.o
 COBJS-$(CONFIG_CMD_ONENAND) += cmd_onenand.o
 COBJS-$(CONFIG_CMD_OTP) += cmd_otp.o
 COBJS-$(CONFIG_CMD_PART) += cmd_part.o
@@ -218,7 +217,6 @@ else
 COBJS-y += env_nowhere.o
 endif
 endif
-
 # core command
 COBJS-y += cmd_nvedit.o
 #environment
@@ -241,7 +239,6 @@ COBJS-$(CONFIG_FIT) += image-fit.o
 COBJS-$(CONFIG_FIT_SIGNATURE) += image-sig.o
 COBJS-y += memsize.o
 COBJS-y += stdio.o
-COBJS-y += cmd_octeon_readreg.o
 
 
 COBJS	:= $(sort $(COBJS-y))
@@ -250,9 +247,7 @@ SRCS	:= $(COBJS:.o=.c) $(XCOBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(COBJS))
 XOBJS	:= $(addprefix $(obj),$(XCOBJS))
 
-CFLAGS += -I$(TOPDIR)/arch/mips/include/asm/arch-octeon -Wno-unused-value -Wno-unused-but-set-variable -Wno-unused-variable
-
-CPPFLAGS += -I.. -I$(TOPDIR)/arch/mips/include/asm/arch-octeon -Wno-unused-value -Wno-unused-but-set-variable -Wno-unused-variable
+CPPFLAGS += -I..
 
 all:	$(LIB) $(XOBJS)
 

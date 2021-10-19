@@ -35,21 +35,28 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#ifdef CFG_PRINT_MPR
+extern void print_mpr(void);
+#else
+void print_mpr(void)
+{
+}
+#endif
+
 /**
  * Prints out board information during bootup.
  */
 int __display_board_info(void)
 {
-	char buffer[32];
-	printf("%s board revision major:%d, minor:%d, serial #: %s\n",
-	       cvmx_board_type_to_string(gd->arch.board_desc.board_type),
-	       gd->arch.board_desc.rev_major,
-	       gd->arch.board_desc.rev_minor, gd->arch.board_desc.serial_str);
 
-	octeon_model_get_string_buffer(cvmx_get_proc_id(), buffer);
+    printf("%s r1:%d, r2:%d, serial #: %s\n",
+           cvmx_board_type_to_string(gd->arch.board_desc.board_type),
+           gd->arch.board_desc.rev_major,
+           gd->arch.board_desc.rev_minor, gd->arch.board_desc.serial_str);
 
-	printf("OCTEON %s, Core clock: %lld MHz",
-	       buffer,
+	print_mpr();
+
+	printf("Core clock: %lld MHz",
 	       DIV_ROUND_UP(cvmx_clock_get_rate(CVMX_CLOCK_CORE), 1000000));
 
 	if (!OCTEON_IS_OCTEON1PLUS())

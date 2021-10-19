@@ -528,7 +528,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
         spd_rdimm = !!simple_strtoul(s, NULL, 0);
     }
 
-    wlevel_loops = 1;
+        wlevel_loops = 1;
 
     if ((s = lookup_env_parameter("ddr%d_wlevel_loops", ddr_interface_num)) != NULL) {
         wlevel_loops = simple_strtoul(s, NULL, 0);
@@ -540,7 +540,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
     bunk_enable = (num_ranks > 1);
 
-    column_bits_start = 3;
+        column_bits_start = 3;
 
     row_lsb = column_bits_start + col_bits + bank_bits - (! ddr_interface_64b);
     debug_print("row_lsb = column_bits_start + col_bits + bank_bits = %d\n", row_lsb);
@@ -2458,9 +2458,9 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             lmc_config.u64 = cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num));
             ecc_ena = lmc_config.cn78xx.ecc_ena;
 
-            if ((s = lookup_env_parameter("ddr_wlevel_rtt_nom")) != NULL) {
-                wlevel_ctl.cn78xx.rtt_nom   = simple_strtoul(s, NULL, 0);
-            }
+                if ((s = lookup_env_parameter("ddr_wlevel_rtt_nom")) != NULL) {
+                    wlevel_ctl.cn78xx.rtt_nom   = simple_strtoul(s, NULL, 0);
+                }
 
             ddr_config_write_csr_node(node,
 				      CVMX_LMCX_WLEVEL_RANKX(rankx, ddr_interface_num),
@@ -2723,8 +2723,8 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                long enough for a few ZQCS calibrations to occur.  This
                should ensure that the calibration circuitry is
                stabilized before read-leveling occurs. */
-            save_ref_zqcs_int         = lmc_config.cn78xx.ref_zqcs_int;
-            lmc_config.cn78xx.ref_zqcs_int = 1 | (32<<7); /* set smallest interval */
+                save_ref_zqcs_int         = lmc_config.cn78xx.ref_zqcs_int;
+                lmc_config.cn78xx.ref_zqcs_int = 1 | (32<<7); /* set smallest interval */
             cvmx_write_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num),
 				lmc_config.u64);
             cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num));
@@ -2742,7 +2742,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
                          temp_delay_usecs);
             cvmx_wait_usec(temp_delay_usecs);
 
-            lmc_config.cn78xx.ref_zqcs_int = save_ref_zqcs_int; /* Restore computed interval */
+                lmc_config.cn78xx.ref_zqcs_int = save_ref_zqcs_int; /* Restore computed interval */
             cvmx_write_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num), lmc_config.u64);
             cvmx_read_csr_node(node, CVMX_LMCX_CONFIG(ddr_interface_num));
         }
@@ -2768,10 +2768,10 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
             ? custom_lmc_config->offset_rdimm
             : custom_lmc_config->offset_udimm;
 
-        rlevel_ctl.cn78xx.delay_unload_0 = 1; /* should normally be set */
-        rlevel_ctl.cn78xx.delay_unload_1 = 1; /* should normally be set */
-        rlevel_ctl.cn78xx.delay_unload_2 = 1; /* should normally be set */
-        rlevel_ctl.cn78xx.delay_unload_3 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_0 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_1 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_2 = 1; /* should normally be set */
+            rlevel_ctl.cn78xx.delay_unload_3 = 1; /* should normally be set */
 
         {
             int byte_bitmask = 0xff;
@@ -3975,7 +3975,7 @@ static int init_octeon3_ddr3_interface(uint32_t cpu_id,
 
     process_custom_dll_offsets(node, ddr_interface_num, cpu_id, "ddr_dll_write_offset",
 			       custom_lmc_config->dll_write_offset, "ddr%d_dll_write_offset_byte%d", 1);
-    process_custom_dll_offsets(node, ddr_interface_num, cpu_id, "ddr_dll_read_offset",
+    process_custom_dll_offsets(node, ddr_interface_num, cpu_id, "ddr_dll_read_offset", 
 			       custom_lmc_config->dll_read_offset,  "ddr%d_dll_read_offset_byte%d",  2);
 
     /* Workaround Errata 21216 */

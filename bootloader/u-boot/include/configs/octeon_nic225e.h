@@ -31,9 +31,6 @@
 #ifndef __OCTEON_NIC225E_H__
 #define __OCTEON_NIC225E_H__
 
-/** Enable the more powerful hush command parser */
-#define CONFIG_SYS_HUSH_PARSER
-
 #define CONFIG_OCTEON_BIG_STACK_SIZE		0x4000	/** 16K stack */
 
 /** NOR flash is only used for expansion ROM */

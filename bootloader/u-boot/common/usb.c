@@ -49,10 +49,6 @@ static int asynch_allowed;
 
 char usb_started; /* flag for the started/stopped USB status */
 
-#ifdef CONFIG_USB_XHCI_OCTEON
-extern int octeon_xhci_reset_needed;
-#endif
-
 #ifndef CONFIG_USB_MAX_CONTROLLER_COUNT
 #define CONFIG_USB_MAX_CONTROLLER_COUNT 1
 #endif
@@ -68,13 +64,8 @@ int usb_init(void)
 {
 	void *ctrl;
 	struct usb_device *dev;
-	int i, start_index;
-#ifdef CONFIG_USB_XHCI_OCTEON
-	int retry_count = 3;
+	int i, start_index = 0;
 
-retry:
-#endif
-	start_index = 0;
 	dev_index = 0;
 	asynch_allowed = 1;
 	usb_hub_reset();
@@ -90,13 +81,6 @@ retry:
 		/* init low_level USB */
 		printf("USB%d:   ", i);
 		if (usb_lowlevel_init(i, USB_INIT_HOST, &ctrl)) {
-#ifdef CONFIG_USB_XHCI_OCTEON
-			if (octeon_xhci_reset_needed) {
-				octeon_xhci_reset_needed = 0;
-				if (--retry_count >= 0)
-					goto retry;
-			}
-#endif
 #if defined(CONFIG_OCTEON) && defined(CONFIG_OCTEON_OCX)
 			if (i == 0)
 #endif
@@ -133,9 +117,6 @@ retry:
 		puts("USB error: all controllers failed lowlevel init\n");
 		return -1;
 	}
-#ifdef CONFIG_USB_XHCI_OCTEON
-	retry_count = 3;
-#endif
 
 	return 0;
 }
@@ -558,7 +539,6 @@ static int usb_get_descriptor(struct usb_device *dev, unsigned char type,
 			unsigned char index, void *buf, int size)
 {
 	int res;
-
 	res = usb_control_msg(dev, usb_rcvctrlpipe(dev, 0),
 			USB_REQ_GET_DESCRIPTOR, USB_DIR_IN,
 			(type << 8) + index, 0,

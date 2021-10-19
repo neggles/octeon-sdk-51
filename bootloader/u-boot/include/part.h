@@ -59,7 +59,6 @@ typedef struct block_dev_desc {
 #define IF_TYPE_SD		7
 #define IF_TYPE_SATA		8
 #define IF_TYPE_SATA_PMP	9	/** SATA port multiplier */
-#define IF_TYPE_NVME		10
 
 /* Part types */
 #define PART_TYPE_UNKNOWN	0x00
@@ -102,7 +101,6 @@ block_dev_desc_t* sata_get_dev(int dev);
 block_dev_desc_t* scsi_get_dev(int dev);
 block_dev_desc_t* usb_stor_get_dev(int dev);
 block_dev_desc_t* mmc_get_dev(int dev);
-block_dev_desc_t* nvme_get_dev(int dev);
 block_dev_desc_t* systemace_get_dev(int dev);
 block_dev_desc_t* mg_disk_get_dev(int dev);
 

@@ -40,9 +40,6 @@ static const struct block_drvr block_drvr[] = {
 #if defined(CONFIG_MMC)
 	{ .name = "mmc", .get_dev = mmc_get_dev, },
 #endif
-#if defined(CONFIG_CMD_NVME)
-	{ .name = "nvme", .get_dev = nvme_get_dev, },
-#endif
 #if defined(CONFIG_SYSTEMACE)
 	{ .name = "ace", .get_dev = systemace_get_dev, },
 #endif
@@ -148,12 +145,6 @@ void dev_print (block_dev_desc_t *dev_desc)
 	case IF_TYPE_DOC:
 		puts("device type DOC\n");
 		return;
-	case IF_TYPE_NVME:
-		printf("Vendor: %s Rev: %s Prod: %s\n",
-		       dev_desc->vendor,
-		       dev_desc->revision,
-		       dev_desc->product);
-		break;
 	case IF_TYPE_UNKNOWN:
 		puts("device type unknown\n");
 		return;
@@ -294,9 +285,6 @@ static void print_part_header (const char *type, block_dev_desc_t * dev_desc)
 		break;
 	case IF_TYPE_MMC:
 		puts ("MMC");
-		break;
-	case IF_TYPE_NVME:
-		puts("NVME");
 		break;
 	default:
 		puts ("UNKNOWN");

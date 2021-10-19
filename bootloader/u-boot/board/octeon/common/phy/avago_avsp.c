@@ -98,6 +98,7 @@ int avsp_get_refclk_divisor(struct avago_hdl *ah, uint32_t prtad)
 	return (return_code == ah->return_code) ? ret : -1;
 }
 
+
 /**
  * @brief   Puts the AVSP device into a known good state and uploads firmware.
  * @details Makes the device ready for additional configuration by performing

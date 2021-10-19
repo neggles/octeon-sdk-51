@@ -564,12 +564,14 @@ int failsafe_scan(void)
 	if (!(gd->flags & GD_FLG_FAILSAFE_MODE))
 		return 0;
 #if !defined(CONFIG_OCTEON_NO_FAILSAFE) && !defined(CONFIG_SYS_NO_FLASH)
+#if 0 // no fs gpio in infinity HW
 	gpio_direction_input(OCTEON_GPIO_FAILSAFE_BIT);
 	if (gpio_get_value(OCTEON_GPIO_FAILSAFE_BIT)) {
 		printf ("GPIO bit %d set, booting failsafe image\n",
 			OCTEON_GPIO_FAILSAFE_BIT);
 		return 0;
 	}
+#endif
 	debug("%s: Searching for normal bootloader\n", __func__);
 	addr = octeon_find_and_validate_normal_bootloader(0);
 	if (addr) {

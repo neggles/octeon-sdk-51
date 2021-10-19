@@ -106,7 +106,7 @@ int rtc_get (struct rtc_time *tmp)
 	tmp->tm_hour = bcd2bin (hour & 0x3F);
 	tmp->tm_mday = bcd2bin (mday & 0x3F);
 	tmp->tm_mon  = bcd2bin (mon_cent & 0x1F);
-	tmp->tm_year = bcd2bin (year) + ((mon_cent & 0x80) ? 2100 : 2000);
+	tmp->tm_year = bcd2bin (year) + ((mon_cent & 0x80) ? 2000 : 1900);
 	tmp->tm_wday = bcd2bin ((wday - 1) & 0x07);
 	tmp->tm_yday = 0;
 	tmp->tm_isdst= 0;
@@ -130,12 +130,9 @@ int rtc_set (struct rtc_time *tmp)
 		tmp->tm_year, tmp->tm_mon, tmp->tm_mday, tmp->tm_wday,
 		tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
 
-	if (tmp->tm_year < 2000 || tmp->tm_year > 2199)
-		return -1;
-
 	rtc_write (RTC_YR_REG_ADDR, bin2bcd (tmp->tm_year % 100));
 
-	century = (tmp->tm_year >= 2100) ? 0x80 : 0;
+	century = (tmp->tm_year >= 2000) ? 0x80 : 0;
 	rtc_write (RTC_MON_REG_ADDR, bin2bcd (tmp->tm_mon) | century);
 
 	rtc_write (RTC_DAY_REG_ADDR, bin2bcd (tmp->tm_wday + 1));

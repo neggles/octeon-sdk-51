@@ -648,8 +648,8 @@ int oci_init(void)
 	debug("ocx_com_link0_ctl: 0x%llx\n",
 	      ocx_com_linkx_ctl.u64);
 	mdelay(5000);
-	result |= init_oci();
-	debug("...OCI_SETUP end.\n");
+		result |= init_oci();
+		debug("...OCI_SETUP end.\n");
 
 	return 0;
 }

@@ -39,7 +39,7 @@
 
 /**
  *
- * $Id: octeon_fdt.c 167267 2017-10-19 21:58:08Z cchavva $
+ * $Id: octeon_fdt.c 152568 2017-01-19 00:05:57Z cchavva $
  *
  */
 
@@ -68,23 +68,8 @@
 #ifdef CONFIG_PCA9698
 # include <pca9698.h>
 #endif
-#ifdef CONFIG_PCA9554
-# include <pca9554.h>
-#endif
-#ifdef CONFIG_PCA9555
-# include <pca9555.h>
-#endif
 
 DECLARE_GLOBAL_DATA_PTR;
-
-#ifdef CONFIG_PCA9554
-static const char *pca9554_gpio_list[] = {
-	"pca9554",
-	"nxp,pca9554",
-	"ti,pca9554",
-	NULL,
-};
-#endif
 
 #ifdef CONFIG_PCA9555
 static const char *pca9555_gpio_list[] = {
@@ -486,7 +471,7 @@ void __octeon_fixup_fdt_mac_addr(void)
 		if (p) {
 			node = fdt_path_offset(working_fdt, p);
 			if (node > 0)
-				octeon_set_one_fdt_mac(node, &mac);
+			octeon_set_one_fdt_mac(node, &mac);
 		}
 	}
 
@@ -496,13 +481,13 @@ void __octeon_fixup_fdt_mac_addr(void)
 		if (p) {
 			node = fdt_path_offset(working_fdt, p);
 			if (node > 0)
-				octeon_set_one_fdt_mac(node, &mac);
+			octeon_set_one_fdt_mac(node, &mac);
 		}
 	}
 
+
 	pip = fdt_node_offset_by_compatible(working_fdt, -1,
 					    "cavium,octeon-3860-pip");
-
 	if (pip > 0)
 		for (i = 0; i < 8; i++) {
 			sprintf(name, "interface@%d", i);
@@ -522,7 +507,7 @@ void __octeon_fixup_fdt_mac_addr(void)
 	/* Assign 78XX addresses in the order they appear in the device tree. */
 	node = fdt_node_offset_by_compatible(working_fdt, -1,
 					     "cavium,octeon-7890-bgx-port");
-	while (node != -FDT_ERR_NOTFOUND) {
+	while (node !=  -FDT_ERR_NOTFOUND) {
 		octeon_set_one_fdt_mac(node, &mac);
 		node = fdt_node_offset_by_compatible(working_fdt, node,
 						     "cavium,octeon-7890-bgx-port");
@@ -583,7 +568,7 @@ void __octeon_fixup_fdt_memory(void)
 	if (size_left > 0) {
 		if (OCTEON_IS_OCTEON1PLUS()) {
 			sizes[num_addresses] =
-			min(256 * 1024 * 1024, size_left);
+					min(256 * 1024 * 1024, size_left);
 			addresses[num_addresses] = 0x410000000ULL;
 			size_left -= sizes[num_addresses];
 			num_addresses++;
@@ -853,7 +838,7 @@ int octeon_fdt_i2c_get_bus(const void *fdt, int node_offset)
 #ifdef CONFIG_OCTEON_I2C_FDT
 		bus = i2c_get_bus_num_fdt(node_offset);
 		if (bus >= 0) {
-			debug("%s: Found bus 0x%x\n", __func__, bus);
+			debug("%s: Found bus 0x%x\n", bus);
 			return bus;
 		}
 #endif
@@ -1097,13 +1082,9 @@ int octeon_fdt_get_gpio_info(int fdt_node,
 		debug("%s: Found PCA9555 type compatible GPIO\n", __func__);
 		*type = GPIO_TYPE_PCA9555;
 	}
-#endif
-#ifdef CONFIG_PCA9554
-	if (!octeon_fdt_node_check_compatible(fdt, fdt_node,
-					      pca9554_gpio_list)) {
-		debug("%s: Found PCA9555 type compatible GPIO\n", __func__);
-		*type = GPIO_TYPE_PCA9554;
-	}
+# ifdef CONFIG_PCA953X
+	else
+# endif
 #endif
 #ifdef CONFIG_PCA953X
 	if (!octeon_fdt_node_check_compatible(fdt, fdt_node,
@@ -1120,7 +1101,7 @@ int octeon_fdt_get_gpio_info(int fdt_node,
 	}
 #endif
 #if defined(CONFIG_PCA953X) || defined(CONFIG_PCA9698) || \
-    defined(CONFIG_PCA9555) || defined(CONFIG_PCA9554)
+    defined(CONFIG_PCA9555)
 	if (!i2c_addr || !i2c_bus) {
 		printf("%s: Error: i2c_addr or i2c_bus is NULL\n", __func__);
 		return -1;
@@ -1137,7 +1118,6 @@ int octeon_fdt_get_gpio_info(int fdt_node,
 	return (*type != GPIO_TYPE_UNKNOWN) ? 0 : -1;
 }
 
-#ifdef CONFIG_PHY_VITESSE
 /**
  * Given a node in the flat device tree, return the matching PHY device
  *
@@ -1161,7 +1141,6 @@ static struct phy_device *octeon_fdt_get_phy_device_from_node(int fdt_node)
 	} while (dev);
 	return NULL;
 }
-#endif
 
 /**
  * Get the PHY data structure for the specified FDT node and output the type
@@ -1182,13 +1161,13 @@ struct phy_device *octeon_fdt_get_phy_gpio_info(int fdt_node,
 		phydev = octeon_fdt_get_phy_device_from_node(fdt_node);
 		if (phydev) {
 			debug("%s: Found Vitesse VSC848X compatible GPIO\n",
-			      __func__);
+		       __func__);
 			*type = GPIO_TYPE_VSC8488;
 			return phydev;
 		} else {
 			debug("%s: Error: phy device not found!\n", __func__);
 			return NULL;
-		}
+	}
 	} else {
 		debug("%s: No compatible Vitesse PHY type found\n", __func__);
 	}

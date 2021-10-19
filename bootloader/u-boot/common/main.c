@@ -182,35 +182,15 @@ static int abortboot_keyed(int bootdelay)
 
 # else	/* !defined(CONFIG_AUTOBOOT_KEYED) */
 
-#if defined(CONFIG_MENUKEY) || defined(CONFIG_STOPKEY)
+#ifdef CONFIG_MENUKEY
 static int menukey = 0;
-#endif
-
-#ifdef CONFIG_STOPKEY
-#define MENUKEY_S      83
-#define MENUKEY_T      84
-#define MENUKEY_O      79
-#define MENUKEY_P      80
-
-static const char stopkey_buf[] = {
-      MENUKEY_S,
-      MENUKEY_T,
-      MENUKEY_O,
-      MENUKEY_P,
-      0
-};
-
-static int stopkey_ind = 0;
 #endif
 
 static int abortboot_normal(int bootdelay)
 {
 	int abort = 0;
 	unsigned long ts;
-#ifdef CONFIG_STOPKEY
-      stopkey_ind = 0;
-	printf("Type '%s' or ", stopkey_buf);
-#endif
+
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT);
 #else
@@ -238,28 +218,11 @@ static int abortboot_normal(int bootdelay)
 		ts = get_timer(0);
 		do {
 			if (tstc()) {	/* we got a key press	*/
-#if defined(CONFIG_MENUKEY) || defined(CONFIG_STOPKEY)
-                        menukey = getc();
-#ifdef CONFIG_STOPKEY
-                        if((menukey & ~(1 << 5)) == stopkey_buf[stopkey_ind]) {
-                              printf("\b\b\b\b%c    ", menukey);
-                              stopkey_ind++;
-                              bootdelay++;
-
-                              if(!stopkey_buf[stopkey_ind]) {
-                                    abort = 1;
-                                    bootdelay = 0;  /* no more delay        */
-                              }
-                              continue;
-                        }
-#endif
-#ifdef CONFIG_MENUKEY
-				if (menukey == CONFIG_MENUKEY) {
-					abort = 1;
-					bootdelay = 0;  /* no more delay        */
-				}
-#endif
-# else // CONFIG_STOPKEY || CONFIG_MENUKEY
+				abort  = 1;	/* don't auto boot	*/
+				bootdelay = 0;	/* no more delay	*/
+# ifdef CONFIG_MENUKEY
+				menukey = getc();
+# else
 				(void) getc();  /* consume input	*/
 # endif
 				break;
@@ -463,7 +426,38 @@ void main_loop(void)
 	char *p;
 #endif
 
+#ifdef CONFIG_FACTORY_RESET
+	int rcount = 0;
+	uint64_t rreg;
+#endif /* CONFIG_FACTORY_RESET */
+
 	bootstage_mark_name(BOOTSTAGE_ID_MAIN_LOOP, "main_loop");
+
+#ifdef CONFIG_FACTORY_RESET
+	for (rcount = 0; rcount <= CONFIG_FACTORY_RESET_TIME; rcount++) {
+		rreg = cvmx_read_csr(CVMX_GPIO_RX_DAT);
+		if (rreg & (1 << CONFIG_FACTORY_RESET_GPIO)) {
+			if (rcount > 0) {
+				printf("...released, NOT resetting\n");
+			}
+			break;
+		}
+		printf("%s...%d", (rcount == 0) ? "Reset pressed " : "",
+		       rcount);
+		board_blink_led(1000);
+	}
+	if (rcount == (CONFIG_FACTORY_RESET_TIME + 1)) {
+		printf("...Confirmed\n"
+		       "Starting with factory-default config...\n");
+		board_set_led_on();
+		udelay(2000000);
+		board_set_led_off();
+		udelay(1000000);
+		board_set_led_normal();
+		run_command(CONFIG_FACTORY_RESET_BOOTCMD, 0);
+	}
+	board_set_led_normal();
+#endif /* CONFIG_FACTORY_RESET */
 
 #ifdef CONFIG_MODEM_SUPPORT
 	debug("DEBUG: main_loop:   do_mdm_init=%d\n", do_mdm_init);

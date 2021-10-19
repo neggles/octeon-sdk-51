@@ -135,8 +135,8 @@
 /*
  * Miscellaneous configurable options
  */
-#define CONFIG_EXTRA_ENV_SETTINGS		\
-	"bootcmd=bootstage3\0"			\
+#define	CONFIG_EXTRA_ENV_SETTINGS					\
+	"bootcmd=bootstage3\0"						\
 	"bootdelay=0\0"
 
 /*-----------------------------------------------------------------------

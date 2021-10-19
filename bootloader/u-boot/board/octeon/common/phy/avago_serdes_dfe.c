@@ -217,7 +217,7 @@ int avago_serdes_dfe_pause(
  *          On error, decrements aapl->return_code and returns -1.
  */
 int avago_serdes_dfe_resume(struct avago_hdl *ah, uint32_t addr,
-			    uint32_t rr_enable)     /**< [in] Enable RR if TRUE (0x1048 release only). */
+	uint32_t rr_enable)     /**< [in] Enable RR if TRUE (0x1048 release only). */
 {
 	if (avago_check_firmware_rev(ah, addr, __func__, __LINE__, false,
 				     1, 0x1049)) {
@@ -226,7 +226,7 @@ int avago_serdes_dfe_resume(struct avago_hdl *ah, uint32_t addr,
 	}
 
 	if (rr_enable && avago_check_firmware_rev(ah,addr, __func__, __LINE__,
-						  false, 1, 0x1048))
+						 false, 1, 0x1048))
 		if (!avago_spico_int_check(ah, __func__, __LINE__, addr,
 					   0x0a, 0x0a))
 			return -1;

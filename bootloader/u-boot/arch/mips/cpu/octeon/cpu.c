@@ -66,9 +66,6 @@ extern void hw_watchdog_disable(void);
 #if defined(__U_BOOT__)
 int do_reset(cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
 {
-#ifdef CONFIG_OCTEON_IM8724
-	im8724_set_max_fans_speed(1);
-#endif
 #ifdef CONFIG_CMD_IDE
 	mdelay (10);
 	ide_set_reset(1);
@@ -76,7 +73,6 @@ int do_reset(cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
 	ide_set_reset(0);
 	mdelay(50);
 #endif
-
 	/* Flush the cache */
 	CVMX_SYNC;
 	CVMX_ICACHE_INVALIDATE;

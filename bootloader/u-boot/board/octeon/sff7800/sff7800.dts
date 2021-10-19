@@ -1362,53 +1362,53 @@
 
 			phy01: ethernet-phy@1 {
 				reg = <0x1>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "0,sgmii";
 			};
 			phy02: ethernet-phy@2 {
 				reg = <0x2>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "0,sgmii";
 			};
 			phy03: ethernet-phy@3 {
 				reg = <0x3>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "0,sgmii";
 			};
 			phy04: ethernet-phy@4 {
 				reg = <0x4>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "0,sgmii";
 			};
 			phy05: ethernet-phy@5 {
 				reg = <0x5>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
 			phy06: ethernet-phy@6 {
 				reg = <0x6>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
 			phy07: ethernet-phy@7 {
 				reg = <0x7>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
 			phy08: ethernet-phy@8 {
 				reg = <0x8>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio0>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
@@ -3369,53 +3369,53 @@
 
 			phy01B: ethernet-phy@1 {
 				reg = <0x1>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "10,sgmii";
 			};
 			phy02B: ethernet-phy@2 {
 				reg = <0x2>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "10,sgmii";
 			};
 			phy03B: ethernet-phy@3 {
 				reg = <0x3>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "10,sgmii";
 			};
 			phy04B: ethernet-phy@4 {
 				reg = <0x4>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <14 8>;	/* Pin 14, active low */
 				cavium,qlm-trim = "10,sgmii";
 			};
 			phy05B: ethernet-phy@5 {
 				reg = <0x5>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
 			phy06B: ethernet-phy@6 {
 				reg = <0x6>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
 			phy07B: ethernet-phy@7 {
 				reg = <0x7>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};
 			phy08B: ethernet-phy@8 {
 				reg = <0x8>;	/* MDIO address */
-				compatible = "marvell,88e1240", "ethernet-phy-ieee802.3-c22";
+				compatible = "marvell,88e1240";
 				interrupt-parent = <&gpio10>;
 				interrupt = <13 8>;	/* Pin 13, active low */
 			};

@@ -1980,10 +1980,12 @@ ulong flash_get_size (phys_addr_t base, int banknum)
 		}
 
 		/* Do manufacturer-specific fixups */
+		
 		switch (info->manufacturer_id) {
 		case 0x0001: /* AMD */
 		case 0x0037: /* AMIC */
 		case 0x0098: /* Toshiba */
+		case 0x00c2: /* MXIC */
 			flash_fixup_amd(info, &qry);
 			break;
 		case 0x001f:
