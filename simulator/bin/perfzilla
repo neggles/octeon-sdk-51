@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 # Copyright (c) 2006, Cavium Inc.. All rights reserved.
 #
 # This Software is the property of Cavium Inc..  The Software and all
@@ -140,7 +140,7 @@ class FunctionProfileEntry:
         for v in cpuHits:
             i+=1
             cpu =self.parent.app.appCoreMask[i]
-            self.hits[cpu] += v 
+            self.hits[cpu] += v
         #str = self.getStr(4)
         #print str
 
@@ -177,8 +177,8 @@ class FunctionProfileData:
             self.func_dict[sym].addHits(cpuHits)
         else:
             self.func_dict[sym] = FunctionProfileEntry(self, sym, name)
-            self.func_dict[sym].addHits(cpuHits)    
-            
+            self.func_dict[sym].addHits(cpuHits)
+
     def buildSortedFuncList(self):
         print "sorting list"
         self.func_list = []
@@ -202,8 +202,8 @@ class FunctionProfileData:
             str += "\n"
         #print str
         return str
-        
-                    
+
+
 #
 # This class represents all of the profile data for a specific file
 #
@@ -243,7 +243,7 @@ class FileProfileData:
             for v in cpuHits:
                 i+=1
                 cpu = self.parent.app.appCoreMask[i]
-                self.parent.addressHits[address][cpu] += v            
+                self.parent.addressHits[address][cpu] += v
 
 #
 # This class contains all the profile data
@@ -373,7 +373,7 @@ class ApplicationWindow(Frame):
         self.FILELIST.bind("<ButtonPress-1>", self.clickFile)
         self.FILELIST.bind("<Double-Button-1>", self.doubleClickFile)
         self.FILELIST_SCROLL.bind('<Button-4>', lambda evt, temp=self.FILELIST: self.umouseScroll(evt, temp))
-        self.FILELIST_SCROLL.bind('<Button-5>', lambda evt, temp=self.FILELIST: self.dmouseScroll(evt, temp)) 
+        self.FILELIST_SCROLL.bind('<Button-5>', lambda evt, temp=self.FILELIST: self.dmouseScroll(evt, temp))
 
         self.SOURCE_SCROLL = Scrollbar(self)
         self.SOURCE_SCROLL.grid(row=row, column=4, rowspan=1, stick=NW+S)
@@ -542,7 +542,7 @@ class ApplicationWindow(Frame):
                 self.FILELIST.insert(END, (" %.6d\n" % hits).rjust(9), "samples")
             else:
                 self.FILELIST.insert(END, "\n".rjust(3), "samples")
-		
+
         self.FILELIST.xview_moveto(1)
         self.FILELIST.yview_moveto(scrolly[0])
 
@@ -685,8 +685,8 @@ class ApplicationWindow(Frame):
 	add_sel = self.ADDRESS.tag_ranges(SEL)
 	asm_sel = self.ASM.tag_ranges(SEL)
 	self.clipboard_clear()
-	
-	if sc_sel:	
+
+	if sc_sel:
 		self.clipboard_append(self.SOURCE.get(*sc_sel))
 	if fl_sel:
 		self.clipboard_append(self.FILELIST.get(*fl_sel))
@@ -694,7 +694,7 @@ class ApplicationWindow(Frame):
 		self.clipboard_append(self.ADDRESS.get(*add_sel))
 	if asm_sel:
 		self.clipboard_append(self.ASM.get(*asm_sel))
-	
+
     def findNext(self, event=None):
         self.SOURCE.focus_set()
 	try:
@@ -703,7 +703,7 @@ class ApplicationWindow(Frame):
 			return
 	except:
 		tkMessageBox.showwarning('Find', 'Enter the string first by clicking Search->Find')
-		return	
+		return
         revsearchList = self.searchList
         revsearchList.reverse()
 
@@ -782,11 +782,11 @@ class ApplicationWindow(Frame):
        # self.after_idle(self.clickSource)
 
     def umouseScroll(self, event, filename):
-            filename.yview("scroll", "-5", "units") 
+            filename.yview("scroll", "-5", "units")
 
     def dmouseScroll(self, event, filename):
-            filename.yview("scroll", "5", "units")   
- 	
+            filename.yview("scroll", "5", "units")
+
     def showFunctionPercentages(self):
         #frame = Frame(self)
         #funcRoot = self.app.root   # create a root window
@@ -824,9 +824,9 @@ class ApplicationWindow(Frame):
                 if hits:
                     break
             if line > maxLine:
-                line = 1        
+                line = 1
             line += 1
-            
+
         if event:
             line -= 1
 
@@ -863,7 +863,7 @@ class Application:
             vzcore = int(maxcore)
             return [core for core in xrange(vzcore+1)]
         else:
-            return self.appCoreMask 
+            return self.appCoreMask
 
     def setAppCoreMask(self, filename):
         if filename.endswith(".vz"):
@@ -888,7 +888,7 @@ class Application:
                         self.appCoreMask.append(core_num);
                 cnt+=1
         else:
-            self.appCoreMask = [core for core in xrange(MAX_CORES)]            
+            self.appCoreMask = [core for core in xrange(MAX_CORES)]
         infile.close();
 
 
@@ -1100,7 +1100,7 @@ class Application:
             return REGION_SUPER
         else:
             return REGION_UNKNOWN
-        
+
     def getCoreMask(self, filename):
         count = 0
         infile = open(filename, "r")
@@ -1130,7 +1130,7 @@ class Application:
                 self.windows[0].coresel[i].set(1)
         infile.close();
 
-  
+
     # Load profiler data
     def loadProfileData(self, filename):
         self.updateStatus("Reading profile data from %s..." % filename)

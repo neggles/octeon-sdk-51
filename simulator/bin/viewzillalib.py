@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 # Copyright (c) 2003-2005, Cavium Inc.. All rights reserved.
 #
 # This Software is the property of Cavium Inc..  The Software and all

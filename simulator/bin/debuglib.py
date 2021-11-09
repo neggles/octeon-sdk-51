@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 # Copyright (c) 2003-2005, Cavium Inc.. All rights reserved.
 #
 # This Software is the property of Cavium Inc..  The Software and all
@@ -364,7 +364,7 @@ class PrivateDwarfTree:
             os.system("dwarfdump -i \"" + filename + "\" > " + TMP_FILE)
         print "Reading Dwarftree"
         lineno = 0
-        infile = open(TMP_FILE, "r") 
+        infile = open(TMP_FILE, "r")
         for line in infile:
             lineno += 1
             if (lineno & 0xfffff) == 0:
@@ -379,7 +379,7 @@ class PrivateDwarfTree:
                 if line.strip().count(" ") < 1:
                     (attrib, value) = (line.strip(), "")
                 else:
-                    (attrib, value) = line.strip().split(" ", 1) 
+                    (attrib, value) = line.strip().split(" ", 1)
                 if "DW_OP_reg" in value:
                     for i in xrange(31, -1, -1):
                         value = value.replace(REGISTER_REF[i], REGISTER_NAMES[i])
@@ -488,7 +488,7 @@ class DebugInfo:
             parts = line.split()
 
             try:
-                parts.remove('[') 
+                parts.remove('[')
             except:
                 pass
 
@@ -516,8 +516,8 @@ class DebugInfo:
                         source = absFilepath
             except:
                 source = absFilepath
-            
-            #print "%s %s %s %d" % (parts[0][0:], address, source, int(location[0])) 
+
+            #print "%s %s %s %d" % (parts[0][0:], address, source, int(location[0]))
             entry = address, source.replace('\"',''), int(location[0])
 
             # Stop loading line info if we get a zero address. The ELF hasn't been linked

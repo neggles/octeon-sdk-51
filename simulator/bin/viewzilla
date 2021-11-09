@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 # Copyright (c) 2003-2005, Cavium Inc.. All rights reserved.
 #
 # This Software is the property of Cavium Inc..  The Software and all
@@ -536,7 +536,7 @@ class Application(Frame):
 
     #
     # Get the color for a given pipe
-    # 
+    #
     def getColor(self, search_hw, current_cycle):
         if (current_cycle - self.cycle) < self.viewzilla.view_cycles:
             return self.viewzilla.hardware[search_hw].color[current_cycle - self.cycle]

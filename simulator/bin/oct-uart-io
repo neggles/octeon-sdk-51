@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 #
 # This script provides a simple interface to the Octeon simulator uarts.
 # For usage information run "oct-uart-io -h"
@@ -89,7 +89,7 @@ def readSimulator(host, port):
     sock.close()
 
 #
-# Setup the python argument parser 
+# Setup the python argument parser
 #
 shortopt="qn:p:l:b:i:t:"
 longopt=["quiet", "host=", "port=", "log=", "bootlog=", "input=", "timeout="]
