@@ -67,7 +67,7 @@
 }
 
 /* Set bootdelay to 0 for immediate boot */
-#define CONFIG_BOOTDELAY	0	/* autoboot after X seconds	*/
+#define CONFIG_BOOTDELAY	-1	/* autoboot after X seconds	*/
 
 #undef	CONFIG_BOOTARGS
 
@@ -78,11 +78,11 @@
  * variable to define the MTD partitions for u-boot.
  */
 #define MTDPARTS_DEFAULT				\
-	"mtdparts=octeon_nor0:1m(boot-loader)ro,"	\
+	"octeon_nor0:1m(boot-loader)ro,"	\
 	"2944k(kernel),"				\
 	"128k(environment)ro\0"
 
-#define MTDIDS_DEFAULT	"nor0=octeon_nor0\0"
+#define MTDIDS_DEFAULT	"nor0=octeon_nor0,nand0=octeon_nand0\0"
 
 /* Define this to enable built-in octeon ethernet support */
 #define CONFIG_OCTEON_XAUI_ENET
@@ -133,10 +133,23 @@
 /* Vitesse vsc8488 tuning support */
 # define CONFIG_OCTEON_VSC8488
 # define CONFIG_PHY_VITESSE
-# define CONFIG_PHY_TI
+// # define CONFIG_PHY_TI
 
 # include "octeon_network.h"
 #endif
+
+/* Add NAND support */
+/** Uncomment to disable UBI and UBIFS support */
+/** Note: enabled on SNIC10E. */
+//#define CONFIG_OCTEON_DISABLE_UBI
+/** Disable JFFS2 support */
+#define CONFIG_OCTEON_DISABLE_JFFS2
+
+#include "config_octeon_nand.h"
+
+/** Enable multi-bit ECC support */
+#define CONFIG_BCH
+#define CONFIG_NAND_ECC_BCH
 
 #define CONFIG_CMD_OCTEON_TLVEEPROM
 #define CONFIG_CMD_QLM
@@ -155,6 +168,8 @@
         "burn_app=erase $(flash_unused_addr) +$(filesize);cp.b $(fileaddr) $(flash_unused_addr) $(filesize)\0"	\
         "bf=bootoct $(flash_unused_addr) forceboot numcores=$(numcores)\0"			\
         "autoload=n\0"					\
+		"pci_console_active=1\0"		\
+		"serial_console_active=1\0"		\
         ""
 
 /*-----------------------------------------------------------------------
@@ -179,6 +194,15 @@
 /* Address and size of Primary Environment Sector	*/
 #define CONFIG_ENV_SIZE		(8*1024)
 #define CONFIG_ENV_ADDR		(CONFIG_SYS_FLASH_BASE + CONFIG_SYS_FLASH_SIZE - CONFIG_ENV_SIZE)
+
+/* Maximum NAND flash device */
+#define CONFIG_SYS_MAX_NAND_DEVICE	1
+/* Force width to 8-bits */
+#define CONFIG_SYS_NAND_FORCE_WIDTH	8	/* Force to 8-bit width */
+/* Not used for Octeon, but must be set */
+#define CONFIG_SYS_NAND_BASE		0
+/* Maximum number of NAND chips */
+#define CONFIG_SYS_NAND_MAX_CHIPS CONFIG_SYS_MAX_NAND_DEVICE
 
 /*-----------------------------------------------------------------------
  * Cache Configuration
