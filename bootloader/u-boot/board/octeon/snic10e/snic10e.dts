@@ -9,6 +9,16 @@
 	#size-cells = <2>;
 	interrupt-parent = <&ciu>;
 
+	aliases {
+		pip = &pip;
+		smi0 = &smi0;
+		twsi0 = &twsi0;
+		twsi1 = &twsi1;
+		uart0 = &uart0;
+		uart1 = &uart1;
+		flash0 = &flash0;
+	};
+
 	soc@0 {
 		compatible = "simple-bus";
 		#address-cells = <2>;
@@ -342,7 +352,7 @@
 					 * copper or optical.
 					 */
 					sfp-eeprom = <&sfp0eeprom>;
-	                        };
+				};
 
 				phy1: ethernet-phy@1 {
 					/* Absolute address */
@@ -558,8 +568,9 @@
 					 * copper or optical.
 					 */
 					sfp-eeprom = <&sfp1eeprom>;
-	                        };
+				};
 			};
+
 			mphyB: ethernet-phy-nexus@B {
 				reg = <0>;
 				/* The TI TLK10232 is a dual-PHY where
@@ -589,7 +600,7 @@
 					mod-abs		= <&gpio1 6 0>;
 					/* RX los of singal for PHY from SFP+ */
 					rx-los		= <&gpio1 7 0>;
-	                        };
+				};
 
 				phy10: ethernet-phy@1 {
 					/* Absolute address */
@@ -604,7 +615,7 @@
 					mod-abs		= <&gpio1 2 0>;
 					/* RX los of singal for PHY */
 					rx-los		= <&gpio1 3 0>;
-	                        };
+				};
 			};
 		};
 
@@ -842,15 +853,5 @@
 			diag       = <&sfp1alerts>;
 			cavium,phy-trim = "0,ti";
 		};
-	};
-
-	aliases {
-		pip = &pip;
-		smi0 = &smi0;
-		twsi0 = &twsi0;
-		twsi1 = &twsi1;
-		uart0 = &uart0;
-		uart1 = &uart1;
-		flash0 = &flash0;
 	};
  };
