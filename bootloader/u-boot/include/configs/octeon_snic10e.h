@@ -78,7 +78,7 @@
  * variable to define the MTD partitions for u-boot.
  */
 #define MTDPARTS_DEFAULT				\
-	"octeon_nor0:1m(boot-loader)ro,"	\
+	"mtdparts=octeon_nor0:1m(boot-loader)ro,"	\
 	"2944k(kernel),"				\
 	"128k(environment)ro\0"
 
