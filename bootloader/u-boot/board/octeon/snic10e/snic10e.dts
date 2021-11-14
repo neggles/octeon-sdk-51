@@ -69,14 +69,14 @@
 				compatible = "ti,tmp421";
 				reg = <0x4c>;
 			};
-			sfp0eeprom: eeprom@50 {
+			sfp1eeprom: eeprom@50 {
 				compatible = "atmel,24c01";
 				reg = <0x50>;
 			};
 			/* This is optional, available on some
 			 * Avago devices
 			 */
-			sfp0alerts: eeprom@51 {
+			sfp1alerts: eeprom@51 {
 				compatible = "atmel,24c01";
 				reg = <0x51>;
 			};
@@ -95,11 +95,11 @@
 			interrupts = <0 59>;
 			clock-frequency = <100000>;
 
-			sfp1eeprom: eeprom@50 {
+			sfp0eeprom: eeprom@50 {
 				compatible = "atmel,24c01";
 				reg = <0x50>;
 			};
-			sfp1alerts: eeprom@51 {
+			sfp0alerts: eeprom@51 {
 				compatible = "atmel,24c01";
 				reg = <0x51>;
 			};
@@ -636,8 +636,8 @@
 					compatible = "cavium,octeon-3860-pip-port";
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
-					phy-handle = <&phy0>;
-					sfp-slot = <&sfp00>;
+					phy-handle = <&phy1>;
+					sfp-slot = <&sfp01>;
 				};
 			};
 			interface@B {
@@ -651,8 +651,8 @@
 					compatible = "cavium,octeon-3860-pip-port";
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
-					phy-handle = <&phy1>;
-					sfp-slot = <&sfp01>;
+					phy-handle = <&phy0>;
+					sfp-slot = <&sfp00>;
 				};
 			};
 			interface@C {
@@ -793,65 +793,130 @@
 			reg = <0x11800 0x00000108 0x0 0x8>;
 			interrupts = <0 63>;
 		};
-	};
-	gpio-leds {
-		compatible = "gpio-leds";
 
-		d1a {
-			label = "bottom";
-			gpios = <&gpio 1 0>;
-			default-state = "keep";
-			cavium,phy-trim = "0,ti";
+		nand-flash-interface@1070001000000 {
+			compatible = "cavium,octeon-5230-nand";
+			reg = <0x10700 0x01000000 0x0 0x100>,
+				<0x11800 0x00000168 0x0 0x20>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			interrupts = <0 63>;
+
+			flash@1 {
+				compatible = "nand-flash";
+				reg = <1>;
+
+				/* soft_bch is used to support multi-bit ECC */
+				nand-ecc-mode = "soft";
+
+				/* Number of bytes of data to perform ECC over */
+				nand-ecc-size = <512>;
+
+				/* nand-ecc-size and nand-ecc-bytes are
+				 * calculated based on the error management
+				 * requirements of the NAND device.
+				 *
+				 * For example, if a device says it requires
+				 * 12 bits of ECC per 540 bytes then
+				 * nand-ecc-size would be set to 512.
+				 *
+				 * nand-ecc-bytes is calculated based on the
+				 * requirements for the Galios field order.
+				 * There are two variables involved, m and t.
+				 *
+				 * m must be chosen such that:
+				 *	(2^m) - 1 > (nand-ecc-size * 8)
+				 * In the case of 512, m=13 since
+				 * nand-ecc-size * 8 = 2^12.
+				 *
+				 * We need 12 bits of ecc per 512 bytes so t=12.
+				 *
+				 * nand-ecc-bytes = (m*t) / 8 rounded up so
+				 * 19.5 = 20 bytes of ECC per 512 bytes.
+				 *
+				 * For 24 bits of ECC per 1024 bytes of data
+				 * this works out to 42.  For 4 bits of ECC
+				 * per 512 bytes this should be 7.
+				 *
+				 * If nand-ecc-size and nand-ecc-bytes are not
+				 * specified then the default values of 512 and
+				 * 7 will be used respectively, providing 4 bits
+				 * of ecc per 512 bytes of data.
+				 *
+				 * Note that for booting purposes, OCTEON only
+				 * supports 1 bit of ECC per 256 bytes which
+				 * means that NAND devices requiring the
+				 * extended ECC support cannot be used for
+				 * booting purposes.
+				 */
+				nand-ecc-bytes = <3>;
+
+				/* With of NAND on bus, OCTEON supports both 8
+				 * and 16-bits
+				 */
+				nand-bus-width = <8>;
+			};
 		};
-		d1b-t {
-			label = "top";
-			gpios = <&gpio 2 0>;
-			default-state = "keep";
-			cavium,phy-trim = "0,ti";
-		};
-		d1b-v {
-			label = "top";
-			gpios = <&gpio 2 0>;
-			default-state = "keep";
-			cavium,phy-trim = "0,vitesse";
-		};
-		sfp00: sfp-slot@00 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&phy0 4 0>;
-			mod_abs    = <&phy0 0 0>;
-			tx_error   = <&phy0 1 0>;
-			eeprom     = <&sfp0eeprom>;
-			diag       = <&sfp0alerts>;
-			cavium,phy-trim = "0,vitesse";
-		};
-		sfp01: sfp-slot@01 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&phy1 10 0>;
-			mod_abs    = <&phy1 9 0>;
-			tx_error   = <&phy1 8 0>;
-			eeprom     = <&sfp1eeprom>;
-			diag       = <&sfp1alerts>;
-			cavium,phy-trim = "0,vitesse";
-		};
-		sfp10: sfp-slot@10 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&gpio1 5 0>;
-			mod_abs    = <&gpio1 6 0>;
-			tx_error   = <&gpio1 4 0>;
-			rx_los     = <&gpio1 7 0>;
-			eeprom     = <&sfp0eeprom>;
-			diag       = <&sfp0alerts>;
-			cavium,phy-trim = "0,ti";
-		};
-		sfp11: sfp-slot@11 {
-			compatible = "ethernet,sfp-slot";
-			tx_disable = <&gpio1 1 0>;
-			mod_abs    = <&gpio1 2 0>;
-			tx_error   = <&gpio1 0 0>;
-			rx_los     = <&gpio1 3 0>;
-			eeprom     = <&sfp1eeprom>;
-			diag       = <&sfp1alerts>;
-			cavium,phy-trim = "0,ti";
+
+		gpio-leds {
+			compatible = "gpio-leds";
+
+			d1a {
+				label = "bottom";
+				gpios = <&gpio 1 0>;
+				default-state = "keep";
+				cavium,phy-trim = "0,ti";
+			};
+			d1b-t {
+				label = "top";
+				gpios = <&gpio 2 0>;
+				default-state = "keep";
+				cavium,phy-trim = "0,ti";
+			};
+			d1b-v {
+				label = "top";
+				gpios = <&gpio 2 0>;
+				default-state = "keep";
+				cavium,phy-trim = "0,vitesse";
+			};
+			sfp00: sfp-slot@00 {
+				compatible = "ethernet,sfp-slot";
+				tx_disable = <&phy0 4 0>;
+				mod_abs    = <&phy0 0 0>;
+				tx_error   = <&phy0 1 0>;
+				eeprom     = <&sfp0eeprom>;
+				diag       = <&sfp0alerts>;
+				cavium,phy-trim = "0,vitesse";
+			};
+			sfp01: sfp-slot@01 {
+				compatible = "ethernet,sfp-slot";
+				tx_disable = <&phy1 10 0>;
+				mod_abs    = <&phy1 9 0>;
+				tx_error   = <&phy1 8 0>;
+				eeprom     = <&sfp1eeprom>;
+				diag       = <&sfp1alerts>;
+				cavium,phy-trim = "0,vitesse";
+			};
+			sfp10: sfp-slot@10 {
+				compatible = "ethernet,sfp-slot";
+				tx_disable = <&gpio1 5 0>;
+				mod_abs    = <&gpio1 6 0>;
+				tx_error   = <&gpio1 4 0>;
+				rx_los     = <&gpio1 7 0>;
+				eeprom     = <&sfp1eeprom>;
+				diag       = <&sfp1alerts>;
+				cavium,phy-trim = "0,ti";
+			};
+			sfp11: sfp-slot@11 {
+				compatible = "ethernet,sfp-slot";
+				tx_disable = <&gpio1 1 0>;
+				mod_abs    = <&gpio1 2 0>;
+				tx_error   = <&gpio1 0 0>;
+				rx_los     = <&gpio1 3 0>;
+				eeprom     = <&sfp0eeprom>;
+				diag       = <&sfp0alerts>;
+				cavium,phy-trim = "0,ti";
+			};
 		};
 	};
  };

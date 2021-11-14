@@ -78,9 +78,11 @@
  * variable to define the MTD partitions for u-boot.
  */
 #define MTDPARTS_DEFAULT				\
-	"mtdparts=octeon_nor0:1m(boot-loader)ro,"	\
-	"2944k(kernel),"				\
-	"128k(environment)ro\0"
+	"mtdparts=octeon_nor0:3m(bootloaders)ro,"	\
+	"4m(kernel),1m(boot-env)ro;"			\
+	"octeon_nand0:128m(ubifs-kernel),"		\
+	"896m(ubifs)"					\
+	"\0"
 
 #define MTDIDS_DEFAULT	"nor0=octeon_nor0,nand0=octeon_nand0\0"
 
@@ -90,6 +92,10 @@
 #define CONFIG_PHY_SFP
 #define CONFIG_OCTEON_SFP
 #define CONFIG_CMD_SFP
+#define CONFIG_CMD_LLDP
+
+/** No failsafe for NIC cards */
+#define CONFIG_OCTEON_NO_FAILSAFE
 
 /* Enable Octeon built-in networking if RGMII support is enabled */
 #if defined(CONFIG_OCTEON_RGMII_ENET) || defined(CONFIG_OCTEON_SGMII_ENET) ||	\
@@ -166,10 +172,12 @@
  */
 #define	CONFIG_EXTRA_ENV_SETTINGS					\
         "burn_app=erase $(flash_unused_addr) +$(filesize);cp.b $(fileaddr) $(flash_unused_addr) $(filesize)\0"	\
-        "bf=bootoct $(flash_unused_addr) forceboot numcores=$(numcores)\0"			\
-        "autoload=n\0"					\
-		"pci_console_active=1\0"		\
-		"serial_console_active=1\0"		\
+        "bf=bootoct $(flash_unused_addr) forceboot numcores=$(numcores)\0"	\
+        "autoload=n\0"							\
+	"mtdids=" MTDIDS_DEFAULT "\0"					\
+	"mtdparts=" MTDPARTS_DEFAULT "\0"				\
+	"pci_console_active=1\0"					\
+	"serial_console_active=1\0"					\
         ""
 
 /*-----------------------------------------------------------------------
@@ -202,7 +210,7 @@
 /* Not used for Octeon, but must be set */
 #define CONFIG_SYS_NAND_BASE		0
 /* Maximum number of NAND chips */
-#define CONFIG_SYS_NAND_MAX_CHIPS CONFIG_SYS_MAX_NAND_DEVICE
+#define CONFIG_SYS_NAND_MAX_CHIPS	CONFIG_SYS_MAX_NAND_DEVICE
 
 /*-----------------------------------------------------------------------
  * Cache Configuration
@@ -225,5 +233,12 @@
 
 /** Disable DDR2 support */
 #define CONFIG_OCTEON_DISABLE_DDR2
+
+/* The following line should be defined for all PCIe connected LiquidIO card
+ * It will do initialization needed for oct-remote-app-ctl host utilty to
+ * provide hotplug features when controlling start/add_cores/del_cores/shutdown
+ * hotplugable SE application from x86 HOST
+ */
+#define CONFIG_OCTEON_REMOTE_HOTPLUG
 
 #endif	/* __CONFIG_H__ */
