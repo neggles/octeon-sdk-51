@@ -69,17 +69,19 @@
 				compatible = "ti,tmp421";
 				reg = <0x4c>;
 			};
-			sfp1eeprom: eeprom@50 {
+
+			sfp0eeprom: eeprom@50 {
 				compatible = "atmel,24c01";
 				reg = <0x50>;
 			};
 			/* This is optional, available on some
 			 * Avago devices
 			 */
-			sfp1alerts: eeprom@51 {
+			sfp0alerts: eeprom@51 {
 				compatible = "atmel,24c01";
 				reg = <0x51>;
 			};
+
 			tlv-eeprom@53 {
 				compatible = "atmel,24c256";
 				reg = <0x53>;
@@ -95,25 +97,14 @@
 			interrupts = <0 59>;
 			clock-frequency = <100000>;
 
-			sfp0eeprom: eeprom@50 {
+			sfp1eeprom: eeprom@50 {
 				compatible = "atmel,24c01";
 				reg = <0x50>;
 			};
-			sfp0alerts: eeprom@51 {
+			sfp1alerts: eeprom@51 {
 				compatible = "atmel,24c01";
 				reg = <0x51>;
 			};
-			gpio1: gpio@20 {
-				reg = <0x20>;
-				compatible = "nxp,pca9554";
-				gpio-controller;
-				#gpio-cells = <2>;
-				interrupt-parent = <&gpio>;
-				interrupt = <13 2>; /* OCTEON GPIO 13, falling edge */
-				#interrupt-cells = <1>;
-				cavium,phy-trim = "0,ti";
-			};
-
 		};
 
 		smi0: mdio@1180000001800 {
@@ -122,7 +113,7 @@
 			#size-cells = <0>;
 			reg = <0x11800 0x00001800 0x0 0x40>;
 
-			mphyA: ethernet-phy-nexus@A {
+			mphy0: ethernet-phy-nexus@0 {
 				reg = <0>;
 				/* The Vitesse VSC8488 is a dual-PHY where
 				 * some of the configuration is common across
@@ -133,7 +124,6 @@
 				#address-cells = <1>;
 				#size-cells = <0>;
 				ranges;
-				cavium,phy-trim = "0,vitesse";
 
 				/* Hardware reset signal */
 				reset = <&gpio 17 0>;
@@ -234,7 +224,7 @@
 					 * maximum (-16mA).  The default is
 					 * 0b000000.
 					 */
-					/*vitesse,txout_driver_ctrl2 = <0x1300>;*/
+					/* vitesse,txout_driver_ctrl2 = <0x1300>;*/
 
 					/* DC_AGC_LOS_CONFIG1:
 					 *   15: Suppress_Coarse_Adj_on_LOS_Clear
@@ -570,53 +560,6 @@
 					sfp-eeprom = <&sfp1eeprom>;
 				};
 			};
-
-			mphyB: ethernet-phy-nexus@B {
-				reg = <0>;
-				/* The TI TLK10232 is a dual-PHY where
-				 * some of the configuration is common across
-				 * both of the phy devices such as the reset
-				 * line and the base MDIO address.
-				 */
-				compatible = "ti,tlk10232-nexus", "ethernet-phy-nexus";
-				#address-cells = <1>;
-				#size-cells = <0>;
-				ranges;
-				cavium,phy-trim = "0,ti";
-
-				/* Hardware reset signal open-drain active low on GPIO 17, must not be driven high. */
-				reset = <&gpio 17 2>;
-
-				phy11: ethernet-phy@0 {
-					/* Absolute address */
-					reg = <0>;
-					compatible = "ti,tlk10232", "ethernet-phy-ieee802.3-c45";
-
-					/* TX fault input signal for PHY from SFP+ */
-					tx-fault	= <&gpio1 4 0>;
-					/* TX disable for PHY to SFP+ */
-					tx-disable	= <&gpio1 5 0>;
-					/* MOD ABS signal for PHY from SFP+ */
-					mod-abs		= <&gpio1 6 0>;
-					/* RX los of singal for PHY from SFP+ */
-					rx-los		= <&gpio1 7 0>;
-				};
-
-				phy10: ethernet-phy@1 {
-					/* Absolute address */
-					reg = <0x1>;
-					compatible = "ti,tlk10232", "ethernet-phy-ieee802.3-c45";
-
-					/* TX fault input signal for PHY */
-					tx-fault	= <&gpio1 0 0>;
-					/* TX disable for PHY */
-					tx-disable	= <&gpio1 1 0>;
-					/* MOD ABS signal for PHY */
-					mod-abs		= <&gpio1 2 0>;
-					/* RX los of singal for PHY */
-					rx-los		= <&gpio1 3 0>;
-				};
-			};
 		};
 
 		pip: pip@11800a0000000 {
@@ -625,64 +568,32 @@
 			#size-cells = <0>;
 			reg = <0x11800 0xa0000000 0x0 0x2000>;
 
-			interface@A {
+			interface@0 {
 				compatible = "cavium,octeon-3860-pip-interface";
 				#address-cells = <1>;
 				#size-cells = <0>;
 				reg = <0>; /* interface */
-				cavium,phy-trim = "0,vitesse";
 
 				ethernet@0 {
 					compatible = "cavium,octeon-3860-pip-port";
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
 					phy-handle = <&phy1>;
-					sfp-slot = <&sfp01>;
+					sfp-slot = <&sfp1>;
 				};
 			};
-			interface@B {
+			interface@1 {
 				compatible = "cavium,octeon-3860-pip-interface";
 				#address-cells = <1>;
 				#size-cells = <0>;
 				reg = <1>; /* interface */
-				cavium,phy-trim = "0,vitesse";
 
 				ethernet@0 {
 					compatible = "cavium,octeon-3860-pip-port";
 					reg = <0x0>; /* Port */
 					local-mac-address = [ 00 00 00 00 00 00 ];
 					phy-handle = <&phy0>;
-					sfp-slot = <&sfp00>;
-				};
-			};
-			interface@C {
-				compatible = "cavium,octeon-3860-pip-interface";
-				#address-cells = <1>;
-				#size-cells = <0>;
-				reg = <0>; /* interface */
-				cavium,phy-trim = "0,ti";
-
-				ethernet@0 {
-					compatible = "cavium,octeon-3860-pip-port";
-					reg = <0x0>; /* Port */
-					local-mac-address = [ 00 00 00 00 00 00 ];
-					phy-handle = <&phy10>;
-					sfp-slot = <&sfp10>;
-				};
-			};
-			interface@D {
-				compatible = "cavium,octeon-3860-pip-interface";
-				#address-cells = <1>;
-				#size-cells = <0>;
-				reg = <1>; /* interface */
-				cavium,phy-trim = "0,ti";
-
-				ethernet@0 {
-					compatible = "cavium,octeon-3860-pip-port";
-					reg = <0x0>; /* Port */
-					local-mac-address = [ 00 00 00 00 00 00 ];
-					phy-handle = <&phy11>;
-					sfp-slot = <&sfp11>;
+					sfp-slot = <&sfp0>;
 				};
 			};
 		};
@@ -764,16 +675,16 @@
 
 				partition@0 {
 					label = "bootloader";
-					reg = <0x0 0x1c0000>;
+					reg = <0x0 0x300000>;
 					read-only;
 				};
-				partition@1c0000 {
+				partition@300000 {
 					label = "kernel";
-					reg = <0x1c0000 0x63e000>;
+					reg = <0x300000 0x4f0000>;
 				};
-				partition@7fe000 {
+				partition@7f0000 {
 					label = "environment";
-					reg = <0x7fe0000 0x2000>;
+					reg = <0x7f00000 0x10000>;
 					read-only;
 				};
 			};
@@ -788,6 +699,7 @@
 			reg = <0x11800 0x00000100 0x0 0x8>;
 			interrupts = <0 63>;
 		};
+
 		dma1: dma-engine@1180000000108 {
 			compatible = "cavium,octeon-5750-bootbus-dma";
 			reg = <0x11800 0x00000108 0x0 0x8>;
@@ -807,7 +719,7 @@
 				reg = <1>;
 
 				/* soft_bch is used to support multi-bit ECC */
-				nand-ecc-mode = "soft";
+				nand-ecc-mode = "soft_bch";
 
 				/* Number of bytes of data to perform ECC over */
 				nand-ecc-size = <512>;
@@ -849,7 +761,7 @@
 				 * extended ECC support cannot be used for
 				 * booting purposes.
 				 */
-				nand-ecc-bytes = <3>;
+				nand-ecc-bytes = <2>;
 
 				/* With of NAND on bus, OCTEON supports both 8
 				 * and 16-bits
@@ -858,64 +770,29 @@
 			};
 		};
 
+		sfp0: sfp-slot@00 {
+			compatible = "ethernet,sfp-slot";
+			tx_disable = <&phy0 4 0>;
+			mod_abs    = <&phy0 0 0>;
+			tx_error   = <&phy0 1 0>;
+			eeprom     = <&sfp0eeprom>;
+			diag       = <&sfp0alerts>;
+		};
+		sfp1: sfp-slot@01 {
+			compatible = "ethernet,sfp-slot";
+			tx_disable = <&phy1 10 0>;
+			mod_abs    = <&phy1 9 0>;
+			tx_error   = <&phy1 8 0>;
+			eeprom     = <&sfp1eeprom>;
+			diag       = <&sfp1alerts>;
+		};
+
 		gpio-leds {
 			compatible = "gpio-leds";
-
-			d1a {
-				label = "bottom";
-				gpios = <&gpio 1 0>;
-				default-state = "keep";
-				cavium,phy-trim = "0,ti";
-			};
-			d1b-t {
-				label = "top";
-				gpios = <&gpio 2 0>;
-				default-state = "keep";
-				cavium,phy-trim = "0,ti";
-			};
 			d1b-v {
 				label = "top";
 				gpios = <&gpio 2 0>;
 				default-state = "keep";
-				cavium,phy-trim = "0,vitesse";
-			};
-			sfp00: sfp-slot@00 {
-				compatible = "ethernet,sfp-slot";
-				tx_disable = <&phy0 4 0>;
-				mod_abs    = <&phy0 0 0>;
-				tx_error   = <&phy0 1 0>;
-				eeprom     = <&sfp0eeprom>;
-				diag       = <&sfp0alerts>;
-				cavium,phy-trim = "0,vitesse";
-			};
-			sfp01: sfp-slot@01 {
-				compatible = "ethernet,sfp-slot";
-				tx_disable = <&phy1 10 0>;
-				mod_abs    = <&phy1 9 0>;
-				tx_error   = <&phy1 8 0>;
-				eeprom     = <&sfp1eeprom>;
-				diag       = <&sfp1alerts>;
-				cavium,phy-trim = "0,vitesse";
-			};
-			sfp10: sfp-slot@10 {
-				compatible = "ethernet,sfp-slot";
-				tx_disable = <&gpio1 5 0>;
-				mod_abs    = <&gpio1 6 0>;
-				tx_error   = <&gpio1 4 0>;
-				rx_los     = <&gpio1 7 0>;
-				eeprom     = <&sfp1eeprom>;
-				diag       = <&sfp1alerts>;
-				cavium,phy-trim = "0,ti";
-			};
-			sfp11: sfp-slot@11 {
-				compatible = "ethernet,sfp-slot";
-				tx_disable = <&gpio1 1 0>;
-				mod_abs    = <&gpio1 2 0>;
-				tx_error   = <&gpio1 0 0>;
-				rx_los     = <&gpio1 3 0>;
-				eeprom     = <&sfp0eeprom>;
-				diag       = <&sfp0alerts>;
-				cavium,phy-trim = "0,ti";
 			};
 		};
 	};

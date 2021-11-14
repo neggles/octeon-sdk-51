@@ -79,7 +79,7 @@
  */
 #define MTDPARTS_DEFAULT				\
 	"mtdparts=octeon_nor0:3m(bootloaders)ro,"	\
-	"4m(kernel),1m(boot-env)ro;"			\
+	"5056k(kernel),64k(boot-env)ro;"		\
 	"octeon_nand0:128m(ubifs-kernel),"		\
 	"896m(ubifs)"					\
 	"\0"
